@@ -1,5 +1,5 @@
 export const i18n = {
-  defaultLocale: "en",
+  defaultLocale: "en", // This will be the default when no language preference is detected
   locales: ["en", "ar"],
 } as const
 
