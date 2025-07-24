@@ -53,7 +53,7 @@ export default function BusinessCard({ params: { lang } }: { params: { lang: Loc
           {/* Background Image */}
           <div className="absolute inset-0">
             <Image
-              src="/images/card-background.jpeg"
+              src="https://media.licdn.com/dms/image/v2/D4D03AQFcWMsi0rSkeg/profile-displayphoto-shrink_400_400/B4DZbdzBS3GwAg-/0/1747477862106?e=1756339200&v=beta&t=_B61Q2NmOp213hwgrqzRs61wriwZgo88oQ0L4Qx843g"
               alt="Anas Hamad"
               fill
               className={`object-cover transition-all duration-500 ${showDetails ? "blur-md scale-110" : ""}`}
