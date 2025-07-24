@@ -2,18 +2,17 @@
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { HomeIcon, Mail, Phone, MapPin, QrCode, X, ImageIcon } from "lucide-react"
+import { HomeIcon, Mail, Phone, MapPin, QrCode, X } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
-import type { Locale } from "@/i18n-config"
+import type { Locale } from "@/types/locale" // Declare Locale type
 
 export default function BusinessCard({ params: { lang } }: { params: { lang: Locale } }) {
   const [isLoaded, setIsLoaded] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
   const [showQR, setShowQR] = useState(false)
-  const [backgroundError, setBackgroundError] = useState(false)
 
   useEffect(() => {
     setIsLoaded(true)
@@ -51,32 +50,15 @@ export default function BusinessCard({ params: { lang } }: { params: { lang: Loc
           className="w-[400px] h-[550px] overflow-hidden relative border-0 rounded-3xl cursor-pointer"
           onClick={handleCardClick}
         >
-          {/* Background Image or Fallback */}
+          {/* Background Image */}
           <div className="absolute inset-0">
-            {!backgroundError ? (
-              <Image
-                src="/images/card-background.jpeg"
-                alt="Anas Hamad"
-                fill
-                className={`object-cover transition-all duration-500 ${showDetails ? "blur-md scale-110" : ""}`}
-                priority
-                unoptimized
-                onError={() => {
-                  console.log("Background image failed to load, using fallback")
-                  setBackgroundError(true)
-                }}
-              />
-            ) : (
-              // Fallback gradient background
-              <div
-                className={`absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 transition-all duration-500 ${showDetails ? "blur-md scale-110" : ""}`}
-              >
-                <div className="absolute inset-0 bg-black/20"></div>
-                <div className="absolute inset-0 flex items-center justify-center opacity-10">
-                  <ImageIcon className="w-32 h-32 text-white" />
-                </div>
-              </div>
-            )}
+            <Image
+              src="/images/card-background.jpeg"
+              alt="Anas Hamad"
+              fill
+              className={`object-cover transition-all duration-500 ${showDetails ? "blur-md scale-110" : ""}`}
+              priority
+            />
           </div>
 
           {/* Gradient Overlay */}
