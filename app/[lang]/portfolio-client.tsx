@@ -201,9 +201,16 @@ function CTAButtons({
           </g>
         </svg>
       </Button>
-      <Button variant="outline" className="w-full sm:w-auto rounded-[99px] h-[34px] bg-transparent">
-        <span className="text-[13px] leading-5">{dict.cta.resume}</span>
-      </Button>
+      <a 
+  href="https://drive.google.com/uc?export=download&id=1HtFK1I2LFlT8RdGiS-9T3Ev92WVDLul-" 
+  download
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <Button variant="outline" className="w-full sm:w-auto rounded-[99px] h-[34px] bg-transparent">
+    <span className="text-[13px] leading-5">{dict.cta.resume}</span>
+  </Button>
+</a>
     </div>
   )
 }
