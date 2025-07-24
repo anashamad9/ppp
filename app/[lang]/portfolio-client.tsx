@@ -22,8 +22,9 @@ import {
   Linkedin,
   Bot,
   Phone,
+  User,
 } from "lucide-react"
-import ContactModal from "@/components/contact-modal" // Import ContactModal
+import ContactModal from "@/components/contact-modal"
 
 type Dictionary = Awaited<ReturnType<typeof getDictionary>>
 
@@ -109,6 +110,8 @@ const coreStack = [
 ]
 
 function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
+  const [imageError, setImageError] = useState(false)
+
   return (
     <header
       className={`flex items-center gap-4 transition-all duration-500 ease-out ${
@@ -117,20 +120,26 @@ function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
       style={{ transitionDelay: "100ms" }}
     >
       <div className="flex-shrink-0">
-        <Image
-          src="/images/profile.jpeg"
-          alt={dict.header.name}
-          width={80}
-          height={80}
-          className="rounded-full border-2 border-border"
-          priority
-          unoptimized
-          onError={(e) => {
-            console.log("Image failed to load:", e)
-            // Fallback to a placeholder if image fails
-            e.currentTarget.src = "/placeholder-user.jpg"
-          }}
-        />
+        {!imageError ? (
+          <Image
+            src="/images/profile.jpeg"
+            alt={dict.header.name}
+            width={80}
+            height={80}
+            className="rounded-full border-2 border-border"
+            priority
+            unoptimized
+            onError={() => {
+              console.log("Profile image failed to load, showing fallback")
+              setImageError(true)
+            }}
+          />
+        ) : (
+          // Fallback avatar with icon
+          <div className="w-20 h-20 rounded-full border-2 border-border bg-secondary flex items-center justify-center">
+            <User className="w-10 h-10 text-muted-foreground" />
+          </div>
+        )}
       </div>
       <div className="flex flex-col gap-1">
         <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-foreground">{dict.header.name}</h1>
