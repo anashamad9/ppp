@@ -52,15 +52,12 @@ export default function BusinessCard({ params: { lang } }: { params: { lang: Loc
         >
           {/* Background Image */}
           <div className="absolute inset-0">
-            <img
+            <Image
               src="/images/card-background.jpeg"
               alt="Anas Hamad"
-              className={`w-full h-full object-cover transition-all duration-500 ${showDetails ? "blur-md scale-110" : ""}`}
-              onError={(e) => {
-                // Fallback to a gradient background if image fails
-                e.currentTarget.style.display = "none"
-                e.currentTarget.parentElement.style.background = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-              }}
+              fill
+              className={`object-cover transition-all duration-500 ${showDetails ? "blur-md scale-110" : ""}`}
+              priority
             />
           </div>
 

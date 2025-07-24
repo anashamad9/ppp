@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { ThemeToggle } from "@/components/theme-toggle"
+import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import type { Locale } from "@/i18n-config"
@@ -108,6 +109,8 @@ const coreStack = [
 ]
 
 function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
+  const basePath = process.env.NODE_ENV === "production" ? "/ppp" : ""
+
   return (
     <header
       className={`flex items-center gap-4 transition-all duration-500 ease-out ${
@@ -116,16 +119,13 @@ function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
       style={{ transitionDelay: "100ms" }}
     >
       <div className="flex-shrink-0">
-        <img
-          src="/images/profile.jpeg"
+        <Image
+          src="https://via.placeholder.com/80x80/666/fff?text=AH"
           alt={dict.header.name}
           width={80}
           height={80}
-          className="rounded-full border-2 border-border object-cover"
-          onError={(e) => {
-            // Fallback to a placeholder if image fails to load
-            e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(dict.header.name)}&size=80&background=random`
-          }}
+          className="rounded-full border-2 border-border"
+          unoptimized
         />
       </div>
       <div className="flex flex-col gap-1">
