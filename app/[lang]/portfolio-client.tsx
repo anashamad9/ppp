@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { ThemeToggle } from "@/components/theme-toggle"
-import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import type { Locale } from "@/i18n-config"
@@ -117,12 +116,16 @@ function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
       style={{ transitionDelay: "100ms" }}
     >
       <div className="flex-shrink-0">
-        <Image
+        <img
           src="/images/profile.jpeg"
           alt={dict.header.name}
           width={80}
           height={80}
-          className="rounded-full border-2 border-border"
+          className="rounded-full border-2 border-border object-cover"
+          onError={(e) => {
+            // Fallback to a placeholder if image fails to load
+            e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(dict.header.name)}&size=80&background=random`
+          }}
         />
       </div>
       <div className="flex flex-col gap-1">
