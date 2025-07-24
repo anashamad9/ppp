@@ -109,8 +109,6 @@ const coreStack = [
 ]
 
 function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
-  const basePath = process.env.NODE_ENV === "production" ? "/ppp" : ""
-
   return (
     <header
       className={`flex items-center gap-4 transition-all duration-500 ease-out ${
@@ -120,12 +118,18 @@ function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
     >
       <div className="flex-shrink-0">
         <Image
-          src="https://via.placeholder.com/80x80/666/fff?text=AH"
+          src="/images/profile.jpeg"
           alt={dict.header.name}
           width={80}
           height={80}
           className="rounded-full border-2 border-border"
+          priority
           unoptimized
+          onError={(e) => {
+            console.log("Image failed to load:", e)
+            // Fallback to a placeholder if image fails
+            e.currentTarget.src = "/placeholder-user.jpg"
+          }}
         />
       </div>
       <div className="flex flex-col gap-1">

@@ -1,18 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export",
-  trailingSlash: true,
+  images: {
+    domains: ["vercel.com", "assets.vercel.com", "hebbkx1anhila5yf.public.blob.vercel-storage.com"],
+    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
   },
-  images: {
-    unoptimized: true,
-  },
-  assetPrefix: process.env.NODE_ENV === "production" ? "/ppp" : "",
-  basePath: process.env.NODE_ENV === "production" ? "/ppp" : "",
+  // Add this to ensure static files are properly handled
+  trailingSlash: false,
+  output: "standalone",
 }
 
 module.exports = nextConfig

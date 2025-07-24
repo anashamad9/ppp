@@ -58,6 +58,12 @@ export default function BusinessCard({ params: { lang } }: { params: { lang: Loc
               fill
               className={`object-cover transition-all duration-500 ${showDetails ? "blur-md scale-110" : ""}`}
               priority
+              unoptimized
+              onError={(e) => {
+                console.log("Background image failed to load")
+                // Set a fallback background color
+                e.currentTarget.style.display = "none"
+              }}
             />
           </div>
 
