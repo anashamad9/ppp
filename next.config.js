@@ -1,7 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["vercel.com", "assets.vercel.com", "hebbkx1anhila5yf.public.blob.vercel-storage.com"],
+    domains: [
+      "vercel.com",
+      "assets.vercel.com",
+      "hebbkx1anhila5yf.public.blob.vercel-storage.com",
+    ],
     unoptimized: true,
     remotePatterns: [
       {
@@ -16,9 +20,12 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Add this to ensure static files are properly handled
-  trailingSlash: false,
-  output: "standalone",
+  trailingSlash: true, // ✅ Important for GitHub Pages to serve /folder/index.html properly
+  output: "export",     // ✅ Static export for GitHub Pages
+  i18n: {               // ✅ Required for locale detection
+    locales: ["en", "ar"],
+    defaultLocale: "en",
+  },
 }
 
 module.exports = nextConfig
