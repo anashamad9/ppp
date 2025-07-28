@@ -35,8 +35,8 @@ export default function ContactModal({
 
     try {
       // EmailJS configuration
-      const serviceId = "service_6hj85pp" // Replace with your EmailJS service ID
-      const templateId = "template_wa9ey1r" // Replace with your EmailJS template ID
+      const serviceId = "service_khasrjf" // Replace with your EmailJS service ID
+      const templateId = "template_jckjvxl" // Replace with your EmailJS template ID
       const publicKey = "QQ_1alyChrEBYODBb" // Replace with your EmailJS public key
 
       const templateParams = {
