@@ -9,6 +9,10 @@ import Link from "next/link"
 import { useState, useEffect } from "react"
 import type { Locale } from "@/i18n-config"
 import type { getDictionary } from "@/lib/dictionaries"
+import {
+  BadgeIcon as IdCard,
+  Home,   // ✅ add this line
+} from "lucide-react"
 
 type Dictionary = Awaited<ReturnType<typeof getDictionary>>
 
@@ -60,19 +64,29 @@ export default function ArticlesClient({ dict, lang }: { dict: Dictionary; lang:
 
     return (
       <main className="flex flex-col items-center bg-background min-h-screen font-sans">
-        <div className="fixed top-4 left-4 z-50">
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSelectedArticle(null)}>
-            <ArrowLeft className="h-4 w-4" />
-            <span className="sr-only">Back to Articles</span>
-          </Button>
-        </div>
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
+    <div className="flex items-center gap-2 px-3 py-1.5 
+                    bg-background/40 backdrop-blur-md 
+                    border border-border/30 rounded-lg">
+      
+      {/* Back Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-7 w-7"
+        onClick={() => setSelectedArticle(null)}
+      >
+        <ArrowLeft className="h-4 w-4" />
+        <span className="sr-only">Back to Articles</span>
+      </Button>
 
-        <div className="fixed top-4 right-4 z-50">
-          <div className="flex items-center gap-1 p-1 bg-background/60 backdrop-blur-xl border border-border/30 shadow-none px-0 py-0 rounded-xl">
-            <LanguageSwitcher lang={lang} />
-            <ThemeToggle />
-          </div>
-        </div>
+      {/* Language Switcher */}
+      <LanguageSwitcher lang={lang} />
+
+      {/* Theme Toggle */}
+      <ThemeToggle />
+    </div>
+  </div>
 
         <div className="w-full min-h-screen bg-background px-4 sm:px-6 md:px-8 py-6 sm:py-8 pt-16">
           <Card className="border-none bg-transparent mb-8 sm:mb-16 w-full max-w-[700px] mx-auto shadow-none">
@@ -101,21 +115,26 @@ export default function ArticlesClient({ dict, lang }: { dict: Dictionary; lang:
 
   return (
     <main className="flex flex-col items-center bg-background min-h-screen font-sans">
-      <div className="fixed top-4 left-4 z-50">
-        <Link href={`/${lang}`}>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <ArrowLeft className="h-4 w-4" />
-            <span className="sr-only">Back to Portfolio</span>
-          </Button>
-        </Link>
-      </div>
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
+    <div className="flex items-center gap-2 px-3 py-1.5 
+                    bg-background/40 backdrop-blur-md 
+                    border border-border/30 rounded-lg">
+      
+      {/* Home Button */}
+      <Link href={`/${lang}`}>
+        <Button variant="ghost" size="icon" className="h-7 w-7">
+          <Home className="h-4 w-4" />
+          <span className="sr-only">Back to Home</span>
+        </Button>
+      </Link>
 
-      <div className="fixed top-4 right-4 z-50">
-        <div className="flex items-center gap-1 p-1 bg-background/60 backdrop-blur-xl border border-border/30 shadow-none px-0 py-0 rounded-xl">
-          <LanguageSwitcher lang={lang} />
-          <ThemeToggle />
-        </div>
-      </div>
+      {/* Language Switcher */}
+      <LanguageSwitcher lang={lang} />
+
+      {/* Theme Toggle */}
+      <ThemeToggle />
+    </div>
+  </div>
 
       <div
         className={`w-full min-h-screen bg-background px-4 sm:px-6 md:px-8 py-6 sm:py-8 pt-16 transition-all duration-700 ease-out ${

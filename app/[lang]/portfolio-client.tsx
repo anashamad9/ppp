@@ -37,24 +37,30 @@ export default function PortfolioClient({ dict, lang }: { dict: Dictionary; lang
 
   return (
     <main className="flex flex-col items-center bg-background min-h-screen font-sans">
-      <div className="fixed top-4 right-4 z-50">
-        <div className="flex items-center gap-1 p-1 bg-background/60 backdrop-blur-xl border border-border/30 shadow-none px-0 py-0 rounded-xl">
-          <LanguageSwitcher lang={lang} />
-          <Link href={`/${lang}/articles`}>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <BookOpen className="h-4 w-4" />
-              <span className="sr-only">{dict.nav.articles}</span>
-            </Button>
-          </Link>
-          <Link href={`/${lang}/card`}>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <IdCard className="h-4 w-4" />
-              <span className="sr-only">{dict.nav.card}</span>
-            </Button>
-          </Link>
-          <ThemeToggle />
-        </div>
-      </div>
+      {/* Floating bottom-center navbar */}
+<div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+  <div className="flex items-center gap-1.5 px-1.5 py-1.5 
+                  bg-background/40 backdrop-blur-lg
+                  border border-border/90 
+                  rounded-xl">
+    <LanguageSwitcher lang={lang} />
+    <Link href={`/${lang}/articles`}>
+      <Button variant="ghost" size="icon" className="h-7 w-7">
+        <BookOpen className="h-4 w-4" />
+        <span className="sr-only">{dict.nav.articles}</span>
+      </Button>
+    </Link>
+    <Link href={`/${lang}/card`}>
+      <Button variant="ghost" size="icon" className="h-7 w-7">
+        <IdCard className="h-4 w-4" />
+        <span className="sr-only">{dict.nav.card}</span>
+      </Button>
+    </Link>
+    <ThemeToggle />
+  </div>
+</div>
+
+
       <div className="w-full min-h-screen bg-background px-4 sm:px-6 md:px-8 py-6 sm:py-8 pt-16">
         <Card className="border-none bg-transparent mb-8 sm:mb-16 w-full max-w-[500px] mx-auto shadow-none">
           <CardContent className="flex flex-col gap-8 sm:gap-12 p-0 sm:p-4">
