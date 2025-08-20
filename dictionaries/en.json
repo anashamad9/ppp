@@ -10,9 +10,9 @@
   },
   "topTechStack": ["Python", "LLMs", "NLP", "Data Manipulation", "TensorFlow", "RAG", "Fine Tuning"],
   "description": [
-    "Hi! I'm an AI and Machine Learning Engineer with a degree in Computer Engineering. I like building things that make life easier using data and AI. Some of my favorite projects are Onqoud, which helps restaurants understand their business better, and ElmLLM, an Arabic AI model I built from scratch. I usually work with Python, TensorFlow, and tools like Power BI to show data in a clear way.",
-    "I've won 1st place in a NASA competition and was part of the top AI project at PSUT. I'm always looking to learn more, build cool ideas, and connect with people who love working on smart and helpful tech."
-  ],
+  "Hi! I'm an <u>AI and Machine Learning Engineer</u> with a degree in <u>Computer Engineering</u>. I like building things that make life easier using <u>data</u> and <u>AI</u>. Some of my favorite projects are <u>Onqoud</u>, which helps restaurants understand their business better, and <u>ElmLLM</u>, an <u>Arabic AI model</u> I built from scratch. I usually work with <u>Python</u>, <u>TensorFlow</u>, and tools like <u>Power BI</u> to show data in a clear way.",
+  "I've won <u>1st place</u> in a <u>NASA competition</u> and was part of the top <u>AI project</u> at <u>PSUT</u>. I'm always looking to <u>learn more</u>, <u>build cool ideas</u>, and <u>connect</u> with people who love working on <u>smart and helpful tech</u>."
+],
   "cta": {
     "contact": "Contact me",
     "resume": "View Resume"

@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -23,7 +24,7 @@ import {
   Bot,
   Phone,
 } from "lucide-react"
-import ContactModal from "@/components/contact-modal" // Import ContactModal
+import ContactModal from "@/components/contact-modal"
 
 type Dictionary = Awaited<ReturnType<typeof getDictionary>>
 
@@ -38,28 +39,29 @@ export default function PortfolioClient({ dict, lang }: { dict: Dictionary; lang
   return (
     <main className="flex flex-col items-center bg-background min-h-screen font-sans">
       {/* Floating bottom-center navbar */}
-<div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-  <div className="flex items-center gap-1.5 px-1.5 py-1.5 
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+        <div
+          className="flex items-center gap-1.5 px-1.5 py-1.5 
                   bg-background/40 backdrop-blur-lg
                   border border-border/90 
-                  rounded-xl">
-    <LanguageSwitcher lang={lang} />
-    <Link href={`/${lang}/articles`}>
-      <Button variant="ghost" size="icon" className="h-7 w-7">
-        <BookOpen className="h-4 w-4" />
-        <span className="sr-only">{dict.nav.articles}</span>
-      </Button>
-    </Link>
-    <Link href={`/${lang}/card`}>
-      <Button variant="ghost" size="icon" className="h-7 w-7">
-        <IdCard className="h-4 w-4" />
-        <span className="sr-only">{dict.nav.card}</span>
-      </Button>
-    </Link>
-    <ThemeToggle />
-  </div>
-</div>
-
+                  rounded-xl"
+        >
+          <LanguageSwitcher lang={lang} />
+          <Link href={`/${lang}/articles`}>
+            <Button variant="ghost" size="icon" className="h-7 w-7">
+              <BookOpen className="h-4 w-4" />
+              <span className="sr-only">{dict.nav.articles}</span>
+            </Button>
+          </Link>
+          <Link href={`/${lang}/card`}>
+            <Button variant="ghost" size="icon" className="h-7 w-7">
+              <IdCard className="h-4 w-4" />
+              <span className="sr-only">{dict.nav.card}</span>
+            </Button>
+          </Link>
+          <ThemeToggle />
+        </div>
+      </div>
 
       <div className="w-full min-h-screen bg-background px-4 sm:px-6 md:px-8 py-6 sm:py-8 pt-16">
         <Card className="border-none bg-transparent mb-8 sm:mb-16 w-full max-w-[500px] mx-auto shadow-none">
@@ -72,14 +74,15 @@ export default function PortfolioClient({ dict, lang }: { dict: Dictionary; lang
               setShowModal={setShowContactModal}
               dict={dict}
             />
-            <Experience isLoaded={isLoaded} experiences={dict.experiences} />
-            <Education isLoaded={isLoaded} education={dict.education} />
-            <CoreTechStack isLoaded={isLoaded} coreStack={coreStack} dict={dict} />
-            <Achievements isLoaded={isLoaded} achievements={dict.achievements} />
-            <Certifications isLoaded={isLoaded} certifications={dict.certifications} />
-            <Projects isLoaded={isLoaded} projects={dict.projects} />
+            {/* pass dict + lang so headings localize */}
+            <Experience isLoaded={isLoaded} experiences={dict.experiences} dict={dict} lang={lang} />
+            <Education isLoaded={isLoaded} education={dict.education} dict={dict} lang={lang} />
+            <CoreTechStack isLoaded={isLoaded} coreStack={coreStack} dict={dict} lang={lang} />
+            <Achievements isLoaded={isLoaded} achievements={dict.achievements} dict={dict} lang={lang} />
+            <Certifications isLoaded={isLoaded} certifications={dict.certifications} dict={dict} lang={lang} />
+            <Projects isLoaded={isLoaded} projects={dict.projects} dict={dict} lang={lang} />
             <Articles isLoaded={isLoaded} articles={dict.articles} lang={lang} dict={dict} />
-            <SocialLinks isLoaded={isLoaded} links={dict.socialLinks} dict={dict} />
+            <SocialLinks isLoaded={isLoaded} links={dict.socialLinks} dict={dict} lang={lang} />
           </CardContent>
         </Card>
       </div>
@@ -89,7 +92,7 @@ export default function PortfolioClient({ dict, lang }: { dict: Dictionary; lang
   )
 }
 
-// Dummy data for CoreTechStack as it's not in the dictionary
+/* ---------- Tech stack data ---------- */
 const coreStack = [
   {
     category: "Coding",
@@ -113,6 +116,8 @@ const coreStack = [
     items: [{ name: "GitHub" }, { name: "AWS" }, { name: "Hugging Face" }, { name: "Oracle" }],
   },
 ]
+
+/* ---------- Sections ---------- */
 
 function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
   return (
@@ -162,9 +167,11 @@ function Description({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }
     >
       <div className="flex flex-col gap-4 sm:gap-5">
         {dict.description.map((paragraph, index) => (
-          <p key={index} className="text-sm text-foreground">
-            {paragraph}
-          </p>
+          <p
+            key={index}
+            className="text-sm text-foreground leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: paragraph }}
+          />
         ))}
       </div>
     </div>
@@ -194,44 +201,46 @@ function CTAButtons({
         className="w-full sm:w-auto inline-flex h-[34px] items-center justify-center gap-2.5 ps-4 pe-3 py-0 bg-primary rounded-[99px] hover:bg-primary/90 text-primary-foreground"
       >
         <span className="font-medium text-[13px] leading-5 text-primary-foreground">{dict.cta.contact}</span>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="12"
-          height="12"
-          viewBox="0 0 12 12"
-          className="text-primary-foreground"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" className="text-primary-foreground">
           <title>chevron-right</title>
           <g fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" stroke="currentColor">
             <polyline points="4.25 10.25 8.5 6 4.25 1.75"></polyline>
           </g>
         </svg>
       </Button>
-      <a 
-  href="https://drive.google.com/uc?export=download&id=1HtFK1I2LFlT8RdGiS-9T3Ev92WVDLul-" 
-  download
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <Button variant="outline" className="w-full sm:w-auto rounded-[99px] h-[34px] bg-transparent">
-    <span className="text-[13px] leading-5">{dict.cta.resume}</span>
-  </Button>
-</a>
+      <a
+        href="https://drive.google.com/uc?export=download&id=1HtFK1I2LFlT8RdGiS-9T3Ev92WVDLul-"
+        download
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Button variant="outline" className="w-full sm:w-auto rounded-[99px] h-[34px] bg-transparent">
+          <span className="text-[13px] leading-5">{dict.cta.resume}</span>
+        </Button>
+      </a>
     </div>
   )
 }
 
-function Experience({ isLoaded, experiences }: { isLoaded: boolean; experiences: Dictionary["experiences"] }) {
+/* ---------- Localized sections ---------- */
+
+function Experience({
+  isLoaded,
+  experiences,
+  dict,
+  lang,
+}: {
+  isLoaded: boolean
+  experiences: Dictionary["experiences"]
+  dict: Dictionary
+  lang: Locale
+}) {
   const [expandedJobs, setExpandedJobs] = useState<Set<string>>(new Set())
 
   const toggleJobExpansion = (jobKey: string) => {
-    const newExpanded = new Set(expandedJobs)
-    if (newExpanded.has(jobKey)) {
-      newExpanded.delete(jobKey)
-    } else {
-      newExpanded.add(jobKey)
-    }
-    setExpandedJobs(newExpanded)
+    const s = new Set(expandedJobs)
+    s.has(jobKey) ? s.delete(jobKey) : s.add(jobKey)
+    setExpandedJobs(s)
   }
 
   return (
@@ -241,15 +250,15 @@ function Experience({ isLoaded, experiences }: { isLoaded: boolean; experiences:
       }`}
       style={{ transitionDelay: "400ms" }}
     >
-      <h2 className="text-sm text-muted-foreground uppercase">EXPERIENCE</h2>
+      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
+        {dict.sections.experience}
+      </h2>
       <div className="flex flex-col gap-4">
         {experiences.map((exp) => {
           const jobKey = exp.role + exp.company
           const isExpanded = expandedJobs.has(jobKey)
           const shouldTruncate = exp.description.length > 120
-          const displayDescription =
-            shouldTruncate && !isExpanded ? exp.description.substring(0, 120) + "..." : exp.description
-
+          const displayDescription = shouldTruncate && !isExpanded ? exp.description.substring(0, 120) + "..." : exp.description
           return (
             <div key={jobKey} className="flex flex-col gap-y-[-2]">
               <div className="flex items-baseline justify-between">
@@ -263,13 +272,8 @@ function Experience({ isLoaded, experiences }: { isLoaded: boolean; experiences:
                 <p className="text-sm text-muted-foreground">{displayDescription}</p>
                 {shouldTruncate && (
                   <div className="flex justify-center">
-                    <button
-                      onClick={() => toggleJobExpansion(jobKey)}
-                      className="p-1 hover:bg-secondary/50 rounded transition-colors"
-                    >
-                      <ChevronDown
-                        className={`h-3 w-3 text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`}
-                      />
+                    <button onClick={() => toggleJobExpansion(jobKey)} className="p-1 hover:bg-secondary/50 rounded transition-colors">
+                      <ChevronDown className={`h-3 w-3 text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                     </button>
                   </div>
                 )}
@@ -282,7 +286,17 @@ function Experience({ isLoaded, experiences }: { isLoaded: boolean; experiences:
   )
 }
 
-function Education({ isLoaded, education }: { isLoaded: boolean; education: Dictionary["education"] }) {
+function Education({
+  isLoaded,
+  education,
+  dict,
+  lang,
+}: {
+  isLoaded: boolean
+  education: Dictionary["education"]
+  dict: Dictionary
+  lang: Locale
+}) {
   return (
     <div
       className={`flex flex-col gap-6 transition-all duration-500 ease-out ${
@@ -290,7 +304,9 @@ function Education({ isLoaded, education }: { isLoaded: boolean; education: Dict
       }`}
       style={{ transitionDelay: "500ms" }}
     >
-      <h2 className="text-sm text-muted-foreground uppercase">EDUCATION</h2>
+      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
+        {dict.sections.education}
+      </h2>
       <div className="flex flex-col gap-6">
         {education.map((edu) => (
           <div key={edu.institution} className="flex flex-col gap-1">
@@ -307,56 +323,78 @@ function Education({ isLoaded, education }: { isLoaded: boolean; education: Dict
   )
 }
 
-import React from "react"
-
+/* prettier, glassy Tech Stack */
 function CoreTechStack({
   isLoaded,
   coreStack,
   dict,
+  lang,
 }: {
   isLoaded: boolean
   coreStack: typeof coreStack
   dict: Dictionary
+  lang: Locale
 }) {
   return (
-    <div
-      className={`flex flex-col gap-6 transition-all duration-500 ease-out ${
+    <section
+      className={`flex flex-col gap-4 transition-all duration-500 ease-out ${
         isLoaded ? "opacity-100 blur-none translate-y-0" : "opacity-0 blur-[4px] translate-y-2"
       }`}
       style={{ transitionDelay: "550ms" }}
     >
-      <h2 className="text-sm text-muted-foreground uppercase">{dict.sections.tech_stack}</h2>
-      <div className="space-y-4">
-        {coreStack.map((category) => (
-          <div key={category.category} className="group">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-2 h-2 rounded-full bg-primary"></div>
-              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                {category.category}
-              </span>
-            </div>
-            <div className="ps-5 border-s border-border/50">
-              <div className="flex flex-wrap">
-                {category.items.map((item, index) => (
-                  <React.Fragment key={item.name}>
-                    <span className="text-xs text-foreground/80 hover:text-foreground transition-colors cursor-default">
-                      {item.name}
-                    </span>
-                    {index < category.items.length - 1 && (
-                      <span className="text-xs text-muted-foreground mx-1.5">-</span>
-                    )}
-                  </React.Fragment>
-                ))}
+      <div className="flex items-center justify-between">
+        <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
+          {dict.sections.tech_stack}
+        </h2>
+        <span className="text-[11px] text-muted-foreground/70">recent tools • compact view</span>
+      </div>
+
+      <div className="grid grid-cols-1 gap-3">
+        {coreStack.map((cat) => (
+          <div key={cat.category} className="rounded-xl border border-border/60 bg-background/40 backdrop-blur-md px-3 py-3">
+            <div className="mb-2 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />
+                <span className="text-xs font-medium tracking-wider text-foreground/90 uppercase">{cat.category}</span>
               </div>
+              <span className="text-[11px] text-muted-foreground/70">{cat.items.length}</span>
+            </div>
+
+            <div className="flex flex-wrap gap-1.5">
+              {cat.items.map((it) => (
+                <span
+                  key={it.name}
+                  title={it.name}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border/60 
+                             bg-neutral-100/70 dark:bg-neutral-900/40 px-2.5 py-1 
+                             text-[11px] text-foreground/90 hover:text-foreground
+                             hover:-translate-y-[1px] transition-transform"
+                >
+                  <span className="grid h-4 w-4 place-items-center rounded-full bg-primary/10 text-[9px] font-semibold">
+                    {it.name.slice(0, 1)}
+                  </span>
+                  {it.name}
+                </span>
+              ))}
             </div>
           </div>
         ))}
       </div>
-    </div>
+    </section>
   )
 }
 
-function Achievements({ isLoaded, achievements }: { isLoaded: boolean; achievements: Dictionary["achievements"] }) {
+function Achievements({
+  isLoaded,
+  achievements,
+  dict,
+  lang,
+}: {
+  isLoaded: boolean
+  achievements: Dictionary["achievements"]
+  dict: Dictionary
+  lang: Locale
+}) {
   return (
     <div
       className={`flex flex-col gap-6 transition-all duration-500 ease-out ${
@@ -364,7 +402,9 @@ function Achievements({ isLoaded, achievements }: { isLoaded: boolean; achieveme
       }`}
       style={{ transitionDelay: "600ms" }}
     >
-      <h2 className="text-sm text-muted-foreground uppercase">ACHIEVEMENTS</h2>
+      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
+        {dict.sections.achievements}
+      </h2>
       <div className="flex flex-col gap-6">
         {achievements.map((achievement) => (
           <div key={achievement.title} className="flex flex-col gap-1">
@@ -384,9 +424,13 @@ function Achievements({ isLoaded, achievements }: { isLoaded: boolean; achieveme
 function Certifications({
   isLoaded,
   certifications,
+  dict,
+  lang,
 }: {
   isLoaded: boolean
   certifications: Dictionary["certifications"]
+  dict: Dictionary
+  lang: Locale
 }) {
   return (
     <div
@@ -395,7 +439,9 @@ function Certifications({
       }`}
       style={{ transitionDelay: "650ms" }}
     >
-      <h2 className="text-sm text-muted-foreground uppercase">CERTIFICATIONS & COURSES</h2>
+      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
+        {dict.sections.certifications}
+      </h2>
       <div className="flex flex-col gap-6">
         {certifications.map((cert) => (
           <div key={cert.title} className="flex flex-col gap-1">
@@ -412,7 +458,17 @@ function Certifications({
   )
 }
 
-function Projects({ isLoaded, projects }: { isLoaded: boolean; projects: Dictionary["projects"] }) {
+function Projects({
+  isLoaded,
+  projects,
+  dict,
+  lang,
+}: {
+  isLoaded: boolean
+  projects: Dictionary["projects"]
+  dict: Dictionary
+  lang: Locale
+}) {
   return (
     <div
       className={`flex flex-col gap-6 transition-all duration-500 ease-out ${
@@ -420,7 +476,9 @@ function Projects({ isLoaded, projects }: { isLoaded: boolean; projects: Diction
       }`}
       style={{ transitionDelay: "700ms" }}
     >
-      <h2 className="text-sm text-muted-foreground uppercase">PROJECTS</h2>
+      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
+        {dict.sections.projects}
+      </h2>
       <div className="flex flex-col gap-6">
         {projects.map((project) => (
           <div key={project.title} className="flex flex-col gap-3 p-4 border border-border rounded-lg bg-card">
@@ -453,7 +511,6 @@ function Projects({ isLoaded, projects }: { isLoaded: boolean; projects: Diction
               </div>
             </div>
             <p className="text-sm text-muted-foreground">{project.description}</p>
-            {/* safely handle undefined tech array */}
             {!!project.tech?.length && (
               <div className="flex flex-wrap gap-1">
                 {project.tech.map((tech) => (
@@ -478,8 +535,12 @@ function Articles({
   articles,
   lang,
   dict,
-}: { isLoaded: boolean; articles: Dictionary["articles"]; lang: Locale; dict: Dictionary }) {
-  // Filter only enabled articles
+}: {
+  isLoaded: boolean
+  articles: Dictionary["articles"]
+  lang: Locale
+  dict: Dictionary
+}) {
   const enabledArticles = articles.filter((article) => article.enabled)
 
   return (
@@ -489,13 +550,12 @@ function Articles({
       }`}
       style={{ transitionDelay: "750ms" }}
     >
-      <h2 className="text-sm text-muted-foreground uppercase">{dict.sections.articles}</h2>
+      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
+        {dict.sections.articles}
+      </h2>
       <div className="flex flex-col gap-6">
         {enabledArticles.slice(0, 5).map((article) => (
-          <div
-            key={article.id}
-            className="flex flex-col gap-3 py-4 hover:bg-secondary/20 transition-colors cursor-pointer rounded-lg px-2"
-          >
+          <div key={article.id} className="flex flex-col gap-3 py-4 hover:bg-secondary/20 transition-colors cursor-pointer rounded-lg px-2">
             <div className="flex items-start justify-between">
               <div className="flex flex-col gap-1">
                 <h3 className="text-sm font-medium text-foreground">{article.topic}</h3>
@@ -505,10 +565,7 @@ function Articles({
                   <span>{article.readTime}</span>
                 </div>
               </div>
-              <Link
-                href={`/${lang}/articles`}
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
+              <Link href={`/${lang}/articles`} className="text-muted-foreground hover:text-foreground transition-colors">
                 <ExternalLink className="h-4 w-4" />
               </Link>
             </div>
@@ -526,7 +583,13 @@ function SocialLinks({
   isLoaded,
   links,
   dict,
-}: { isLoaded: boolean; links: Dictionary["socialLinks"]; dict: Dictionary }) {
+  lang,
+}: {
+  isLoaded: boolean
+  links: Dictionary["socialLinks"]
+  dict: Dictionary
+  lang: Locale
+}) {
   const getIcon = (label: string) => {
     switch (label) {
       case "Email":
@@ -558,7 +621,9 @@ function SocialLinks({
       }`}
       style={{ transitionDelay: "800ms" }}
     >
-      <h2 className="text-sm text-muted-foreground uppercase">{dict.sections.social}</h2>
+      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
+        {dict.sections.social}
+      </h2>
       <div className="flex flex-col gap-3">
         {links.map((link) => (
           <div key={link.label} className="group">
