@@ -81,7 +81,7 @@ export default function ContactModal({
         {/* Header Image */}
         <div className="w-full h-32 relative">
           <img
-            src="https://images.hdqwalls.com/wallpapers/night-sky-digital-art-4k-fc.jpg"
+            src="https://rare-gallery.com/mocahbig/83883-artist-artwork-digital-art-hd-4k-artstation.jpg"
             alt="Night Sky Digital Art"
             className="w-full h-full object-cover"
           />
