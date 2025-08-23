@@ -63,7 +63,7 @@ export default function BottomNav({
                   className={cls(
                     "grid place-items-center rounded-xl border transition-all h-8 w-8",
                     active
-                      ? "border-white/30 bg-primary/10 text-white bg-black dark:bg-white dark:text-black dark:border-white/80"
+                      ? "border-white/30 text-white bg-black dark:bg-white dark:text-black dark:border-white/80"
                       : "border-border/60 hover:border-primary/50"
                   )}
                 >
