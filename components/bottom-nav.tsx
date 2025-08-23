@@ -53,7 +53,7 @@ export default function BottomNav({
 
   return (
     <nav className="fixed bottom-3 left-1/2 z-50 -translate-x-1/2 select-none">
-      <div className="px-2.5 py-1.5 rounded-2xl border border-border/70 bg-background/70 backdrop-blur-md">
+      <div className="px-2.5 py-1.5 rounded-2xl border border-border/60 bg-background/70 backdrop-blur-xl">
         <ul className="flex items-center gap-2.5">
           {items.map((item) => {
             const active = "href" in item ? isActive(item.href) : false
@@ -63,7 +63,7 @@ export default function BottomNav({
                   className={cls(
                     "grid place-items-center rounded-xl border transition-all h-8 w-8",
                     active
-                      ? "border-primary/60 bg-primary/10 text-primary"
+                      ? "border-white/30 bg-primary/10 text-white bg-black dark:bg-white dark:text-black dark:border-white/80"
                       : "border-border/60 hover:border-primary/50"
                   )}
                 >

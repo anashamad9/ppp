@@ -128,7 +128,7 @@ export default function ArticlesClient({ dict, lang }: { dict: Dictionary; lang:
               {articles.map((article, index) => (
                 <div
                   key={article.id}
-                  className="py-4 hover:bg-secondary/20 transition-colors cursor-pointer rounded-lg px-2"
+                  className="py-4 hover:bg-secondary/70 transition-colors cursor-pointer rounded-xl px-4 border border"
                   onClick={() => setSelectedArticle(article.id)}
                   style={{
                     animationDelay: `${index * 100}ms`,
