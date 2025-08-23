@@ -1,20 +1,21 @@
+// =============================================
+// File: (your page) PortfolioClient.tsx  — UPDATED
+// Replace your existing file content with this
+// =============================================
 "use client"
 
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { ThemeToggle } from "@/components/theme-toggle"
 import Image from "next/image"
 import Link from "next/link"
-import { useState, useEffect } from "react"
 import type { Locale } from "@/i18n-config"
-import LanguageSwitcher from "@/components/language-switcher"
 import type { getDictionary } from "@/lib/dictionaries"
 import {
   ArrowUpRight,
   ExternalLink,
   Github,
-  BadgeIcon as IdCard,
+  User as IdCard,
   Mail,
   Twitter,
   Trophy,
@@ -25,7 +26,9 @@ import {
   Phone,
 } from "lucide-react"
 import ContactModal from "@/components/contact-modal"
+import BottomNav from "@/components/bottom-nav"
 
+// Types
 type Dictionary = Awaited<ReturnType<typeof getDictionary>>
 
 export default function PortfolioClient({ dict, lang }: { dict: Dictionary; lang: Locale }) {
@@ -37,44 +40,16 @@ export default function PortfolioClient({ dict, lang }: { dict: Dictionary; lang
   }, [])
 
   return (
-    <main className="flex flex-col items-center bg-background min-h-screen font-sans">
-      {/* Floating bottom-center navbar */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-        <div
-          className="flex items-center gap-1.5 px-1.5 py-1.5 
-                  bg-background/40 backdrop-blur-lg
-                  border border-border/90 
-                  rounded-xl"
-        >
-          <LanguageSwitcher lang={lang} />
-          <Link href={`/${lang}/articles`}>
-            <Button variant="ghost" size="icon" className="h-7 w-7">
-              <BookOpen className="h-4 w-4" />
-              <span className="sr-only">{dict.nav.articles}</span>
-            </Button>
-          </Link>
-          <Link href={`/${lang}/card`}>
-            <Button variant="ghost" size="icon" className="h-7 w-7">
-              <IdCard className="h-4 w-4" />
-              <span className="sr-only">{dict.nav.card}</span>
-            </Button>
-          </Link>
-          <ThemeToggle />
-        </div>
-      </div>
+    <main className="flex min-h-screen flex-col items-center bg-background font-sans">
+      {/* NEW: Bottom nav with square tiles */}
+      <BottomNav lang={lang} onContactClick={() => setShowContactModal(true)} />
 
-      <div className="w-full min-h-screen bg-background px-4 sm:px-6 md:px-8 py-6 sm:py-8 pt-16">
-        <Card className="border-none bg-transparent mb-8 sm:mb-16 w-full max-w-[500px] mx-auto shadow-none">
-          <CardContent className="flex flex-col gap-8 sm:gap-12 p-0 sm:p-4">
+      <div className="w-full min-h-screen bg-background px-4 pt-16 sm:px-6 md:px-8 sm:py-8">
+        <Card className="mb-8 w-full max-w-[500px] border-none bg-transparent shadow-none sm:mb-16 mx-auto">
+          <CardContent className="flex flex-col gap-8 p-0 sm:gap-12 sm:p-4">
             <Header isLoaded={isLoaded} dict={dict} />
             <Description isLoaded={isLoaded} dict={dict} />
-            <CTAButtons
-              isLoaded={isLoaded}
-              showModal={showContactModal}
-              setShowModal={setShowContactModal}
-              dict={dict}
-            />
-            {/* pass dict + lang so headings localize */}
+            <CTAButtons isLoaded={isLoaded} setShowModal={setShowContactModal} dict={dict} />
             <Experience isLoaded={isLoaded} experiences={dict.experiences} dict={dict} lang={lang} />
             <Education isLoaded={isLoaded} education={dict.education} dict={dict} lang={lang} />
             <CoreTechStack isLoaded={isLoaded} coreStack={coreStack} dict={dict} lang={lang} />
@@ -117,13 +92,12 @@ const coreStack = [
   },
 ]
 
-/* ---------- Sections ---------- */
-
+/* ---------- Sections (unchanged below this line) ---------- */
 function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
   return (
     <header
       className={`flex items-center gap-4 transition-all duration-500 ease-out ${
-        isLoaded ? "opacity-100 blur-none translate-y-0" : "opacity-0 blur-[4px] translate-y-2"
+        isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
       }`}
       style={{ transitionDelay: "100ms" }}
     >
@@ -137,16 +111,16 @@ function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
         />
       </div>
       <div className="flex flex-col gap-1">
-        <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-foreground">{dict.header.name}</h1>
+        <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">{dict.header.name}</h1>
         <div className="flex items-center gap-2">
           <p className="text-sm font-medium text-muted-foreground">{dict.header.role}</p>
-          <span className="text-xs text-muted-foreground/70 font-extralight">• {dict.header.location}</span>
+          <span className="font-extralight text-xs text-muted-foreground/70">• {dict.header.location}</span>
         </div>
-        <div className="flex flex-wrap gap-1.5 mt-2">
+        <div className="mt-2 flex flex-wrap gap-1.5">
           {dict.topTechStack.map((tech) => (
             <span
               key={tech}
-              className="px-2 py-0.5 text-xs bg-secondary text-secondary-foreground rounded-md border hover:bg-secondary/80 hover:scale-105 transition-all duration-200 cursor-default"
+              className="cursor-default rounded-md border bg-secondary px-2 py-0.5 text-xs text-secondary-foreground transition-all duration-200 hover:scale-105 hover:bg-secondary/80"
             >
               {tech}
             </span>
@@ -160,18 +134,14 @@ function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
 function Description({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
   return (
     <div
-      className={`flex flex-col gap-4 sm:gap-6 transition-all duration-500 ease-out ${
-        isLoaded ? "opacity-100 blur-none translate-y-0" : "opacity-0 blur-[4px] translate-y-2"
+      className={`flex flex-col gap-4 transition-all duration-500 ease-out ${
+        isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
       }`}
       style={{ transitionDelay: "200ms" }}
     >
       <div className="flex flex-col gap-4 sm:gap-5">
         {dict.description.map((paragraph, index) => (
-          <p
-            key={index}
-            className="text-sm text-foreground leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: paragraph }}
-          />
+          <p key={index} className="text-sm leading-relaxed text-foreground" dangerouslySetInnerHTML={{ __html: paragraph }} />
         ))}
       </div>
     </div>
@@ -184,45 +154,37 @@ function CTAButtons({
   dict,
 }: {
   isLoaded: boolean
-  showModal: boolean
   setShowModal: (show: boolean) => void
   dict: Dictionary
 }) {
   return (
     <div
-      className={`flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-2.5 transition-all duration-500 ease-out ${
-        isLoaded ? "opacity-100 blur-none translate-y-0" : "opacity-0 blur-[4px] translate-y-2"
+      className={`flex flex-col items-start gap-3 transition-all duration-500 ease-out sm:flex-row sm:items-center sm:gap-2.5 ${
+        isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
       }`}
       style={{ transitionDelay: "300ms" }}
     >
       <Button
         variant="default"
         onClick={() => setShowModal(true)}
-        className="w-full sm:w-auto inline-flex h-[34px] items-center justify-center gap-2.5 ps-4 pe-3 py-0 bg-primary rounded-[99px] hover:bg-primary/90 text-primary-foreground"
+        className="inline-flex h-[34px] w-full items-center justify-center gap-2.5 rounded-[99px] bg-primary ps-4 pe-3 py-0 text-primary-foreground hover:bg-primary/90 sm:w-auto"
       >
-        <span className="font-medium text-[13px] leading-5 text-primary-foreground">{dict.cta.contact}</span>
+        <span className="text-[13px] font-medium leading-5 text-primary-foreground">{dict.cta.contact}</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" className="text-primary-foreground">
           <title>chevron-right</title>
-          <g fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" stroke="currentColor">
+          <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5">
             <polyline points="4.25 10.25 8.5 6 4.25 1.75"></polyline>
           </g>
         </svg>
       </Button>
-      <a
-        href="https://drive.google.com/uc?export=download&id=1HtFK1I2LFlT8RdGiS-9T3Ev92WVDLul-"
-        download
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <Button variant="outline" className="w-full sm:w-auto rounded-[99px] h-[34px] bg-transparent">
+      <a href="https://drive.google.com/uc?export=download&id=1HtFK1I2LFlT8RdGiS-9T3Ev92WVDLul-" download target="_blank" rel="noopener noreferrer">
+        <Button variant="outline" className="h-[34px] w-full rounded-[99px] bg-transparent sm:w-auto">
           <span className="text-[13px] leading-5">{dict.cta.resume}</span>
         </Button>
       </a>
     </div>
   )
 }
-
-/* ---------- Localized sections ---------- */
 
 function Experience({
   isLoaded,
@@ -246,13 +208,11 @@ function Experience({
   return (
     <div
       className={`flex flex-col gap-4 transition-all duration-500 ease-out ${
-        isLoaded ? "opacity-100 blur-none translate-y-0" : "opacity-0 blur-[4px] translate-y-2"
+        isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
       }`}
       style={{ transitionDelay: "400ms" }}
     >
-      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
-        {dict.sections.experience}
-      </h2>
+      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>{dict.sections.experience}</h2>
       <div className="flex flex-col gap-4">
         {experiences.map((exp) => {
           const jobKey = exp.role + exp.company
@@ -272,7 +232,7 @@ function Experience({
                 <p className="text-sm text-muted-foreground">{displayDescription}</p>
                 {shouldTruncate && (
                   <div className="flex justify-center">
-                    <button onClick={() => toggleJobExpansion(jobKey)} className="p-1 hover:bg-secondary/50 rounded transition-colors">
+                    <button onClick={() => toggleJobExpansion(jobKey)} className="rounded p-1 transition-colors hover:bg-secondary/50">
                       <ChevronDown className={`h-3 w-3 text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                     </button>
                   </div>
@@ -300,13 +260,11 @@ function Education({
   return (
     <div
       className={`flex flex-col gap-6 transition-all duration-500 ease-out ${
-        isLoaded ? "opacity-100 blur-none translate-y-0" : "opacity-0 blur-[4px] translate-y-2"
+        isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
       }`}
       style={{ transitionDelay: "500ms" }}
     >
-      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
-        {dict.sections.education}
-      </h2>
+      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>{dict.sections.education}</h2>
       <div className="flex flex-col gap-6">
         {education.map((edu) => (
           <div key={edu.institution} className="flex flex-col gap-1">
@@ -323,7 +281,6 @@ function Education({
   )
 }
 
-/* prettier, glassy Tech Stack */
 function CoreTechStack({
   isLoaded,
   coreStack,
@@ -338,20 +295,18 @@ function CoreTechStack({
   return (
     <section
       className={`flex flex-col gap-4 transition-all duration-500 ease-out ${
-        isLoaded ? "opacity-100 blur-none translate-y-0" : "opacity-0 blur-[4px] translate-y-2"
+        isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
       }`}
       style={{ transitionDelay: "550ms" }}
     >
       <div className="flex items-center justify-between">
-        <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
-          {dict.sections.tech_stack}
-        </h2>
+        <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>{dict.sections.tech_stack}</h2>
         <span className="text-[11px] text-muted-foreground/70">recent tools • compact view</span>
       </div>
 
       <div className="grid grid-cols-1 gap-3">
         {coreStack.map((cat) => (
-          <div key={cat.category} className="rounded-xl border border-border/60 bg-background/40 backdrop-blur-md px-3 py-3">
+          <div key={cat.category} className="rounded-xl border border-border/60 bg-background/40 px-3 py-3 backdrop-blur-md">
             <div className="mb-2 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />
@@ -365,10 +320,7 @@ function CoreTechStack({
                 <span
                   key={it.name}
                   title={it.name}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border/60 
-                             bg-neutral-100/70 dark:bg-neutral-900/40 px-2.5 py-1 
-                             text-[11px] text-foreground/90 hover:text-foreground
-                             hover:-translate-y-[1px] transition-transform"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-neutral-100/70 px-2.5 py-1 text-[11px] text-foreground/90 transition-transform hover:-translate-y-[1px] dark:bg-neutral-900/40"
                 >
                   <span className="grid h-4 w-4 place-items-center rounded-full bg-primary/10 text-[9px] font-semibold">
                     {it.name.slice(0, 1)}
@@ -398,13 +350,11 @@ function Achievements({
   return (
     <div
       className={`flex flex-col gap-6 transition-all duration-500 ease-out ${
-        isLoaded ? "opacity-100 blur-none translate-y-0" : "opacity-0 blur-[4px] translate-y-2"
+        isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
       }`}
       style={{ transitionDelay: "600ms" }}
     >
-      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
-        {dict.sections.achievements}
-      </h2>
+      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>{dict.sections.achievements}</h2>
       <div className="flex flex-col gap-6">
         {achievements.map((achievement) => (
           <div key={achievement.title} className="flex flex-col gap-1">
@@ -435,13 +385,11 @@ function Certifications({
   return (
     <div
       className={`flex flex-col gap-6 transition-all duration-500 ease-out ${
-        isLoaded ? "opacity-100 blur-none translate-y-0" : "opacity-0 blur-[4px] translate-y-2"
+        isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
       }`}
       style={{ transitionDelay: "650ms" }}
     >
-      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
-        {dict.sections.certifications}
-      </h2>
+      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>{dict.sections.certifications}</h2>
       <div className="flex flex-col gap-6">
         {certifications.map((cert) => (
           <div key={cert.title} className="flex flex-col gap-1">
@@ -472,16 +420,14 @@ function Projects({
   return (
     <div
       className={`flex flex-col gap-6 transition-all duration-500 ease-out ${
-        isLoaded ? "opacity-100 blur-none translate-y-0" : "opacity-0 blur-[4px] translate-y-2"
+        isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
       }`}
       style={{ transitionDelay: "700ms" }}
     >
-      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
-        {dict.sections.projects}
-      </h2>
+      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>{dict.sections.projects}</h2>
       <div className="flex flex-col gap-6">
         {projects.map((project) => (
-          <div key={project.title} className="flex flex-col gap-3 p-4 border border-border rounded-lg bg-card">
+          <div key={project.title} className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4">
             <div className="flex items-start justify-between">
               <div className="flex flex-col gap-1">
                 <h3 className="text-sm font-medium text-foreground">{project.title}</h3>
@@ -489,22 +435,12 @@ function Projects({
               </div>
               <div className="flex gap-2">
                 {project.github && (
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
-                  >
+                  <a href={project.github} target="_blank" rel="noopener noreferrer" className="text-muted-foreground transition-colors hover:text-foreground">
                     <Github className="h-4 w-4" />
                   </a>
                 )}
                 {project.demo && (
-                  <a
-                    href={project.demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
-                  >
+                  <a href={project.demo} target="_blank" rel="noopener noreferrer" className="text-muted-foreground transition-colors hover:text-foreground">
                     <ExternalLink className="h-4 w-4" />
                   </a>
                 )}
@@ -514,10 +450,7 @@ function Projects({
             {!!project.tech?.length && (
               <div className="flex flex-wrap gap-1">
                 {project.tech.map((tech) => (
-                  <span
-                    key={tech}
-                    className="px-2 py-0.5 text-xs bg-secondary text-secondary-foreground rounded-md border hover:bg-secondary/80 hover:scale-105 transition-all duration-200 cursor-default"
-                  >
+                  <span key={tech} className="cursor-default rounded-md border bg-secondary px-2 py-0.5 text-xs text-secondary-foreground transition-all duration-200 hover:scale-105 hover:bg-secondary/80">
                     {tech}
                   </span>
                 ))}
@@ -546,16 +479,14 @@ function Articles({
   return (
     <div
       className={`flex flex-col gap-6 transition-all duration-500 ease-out ${
-        isLoaded ? "opacity-100 blur-none translate-y-0" : "opacity-0 blur-[4px] translate-y-2"
+        isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
       }`}
       style={{ transitionDelay: "750ms" }}
     >
-      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
-        {dict.sections.articles}
-      </h2>
+      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>{dict.sections.articles}</h2>
       <div className="flex flex-col gap-6">
         {enabledArticles.slice(0, 5).map((article) => (
-          <div key={article.id} className="flex flex-col gap-3 py-4 hover:bg-secondary/20 transition-colors cursor-pointer rounded-lg px-2">
+          <div key={article.id} className="cursor-pointer rounded-lg px-2 py-4 transition-colors hover:bg-secondary/20">
             <div className="flex items-start justify-between">
               <div className="flex flex-col gap-1">
                 <h3 className="text-sm font-medium text-foreground">{article.topic}</h3>
@@ -565,13 +496,11 @@ function Articles({
                   <span>{article.readTime}</span>
                 </div>
               </div>
-              <Link href={`/${lang}/articles`} className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link href={`/${lang}/articles`} className="text-muted-foreground transition-colors hover:text-foreground">
                 <ExternalLink className="h-4 w-4" />
               </Link>
             </div>
-            <p className="text-sm text-muted-foreground">
-              {article.content ? article.content.substring(0, 120) + "..." : "Click to read more..."}
-            </p>
+            <p className="text-sm text-muted-foreground">{article.content ? article.content.substring(0, 120) + "..." : "Click to read more..."}</p>
           </div>
         ))}
       </div>
@@ -617,35 +546,26 @@ function SocialLinks({
   return (
     <div
       className={`flex flex-col gap-6 transition-all duration-500 ease-out ${
-        isLoaded ? "opacity-100 blur-none translate-y-0" : "opacity-0 blur-[4px] translate-y-2"
+        isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
       }`}
       style={{ transitionDelay: "800ms" }}
     >
-      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
-        {dict.sections.social}
-      </h2>
+      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>{dict.sections.social}</h2>
       <div className="flex flex-col gap-3">
         {links.map((link) => (
           <div key={link.label} className="group">
             <a
               href={link.href}
-              className="w-full text-sm text-foreground hover:text-muted-foreground transition-colors flex items-center justify-between p-2 rounded-lg hover:bg-accent/10 group"
+              className="group flex w-full items-center justify-between rounded-lg p-2 text-sm text-foreground transition-colors hover:bg-accent/10 hover:text-muted-foreground"
               rel="noopener noreferrer"
-              target={
-                link.label === "Email" ||
-                link.label === "البريد الإلكتروني" ||
-                link.label === "Phone" ||
-                link.label === "الهاتف"
-                  ? "_self"
-                  : "_blank"
-              }
+              target={link.label === "Email" || link.label === "البريد الإلكتروني" || link.label === "Phone" || link.label === "الهاتف" ? "_self" : "_blank"}
             >
               <div className="flex items-center gap-2">
                 {getIcon(link.label)}
                 <span>{link.display || link.username || link.label}</span>
               </div>
-              <div className="flex-1 mx-4 border-b border-dotted border-muted-foreground/30"></div>
-              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              <div className="mx-4 flex-1 border-b border-dotted border-muted-foreground/30"></div>
+              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </a>
           </div>
         ))}

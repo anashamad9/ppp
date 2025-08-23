@@ -1,24 +1,20 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeft, Calendar, Clock } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
-import LanguageSwitcher from "@/components/language-switcher"
+import { Calendar, Clock } from "lucide-react"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import type { Locale } from "@/i18n-config"
 import type { getDictionary } from "@/lib/dictionaries"
-import {
-  BadgeIcon as IdCard,
-  Home,   // ✅ add this line
-} from "lucide-react"
+import BottomNav from "@/components/bottom-nav"
+import ContactModal from "@/components/contact-modal"
 
 type Dictionary = Awaited<ReturnType<typeof getDictionary>>
 
 export default function ArticlesClient({ dict, lang }: { dict: Dictionary; lang: Locale }) {
   const [isLoaded, setIsLoaded] = useState(false)
   const [selectedArticle, setSelectedArticle] = useState<number | null>(null)
+  const [showContactModal, setShowContactModal] = useState(false)
 
   useEffect(() => {
     setIsLoaded(true)
@@ -64,29 +60,8 @@ export default function ArticlesClient({ dict, lang }: { dict: Dictionary; lang:
 
     return (
       <main className="flex flex-col items-center bg-background min-h-screen font-sans">
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
-    <div className="flex items-center gap-2 px-3 py-1.5 
-                    bg-background/40 backdrop-blur-md 
-                    border border-border/30 rounded-lg">
-      
-      {/* Back Button */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-7 w-7"
-        onClick={() => setSelectedArticle(null)}
-      >
-        <ArrowLeft className="h-4 w-4" />
-        <span className="sr-only">Back to Articles</span>
-      </Button>
-
-      {/* Language Switcher */}
-      <LanguageSwitcher lang={lang} />
-
-      {/* Theme Toggle */}
-      <ThemeToggle />
-    </div>
-  </div>
+        {/* New compact bottom nav */}
+        <BottomNav lang={lang} onContactClick={() => setShowContactModal(true)} />
 
         <div className="w-full min-h-screen bg-background px-4 sm:px-6 md:px-8 py-6 sm:py-8 pt-16">
           <Card className="border-none bg-transparent mb-8 sm:mb-16 w-full max-w-[700px] mx-auto shadow-none">
@@ -106,35 +81,32 @@ export default function ArticlesClient({ dict, lang }: { dict: Dictionary; lang:
               </div>
 
               <div className="prose prose-sm max-w-none">{formatContent(article.content || "")}</div>
+              {/* Tiny back link (optional, keeps UX nice with the bottom nav) */}
+              <div className="mt-6">
+                <button
+                  className="text-xs text-muted-foreground underline hover:text-foreground"
+                  onClick={() => setSelectedArticle(null)}
+                >
+                  {lang === "ar" ? "رجوع إلى المقالات" : "Back to list"}
+                </button>
+              </div>
             </CardContent>
           </Card>
         </div>
+
+        <ContactModal
+          isOpen={showContactModal}
+          onClose={() => setShowContactModal(false)}
+          lang={lang}
+        />
       </main>
     )
   }
 
   return (
     <main className="flex flex-col items-center bg-background min-h-screen font-sans">
-      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
-    <div className="flex items-center gap-2 px-3 py-1.5 
-                    bg-background/40 backdrop-blur-md 
-                    border border-border/30 rounded-lg">
-      
-      {/* Home Button */}
-      <Link href={`/${lang}`}>
-        <Button variant="ghost" size="icon" className="h-7 w-7">
-          <Home className="h-4 w-4" />
-          <span className="sr-only">Back to Home</span>
-        </Button>
-      </Link>
-
-      {/* Language Switcher */}
-      <LanguageSwitcher lang={lang} />
-
-      {/* Theme Toggle */}
-      <ThemeToggle />
-    </div>
-  </div>
+      {/* New compact bottom nav */}
+      <BottomNav lang={lang} onContactClick={() => setShowContactModal(true)} />
 
       <div
         className={`w-full min-h-screen bg-background px-4 sm:px-6 md:px-8 py-6 sm:py-8 pt-16 transition-all duration-700 ease-out ${
@@ -186,6 +158,12 @@ export default function ArticlesClient({ dict, lang }: { dict: Dictionary; lang:
           </CardContent>
         </Card>
       </div>
+
+      <ContactModal
+        isOpen={showContactModal}
+        onClose={() => setShowContactModal(false)}
+        lang={lang}
+      />
     </main>
   )
 }
