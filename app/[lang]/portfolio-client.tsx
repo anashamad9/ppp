@@ -236,8 +236,9 @@ function Experience({
               <div className="flex items-baseline justify-between">
                 <div className="flex items-baseline gap-1">
   <span className="text-sm font-medium text-foreground">{exp.role}</span>
-  <span className="text-xs text-muted-foreground">at</span>
-
+<span className="text-xs text-muted-foreground">
+  {lang === "ar" ? "في" : "at"}
+</span>
   {/* ✅ Inline logo + company name */}
   <span className="flex items-center gap-1">
     <Image
@@ -328,7 +329,6 @@ function CoreTechStack({
         <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
           {dict.sections.tech_stack}
         </h2>
-        <span className="text-[11px] text-muted-foreground/70">logos + quick links</span>
       </div>
 
       <div className="grid grid-cols-1 gap-3">

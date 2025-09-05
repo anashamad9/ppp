@@ -7,17 +7,15 @@ import {
   Home,
   BookOpen,
   Mail,
-  User as IdCard,
   Moon,
   Sun,
   Languages,
-  ChevronRight,
-  ChevronUp,
 } from "lucide-react"
 import React, { useEffect, useMemo, useState } from "react"
 
 // simple classnames helper
-const cls = (...s: (string | false | null | undefined)[]) => s.filter(Boolean).join(" ")
+const cls = (...s: (string | false | null | undefined)[]) =>
+  s.filter(Boolean).join(" ")
 
 export default function BottomNav({
   lang,
@@ -28,7 +26,6 @@ export default function BottomNav({
 }) {
   const pathname = usePathname()
   const [theme, setTheme] = useState<"light" | "dark">("light")
-  const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const isRTL = lang === "ar"
   const t = (en: string, ar: string) => (isRTL ? ar : en)
@@ -62,16 +59,30 @@ export default function BottomNav({
   const isActive = (href: string) =>
     href === `/${lang}` ? pathname === `/${lang}` : pathname?.startsWith(href)
 
-  // Items inside the collapsible box
+  // Nav items
   const navItems: Array<
-    | { key: string; label: string; href: string; icon: React.ReactNode; onClick?: never }
-    | { key: string; label: string; href?: never; icon: React.ReactNode; onClick: () => void }
+    | { key: string; label: string; href: string; icon: React.ReactNode }
+    | { key: string; label: string; onClick: () => void; icon: React.ReactNode }
   > = useMemo(
     () => [
-      { key: "home", label: t("Home", "الرئيسية"), href: `/${lang}`, icon: <Home className="h-4 w-4" /> },
-      { key: "articles", label: t("Articles", "مقالاتي"), href: `/${lang}/articles`, icon: <BookOpen className="h-4 w-4" /> },
-      { key: "card", label: t("Card", "كرت"), href: `/${lang}/card`, icon: <IdCard className="h-4 w-4" /> },
-      { key: "contact", label: t("Contact", "تواصل"), onClick: onContactClick, icon: <Mail className="h-4 w-4" /> },
+      {
+        key: "home",
+        label: t("Home", "الرئيسية"),
+        href: `/${lang}`,
+        icon: <Home className="h-4 w-4" />,
+      },
+      {
+        key: "articles",
+        label: t("Articles", "مقالاتي"),
+        href: `/${lang}/articles`,
+        icon: <BookOpen className="h-4 w-4" />,
+      },
+      {
+        key: "contact",
+        label: t("Contact", "تواصل"),
+        onClick: onContactClick,
+        icon: <Mail className="h-4 w-4" />,
+      },
     ],
     [lang] // eslint-disable-line
   )
@@ -84,47 +95,14 @@ export default function BottomNav({
       )}
       dir={isRTL ? "rtl" : "ltr"}
     >
-      {/* Toggle button */}
-      <button
-        type="button"
-        onClick={() => setIsOpen((v) => !v)}
-        aria-expanded={isOpen}
-        aria-controls="bottom-collapsible-nav"
-        className={cls(
-          "grid place-items-center rounded-xl border border-border/60 bg-background/70 backdrop-blur-xl",
-          "h-9 w-9 shadow-sm transition-colors hover:border-primary/50"
-        )}
-        aria-label={t("Open navigation", "فتح القائمة")}
-      >
-        <ChevronUp
-          className={cls(
-            "h-5 w-5 transition-transform",
-            isOpen ? "rotate-180" : ""
-          )}
-        />
-      </button>
-
-      {/* Collapsible box */}
+      {/* Always open nav items */}
       <div
-  id="bottom-collapsible-nav"
-  role="group"
-  aria-label={t("Primary navigation", "التنقل الرئيسي")}
-  aria-hidden={!isOpen}
-  
-  className={cls(
-    "overflow-hidden rounded-2xl shadow-sm",
-    "transition-all duration-300 ease-out",
-    isOpen
-      ? "inline-flex px-2.5 py-1.5"
-      : "w-0 px-0 py-0"
-  )}
->
-        <ul
-          className={cls(
-            "flex items-center gap-1.5 flex-nowrap overflow-x-auto",
-            isOpen ? "pointer-events-auto" : "pointer-events-none"
-          )}
-        >
+        id="bottom-collapsible-nav"
+        role="group"
+        aria-label={t("Primary navigation", "التنقل الرئيسي")}
+        className="inline-flex px-2.5 py-1.5 rounded-2xl"
+      >
+        <ul className="flex items-center gap-1.5 flex-nowrap overflow-x-auto">
           {navItems.map((item) => {
             const active = "href" in item ? isActive(item.href) : false
 
@@ -139,7 +117,12 @@ export default function BottomNav({
                 )}
               >
                 <span aria-hidden="true">{item.icon}</span>
-                <span className={cls("text-xs", active ? "font-semibold" : "text-foreground")}>
+                <span
+                  className={cls(
+                    "text-xs",
+                    active ? "font-semibold" : "text-foreground"
+                  )}
+                >
                   {"label" in item ? item.label : ""}
                 </span>
               </div>
@@ -172,10 +155,11 @@ export default function BottomNav({
         </ul>
       </div>
 
-      {/* Icon-only Theme / Language (outside the collapsible box) */}
+      {/* Theme / Language buttons */}
       <div
         className={cls(
-          "flex items-center gap-1.5 rounded-2xl border-border/60 "        )}
+          "flex items-center gap-1.5 rounded-2xl border-border/60"
+        )}
       >
         <button
           type="button"
@@ -184,7 +168,11 @@ export default function BottomNav({
           aria-label={t("Toggle theme", "تبديل المظهر")}
           title={t("Toggle theme", "تبديل المظهر")}
         >
-          {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          {theme === "dark" ? (
+            <Sun className="h-4 w-4" />
+          ) : (
+            <Moon className="h-4 w-4" />
+          )}
         </button>
 
         <button

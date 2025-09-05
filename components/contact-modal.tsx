@@ -58,11 +58,11 @@ export default function ContactModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-md"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className={`relative w-full max-w-sm bg-background/95 backdrop-blur-xl shadow-2xl rounded-xl overflow-hidden ${
+        className={`relative w-full max-w-sm bg-background/95 backdrop-blur-sm shadow-2xl rounded-xl overflow-hidden ${
           isArabic ? "font-arabic" : ""
         }`}
         dir={isArabic ? "rtl" : "ltr"}
