@@ -6,7 +6,6 @@ import Link from "next/link"
 import { useState, useEffect } from "react"
 import type { Locale } from "@/i18n-config"
 import type { getDictionary } from "@/lib/dictionaries"
-import BottomNav from "@/components/bottom-nav"
 import ContactModal from "@/components/contact-modal"
 
 type Dictionary = Awaited<ReturnType<typeof getDictionary>>
@@ -60,9 +59,6 @@ export default function ArticlesClient({ dict, lang }: { dict: Dictionary; lang:
 
     return (
       <main className="flex flex-col items-center bg-background min-h-screen font-sans">
-        {/* New compact bottom nav */}
-        <BottomNav lang={lang} onContactClick={() => setShowContactModal(true)} />
-
         <div className="w-full min-h-screen bg-background px-4 sm:px-6 md:px-8 py-6 sm:py-8 pt-16">
           <Card className="border-none bg-transparent mb-8 sm:mb-16 w-full max-w-[700px] mx-auto shadow-none">
             <CardContent className="flex flex-col gap-6 p-0 sm:p-4">
@@ -105,9 +101,6 @@ export default function ArticlesClient({ dict, lang }: { dict: Dictionary; lang:
 
   return (
     <main className="flex flex-col items-center bg-background min-h-screen font-sans">
-      {/* New compact bottom nav */}
-      <BottomNav lang={lang} onContactClick={() => setShowContactModal(true)} />
-
       <div
         className={`w-full min-h-screen bg-background px-4 sm:px-6 md:px-8 py-6 sm:py-8 pt-16 transition-all duration-700 ease-out ${
           isLoaded ? "opacity-100 blur-none translate-y-0" : "opacity-0 blur-[4px] translate-y-4"

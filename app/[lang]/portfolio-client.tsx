@@ -11,6 +11,7 @@ import Image from "next/image"
 import Link from "next/link"
 import type { Locale } from "@/i18n-config"
 import type { getDictionary } from "@/lib/dictionaries"
+import { cn } from "@/lib/utils"
 import {
   ArrowUpRight,
   ExternalLink,
@@ -26,7 +27,6 @@ import {
   Phone,
 } from "lucide-react"
 import ContactModal from "@/components/contact-modal"
-import BottomNav from "@/components/bottom-nav"
 
 // Types
 type Dictionary = Awaited<ReturnType<typeof getDictionary>>
@@ -41,15 +41,12 @@ export default function PortfolioClient({ dict, lang }: { dict: Dictionary; lang
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-background font-sans">
-      {/* NEW: Bottom nav with square tiles */}
-      <BottomNav lang={lang} onContactClick={() => setShowContactModal(true)} />
-
       <div className="w-full min-h-screen bg-background px-4 pt-16 sm:px-6 md:px-8 sm:py-8">
         <Card className="mb-8 w-full max-w-[500px] border-none bg-transparent shadow-none sm:mb-16 mx-auto">
           <CardContent className="flex flex-col gap-8 p-0 sm:gap-12 sm:p-4">
             <Header isLoaded={isLoaded} dict={dict} />
             <Description isLoaded={isLoaded} dict={dict} />
-            <CTAButtons isLoaded={isLoaded} setShowModal={setShowContactModal} dict={dict} />
+            <CTAButtons isLoaded={isLoaded} setShowModal={setShowContactModal} dict={dict} lang={lang} />
             <Experience isLoaded={isLoaded} experiences={dict.experiences} dict={dict} lang={lang} />
             <Education isLoaded={isLoaded} education={dict.education} dict={dict} lang={lang} />
             <CoreTechStack isLoaded={isLoaded} coreStack={coreStack} dict={dict} lang={lang} />
@@ -108,12 +105,12 @@ const coreStack = [
 function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
   return (
     <header
-      className={`flex items-center gap-4 transition-all duration-500 ease-out ${
+      className={`flex w-full flex-col gap-3 transition-all duration-500 ease-out ${
         isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
       }`}
       style={{ transitionDelay: "100ms" }}
     >
-      <div className="flex-shrink-0">
+      <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
         <Image
           src="https://media.licdn.com/dms/image/v2/D4D03AQFcWMsi0rSkeg/profile-displayphoto-shrink_200_200/B4DZbdzBS3GwAY-/0/1747477862106?e=1759968000&v=beta&t=ma4QMe01qxwXubZu3VIMzA6Io-zSNW7JOoVpzbPzDIo"
           alt={dict.header.name}
@@ -121,23 +118,21 @@ function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
           height={80}
           className="rounded-full border-2 border-border"
         />
-      </div>
-      <div className="flex flex-col gap-1">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">{dict.header.name}</h1>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col items-start gap-1">
+          <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">{dict.header.name}</h1>
           <p className="text-sm font-medium text-muted-foreground">{dict.header.role}</p>
-          <span className="font-extralight text-xs text-muted-foreground/70">• {dict.header.location}</span>
+          <span className="text-xs text-muted-foreground/70 sm:text-sm">{dict.header.location}</span>
         </div>
-        <div className="mt-2 flex flex-wrap gap-1.5">
-          {dict.topTechStack.map((tech) => (
-            <span
-              key={tech}
-              className="cursor-default rounded-md border bg-secondary px-2 py-0.5 text-xs text-secondary-foreground transition-all duration-200 hover:scale-105 hover:bg-secondary/80"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
+      </div>
+      <div className="flex flex-wrap gap-1.5">
+        {dict.topTechStack.map((tech) => (
+          <span
+            key={tech}
+            className="cursor-default rounded-md border bg-secondary px-2 py-0.5 text-xs text-secondary-foreground transition-all duration-200 hover:scale-105 hover:bg-secondary/80"
+          >
+            {tech}
+          </span>
+        ))}
       </div>
     </header>
   )
@@ -164,10 +159,12 @@ function CTAButtons({
   isLoaded,
   setShowModal,
   dict,
+  lang,
 }: {
   isLoaded: boolean
   setShowModal: (show: boolean) => void
   dict: Dictionary
+  lang: Locale
 }) {
   return (
     <div
@@ -182,18 +179,26 @@ function CTAButtons({
         className="inline-flex h-[34px] w-full items-center justify-center gap-2.5 rounded-[99px] bg-primary ps-4 pe-3 py-0 text-primary-foreground hover:bg-primary/90 sm:w-auto"
       >
         <span className="text-[13px] font-medium leading-5 text-primary-foreground">{dict.cta.contact}</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" className="text-primary-foreground">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          className="text-primary-foreground"
+          style={{ transform: lang === "ar" ? "scaleX(-1)" : undefined }}
+        >
           <title>chevron-right</title>
           <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5">
             <polyline points="4.25 10.25 8.5 6 4.25 1.75"></polyline>
           </g>
         </svg>
       </Button>
-      <a href="https://drive.google.com/uc?export=download&id=1HtFK1I2LFlT8RdGiS-9T3Ev92WVDLul-" download target="_blank" rel="noopener noreferrer">
-        <Button variant="outline" className="h-[34px] w-full rounded-[99px] bg-transparent sm:w-auto">
-          <span className="text-[13px] leading-5">{dict.cta.resume}</span>
-        </Button>
-      </a>
+      <Button asChild variant="outline" className="h-[34px] w-full rounded-[99px] bg-transparent sm:w-auto">
+        <Link href={`/${lang}/articles`} className="flex items-center gap-2">
+          <span className="text-[13px] leading-5">{dict.nav.articles}</span>
+          <BookOpen className="h-3.5 w-3.5" />
+        </Link>
+      </Button>
     </div>
   )
 }
@@ -531,6 +536,7 @@ function Articles({
   dict: Dictionary
 }) {
   const enabledArticles = articles.filter((article) => article.enabled)
+  const [hoveredId, setHoveredId] = useState<number | null>(null)
 
   return (
     <div
@@ -540,25 +546,36 @@ function Articles({
       style={{ transitionDelay: "750ms" }}
     >
       <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>{dict.sections.articles}</h2>
-      <div className="flex flex-col gap-6">
-        {enabledArticles.slice(0, 5).map((article) => (
-          <div key={article.id} className="cursor-pointer rounded-lg px-2 py-4 transition-colors hover:bg-secondary/20">
-            <div className="flex items-start justify-between">
-              <div className="flex flex-col gap-1">
-                <h3 className="text-sm font-medium text-foreground">{article.topic}</h3>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <span>{article.date}</span>
-                  <span>•</span>
-                  <span>{article.readTime}</span>
-                </div>
-              </div>
-              <Link href={`/${lang}/articles`} className="text-muted-foreground transition-colors hover:text-foreground">
-                <ExternalLink className="h-4 w-4" />
-              </Link>
-            </div>
-            <p className="text-sm text-muted-foreground">{article.content ? article.content.substring(0, 120) + "..." : "Click to read more..."}</p>
-          </div>
-        ))}
+      <div className="flex flex-col gap-1.5">
+        {enabledArticles.slice(0, 5).map((article) => {
+          const isHovered = hoveredId === article.id
+          const isDimmed = hoveredId !== null && !isHovered
+
+          return (
+            <Link
+              key={article.id}
+              href={`/${lang}/articles`}
+              className={cn(
+                "group relative flex items-center justify-between rounded-xl px-3 py-2 text-sm transition-all duration-150",
+                isHovered
+                  ? "bg-muted/50 text-foreground shadow-sm"
+                  : "text-muted-foreground",
+                isDimmed && "opacity-40"
+              )}
+              onMouseEnter={() => setHoveredId(article.id)}
+              onMouseLeave={() => setHoveredId(null)}
+              onFocus={() => setHoveredId(article.id)}
+              onBlur={() => setHoveredId(null)}
+            >
+              <span className="flex-1 truncate font-medium transition-colors group-hover:text-primary">
+                {article.topic}
+              </span>
+              <span className="ml-4 shrink-0 text-xs font-medium text-muted-foreground group-hover:text-foreground">
+                {article.date}
+              </span>
+            </Link>
+          )
+        })}
       </div>
     </div>
   )

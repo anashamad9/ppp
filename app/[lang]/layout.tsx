@@ -2,6 +2,7 @@ import "@/app/globals.css"
 import { Inter, IBM_Plex_Sans_Arabic } from "next/font/google"
 import type React from "react"
 import { ThemeProvider } from "@/components/theme-provider"
+import { TopControls } from "@/components/top-controls"
 import { i18n, type Locale } from "@/i18n-config"
 import { getDictionary } from "@/lib/dictionaries"
 
@@ -59,6 +60,7 @@ export default function RootLayout({
       </head>
       <body className={params.lang === "ar" ? "font-arabic" : "font-sans"}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <TopControls lang={params.lang} />
           {children}
         </ThemeProvider>
       </body>

@@ -14,6 +14,7 @@ import {
   X,
 } from "lucide-react"
 import React, { useEffect, useMemo, useState } from "react"
+import { useTheme } from "next-themes"
 
 const cls = (...s: (string | false | null | undefined)[]) =>
   s.filter(Boolean).join(" ")
@@ -26,30 +27,19 @@ export default function BottomNav({
   onContactClick: () => void
 }) {
   const pathname = usePathname()
-  const [theme, setTheme] = useState<"light" | "dark">("light")
   const [isOpen, setIsOpen] = useState(false)
+  const { resolvedTheme, setTheme, theme } = useTheme()
+  const [mounted, setMounted] = useState(false)
 
   const isRTL = lang === "ar"
   const t = (en: string, ar: string) => (isRTL ? ar : en)
 
   useEffect(() => {
-    if (typeof window === "undefined") return
-    const stored = localStorage.getItem("theme") as "light" | "dark" | null
-    const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches
-    const initial: "light" | "dark" = stored ?? (systemDark ? "dark" : "light")
-    setTheme(initial)
-    document.documentElement.classList.toggle("dark", initial === "dark")
+    setMounted(true)
   }, [])
 
-  const applyTheme = (next: "light" | "dark") => {
-    setTheme(next)
-    document.documentElement.classList.toggle("dark", next === "dark")
-    try {
-      localStorage.setItem("theme", next)
-    } catch {}
-  }
-
-  const toggleTheme = () => applyTheme(theme === "light" ? "dark" : "light")
+  const currentTheme = (resolvedTheme ?? (theme === "dark" ? "dark" : "light")) as "light" | "dark"
+  const toggleTheme = () => setTheme(currentTheme === "light" ? "dark" : "light")
 
   const switchLang = () => {
     const other = lang === "ar" ? "en" : "ar"
@@ -175,21 +165,34 @@ export default function BottomNav({
             <button
               type="button"
               onClick={toggleTheme}
-              className="grid h-9 w-9 place-items-center rounded-xl border border-border/60 bg-background/70 backdrop-blur-xl hover:border-primary/50 transition-colors"
+              className="relative inline-flex h-7 w-12 items-center justify-between rounded-full border border-border/50 bg-background/70 px-1 text-muted-foreground transition-colors hover:text-foreground backdrop-blur-xl supports-[backdrop-filter]:bg-background/50"
               aria-label={t("Toggle theme", "تبديل المظهر")}
               title={t("Toggle theme", "تبديل المظهر")}
             >
-              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              <span className="pointer-events-none relative z-10 flex h-full w-1/2 items-center justify-center">
+                <Sun className="h-3 w-3" />
+              </span>
+              <span className="pointer-events-none relative z-10 flex h-full w-1/2 items-center justify-center">
+                <Moon className="h-3 w-3" />
+              </span>
+              <span
+                aria-hidden="true"
+                className={cls(
+                  "pointer-events-none absolute top-0.5 left-1 z-0 h-[20px] w-[20px] rounded-full bg-muted shadow-sm transition-transform duration-200 ease-out",
+                  mounted && currentTheme === "dark" ? "translate-x-[20px]" : "translate-x-0"
+                )}
+                style={{ transform: mounted ? undefined : "translateX(0)" }}
+              />
             </button>
 
             <button
               type="button"
               onClick={switchLang}
-              className="grid h-9 w-9 place-items-center rounded-xl border border-border/60 bg-background/70 backdrop-blur-xl hover:border-primary/50 transition-colors"
+              className="grid h-7 w-7 place-items-center rounded-full border border-border/50 bg-background/70 backdrop-blur-xl text-muted-foreground transition-colors hover:text-foreground supports-[backdrop-filter]:bg-background/50"
               aria-label={t("Switch language", "تبديل اللغة")}
               title={t("Switch language", "تبديل اللغة")}
             >
-              <Languages className="h-4 w-4" />
+              <Languages className="h-3 w-3" />
             </button>
           </div>
         </div>
