@@ -64,7 +64,6 @@ export default function PortfolioClient({ dict, lang }: { dict: Dictionary; lang
   )
 }
 
-/* ---------- Tech stack data ---------- */
 /* ---------- Tech stack data (with logos + links) ---------- */
 const coreStack = [
   {
@@ -83,9 +82,9 @@ const coreStack = [
   {
     category: "Tools",
     items: [
-      { name: "Tableau",       logo: "https://logos-world.net/wp-content/uploads/2021/10/Tableau-Symbol.png",       url: "https://www.tableau.com/" },
-      { name: "Power BI",      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/New_Power_BI_Logo.svg/2048px-New_Power_BI_Logo.svg.png",       url: "https://powerbi.microsoft.com/" },
-      { name: "Excel",         logo: "https://mailmeteor.com/logos/assets/PNG/Microsoft_Office_Excel_Logo_512px.png",url: "https://www.microsoft.com/microsoft-365/excel" },
+      { name: "Tableau",       logo: "https://img.icons8.com/?size=96&id=9Kvi1p1F0tUo&format=png",       url: "https://www.tableau.com/" },
+      { name: "Power BI",      logo: "https://img.icons8.com/?size=96&id=Ny0t2MYrJ70p&format=png",       url: "https://powerbi.microsoft.com/" },
+      { name: "Excel",         logo: "https://img.icons8.com/?size=96&id=117561&format=png",url: "https://www.microsoft.com/microsoft-365/excel" },
       { name: "Jupyter",       logo: "https://cdn.simpleicons.org/jupyter",       url: "https://jupyter.org/" },
     ],
   },
@@ -93,13 +92,12 @@ const coreStack = [
     category: "Deployment",
     items: [
       { name: "GitHub",        logo: "https://cdn.simpleicons.org/github",        url: "https://github.com/" },
-      { name: "AWS",           logo: "https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/light/aws-color.png",     url: "https://aws.amazon.com/" },
+      { name: "AWS",           logo: "https://img.icons8.com/?size=128&id=wU62u24brJ44&format=png",     url: "https://aws.amazon.com/" },
       { name: "Hugging Face",  logo: "https://cdn.simpleicons.org/huggingface",   url: "https://huggingface.co/" },
-      { name: "Oracle",        logo: "https://images.icon-icons.com/2699/PNG/512/oracle_logo_icon_168918.png",        url: "https://www.oracle.com/" },
+      { name: "Oracle",        logo: "https://img.icons8.com/?size=96&id=39913&format=png",        url: "https://www.oracle.com/" },
     ],
   },
 ]
-
 
 /* ---------- Sections (unchanged below this line) ---------- */
 function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
@@ -240,22 +238,24 @@ function Experience({
             <div key={jobKey} className="flex flex-col gap-y-[-2]">
               <div className="flex items-baseline justify-between">
                 <div className="flex items-baseline gap-1">
-  <span className="text-sm font-medium text-foreground">{exp.role}</span>
-<span className="text-xs text-muted-foreground">
-  {lang === "ar" ? "في" : "at"}
+                  <span className="text-sm font-medium text-foreground">{exp.role}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {lang === "ar" ? "في" : "at"}
+                  </span>
+                  {/* ✅ Inline logo + company name */}
+                  {/* ✅ Inline logo + company name with hover scale */}
+<span className="flex items-center gap-1 group">
+  <Image
+    src={exp.logo}
+    alt={exp.company}
+    width={14}
+    height={14}
+    className="inline-block rounded-sm transition-transform duration-300 group-hover:scale-150"
+  />
+  <span className="text-sm font-medium text-foreground">{exp.company}</span>
 </span>
-  {/* ✅ Inline logo + company name */}
-  <span className="flex items-center gap-1">
-    <Image
-      src={exp.logo}   // <-- new field you’ll add in dict.experiences
-      alt={exp.company}
-      width={14}
-      height={14}
-      className="inline-block rounded-sm"
-    />
-    <span className="text-sm font-medium text-foreground">{exp.company}</span>
-  </span>
-</div>
+
+                </div>
 
                 <span className="text-sm text-muted-foreground">{exp.period}</span>
               </div>
@@ -312,6 +312,15 @@ function Education({
   )
 }
 
+/* ------------------- Redesigned Tech Stack -------------------
+   - 3 parts in one horizontal line (Coding | Tools | Deployment)
+   - Minimal rows: logo (transparent SVG) + name only
+   - No boxes/badges around items
+   - Light stroke line between parts
+   - On small screens, keeps one-line layout via horizontal scroll
+-------------------------------------------------------------- */
+/* ------------------- Redesigned Tech Stack (FIXED RTL dividers + min width) ------------------- */
+/* ------------------- Redesigned Tech Stack (Hover black bg for text) ------------------- */
 function CoreTechStack({
   isLoaded,
   coreStack,
@@ -336,65 +345,57 @@ function CoreTechStack({
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 gap-3">
-        {coreStack.map((cat) => (
-          <div
-            key={cat.category}
-            className="rounded-2xl border border-border/60 bg-background/50 px-3 py-3 backdrop-blur-md"
-          >
-            <div className="mb-2 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />
-                <span className="text-xs font-medium tracking-wider text-foreground/90 uppercase">
+      <div className="w-full overflow-x-auto">
+        <div className="grid min-w-[80px] grid-cols-3 items-stretch">
+          {coreStack.map((cat, idx) => (
+            <div
+              key={cat.category}
+              className={cn(
+                "h-full px-4 py-1",
+                idx > 0 && "border-s border-border/60"
+              )}
+            >
+              <div className="mb-2">
+                <span className="text-[11px] tracking-wide text-muted-foreground/80 uppercase">
                   {cat.category}
                 </span>
               </div>
-              <span className="text-[11px] text-muted-foreground/70">{cat.items.length}</span>
-            </div>
 
-            <div className="flex flex-wrap gap-1.5">
-              {cat.items.map((it) => (
-                <a
-                  key={it.name}
-                  href={it.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2 rounded-full border border-border/60 bg-neutral-100/70 px-2.5 py-1.5 text-[12px] text-foreground/90 transition-all hover:-translate-y-[1px] hover:bg-neutral-100 dark:bg-neutral-900/40 dark:hover:bg-neutral-900"
-                  title={it.name}
-                >
-                  {/* Tiny inline logo */}
-                  {/* If you haven’t allowed external images yet, see note below */}
-                  <Image
-                    src={it.logo}
-                    alt={it.name}
-                    width={14}
-                    height={14}
-                    className="inline-block"
-                    unoptimized
-                  />
-                  <span className="font-medium">{it.name}</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    width="14"
-                    height="14"
-                    className="opacity-0 transition-opacity group-hover:opacity-80"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M12.5 3h4a.5.5 0 0 1 .5.5v4a.5.5 0 1 1-1 0V4.707l-8.146 8.147a.5.5 0 0 1-.708-.708L15.293 4H12.5a.5.5 0 1 1 0-1Zm-9 2A1.5 1.5 0 0 0 2 6.5v9A1.5 1.5 0 0 0 3.5 17h9a1.5 1.5 0 0 0 1.5-1.5V11a.5.5 0 0 0-1 0v4.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5H8a.5.5 0 0 0 0-1H3.5Z"
-                    />
-                  </svg>
-                </a>
-              ))}
+              <ul className="space-y-1.5">
+                {cat.items.map((it) => (
+                  <li key={it.name} className="leading-none">
+                    <a
+                      href={it.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-2 text-[12px] text-foreground/90"
+                      title={it.name}
+                    >
+                      <Image
+                        src={it.logo}
+                        alt={it.name}
+                        width={16}
+                        height={16}
+                        className="h-4 w-4 object-contain"
+                        unoptimized
+                      />
+                      <span
+                        className="px-0 transition-all duration-300 group-hover:bg-black group-hover:text-white group-hover:rounded-none dark:group-hover:bg-white dark:group-hover:text-black"
+                      >
+                        {it.name}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   )
 }
+
 
 
 function Achievements({
