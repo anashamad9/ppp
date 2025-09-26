@@ -2,11 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { Languages, Moon, Sun } from "lucide-react"
+import { Languages } from "lucide-react"
 import { useTheme } from "next-themes"
 
 import type { Locale } from "@/i18n-config"
 import { cn } from "@/lib/utils"
+import { ThemeToggleButton, useThemeTransition } from "@/components/ui/shadcn-io/theme-toggle-button"
 
 interface TopControlsProps {
   lang: Locale
@@ -17,6 +18,7 @@ export function TopControls({ lang }: TopControlsProps) {
   const pathname = usePathname()
   const { resolvedTheme, setTheme, theme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const { startTransition } = useThemeTransition()
 
   useEffect(() => {
     setMounted(true)
@@ -33,6 +35,7 @@ export function TopControls({ lang }: TopControlsProps) {
 
   const activeTheme = mounted ? resolvedTheme ?? theme : undefined
   const isDark = activeTheme === "dark"
+  const currentTheme = isDark ? "dark" : "light"
 
   const handleSwitchLang = () => {
     const other = lang === "ar" ? "en" : "ar"
@@ -50,30 +53,25 @@ export function TopControls({ lang }: TopControlsProps) {
     router.push(target)
   }
 
+  const handleToggleTheme = () => {
+    const next = isDark ? "light" : "dark"
+    startTransition(() => setTheme(next))
+  }
+
   return (
     <div className="fixed right-2.5 top-2.5 z-50 flex items-center gap-1.5">
-      <button
-        type="button"
-        onClick={() => setTheme(isDark ? "light" : "dark")}
-        className="relative inline-flex h-6 w-11 items-center justify-between rounded-full border border-border/50 bg-background/70 px-1 text-muted-foreground transition-colors hover:text-foreground backdrop-blur supports-[backdrop-filter]:bg-background/50"
+      <ThemeToggleButton
+        theme={currentTheme}
+        variant="circle-blur"
+        start="center"
+        onClick={handleToggleTheme}
+        className={cn(
+          "h-7 w-7 rounded-full border-border/50 bg-background/70 text-muted-foreground hover:text-foreground backdrop-blur supports-[backdrop-filter]:bg-background/50",
+          !mounted && "opacity-0"
+        )}
         aria-label={labels.toggle}
         title={labels.toggle}
-      >
-        <span className="pointer-events-none relative z-10 flex h-full w-1/2 items-center justify-center">
-          <Sun className="h-3 w-3" />
-        </span>
-        <span className="pointer-events-none relative z-10 flex h-full w-1/2 items-center justify-center">
-          <Moon className="h-3 w-3" />
-        </span>
-        <span
-          aria-hidden="true"
-          className={cn(
-            "pointer-events-none absolute top-0.5 left-1 z-0 h-[18px] w-[18px] rounded-full bg-muted shadow-sm transition-transform duration-200 ease-out",
-            isDark ? "translate-x-[18px]" : "translate-x-0"
-          )}
-          style={{ transform: mounted ? undefined : "translateX(0)" }}
-        />
-      </button>
+      />
       <button
         type="button"
         onClick={handleSwitchLang}
