@@ -6,7 +6,9 @@
   "header": {
     "name": "Anas Hamad",
     "role": "AI & Machine Learning Engineer",
-    "location": "Amman, Jordan"
+    "location": "Amman, Jordan",
+    "verified": "Verified",
+    "verifiedTooltip": "This person is trusted by a lot of people :)"
   },
   "topTechStack": ["Python", "LLMs", "NLP", "Data Manipulation", "TensorFlow", "RAG", "Fine Tuning"],
   "description": [
@@ -34,28 +36,28 @@
       "company": "Onqoud",
       "logo": "https://avatars.githubusercontent.com/u/198729474?s=200&v=4",
       "period": "2024 - present",
-      "description": "I led the development of Onqoud, a smart SaaS platform that uses AI insights to help restaurants predict future sales and streamline their operations with ease! I focused on designing innovative machine learning models, real-time data analytics that deliver instant results, and integrating flexible, scalable solutions using AWS to provide restaurants with a practical and intelligent experience."
+      "description": "Onqoud is a business intelligence startup product that helps restaurants and cafés use AI insights to forecast sales and streamline daily operations."
     },
     {
       "role": "Data Scientist & AI Operations",
       "company": "Digizag",
       "logo": "https://images.crunchbase.com/image/upload/c_pad,h_256,w_256,f_auto,q_auto:eco,dpr_1/q5gghnkvomhp60df5jse",
       "period": "2025 - present",
-      "description": "I develop internal systems to automate the processes of extracting, reading, cleaning, organizing, and presenting data in clear, easy-to-read reports."
+      "description": "DigiZag is a digital performance marketing company focused on data-driven growth and affiliate programs for regional brands."
     },
     {
       "role": "AI & Data Science Intern",
       "company": "ShAI",
       "logo": "https://www.shai.sa/assets/logo.svg",
       "period": "2024 - 2024",
-      "description": "Designed ensemble classifiers (Random Forest - Scikit-learn) to predict customer behavior, achieving 89% accuracy even with imbalanced datasets by using techniques like SMOTE and class weighting. Using Pandas and NumPy, I cleaned and transformed raw data like a pro, handling missing values with KNN, and tackling outliers and skewed distributions smoothly."
+      "description": "ShAI is an AI company that builds intelligent products and training programs to make advanced technology accessible to businesses."
     },
     {
       "role": "Python Developer Intern",
       "company": "Ahli Bank",
       "logo": "https://ahli.com/wp-content/uploads/2024/10/logo.svg?x57988",
       "period": "2023 - 2023",
-      "description": "Designed custom data structures in Python to speed up in-memory processing of large financial datasets, cutting transaction batch runtime by 40%! I also built a serverless data pipeline on AWS Lambda to ingest, clean, and store data seamlessly. I've gained awesome experience in managing structured data, AWS cloud solutions, and database design in a smart way. I worked on data processing and automation tasks using Python, contributing to cloud data infrastructure projects to help build strong and efficient systems."
+      "description": "Jordan Ahli Bank is a full-service bank that supports individuals and businesses with modern digital banking and financial services."
     }
   ],
   "education": [

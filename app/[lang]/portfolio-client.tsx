@@ -7,6 +7,8 @@
 import React, { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import Image from "next/image"
 import Link from "next/link"
 import type { Locale } from "@/i18n-config"
@@ -14,6 +16,7 @@ import type { getDictionary } from "@/lib/dictionaries"
 import { cn } from "@/lib/utils"
 import {
   ArrowUpRight,
+  BadgeCheck,
   ExternalLink,
   Github,
   User as IdCard,
@@ -27,6 +30,7 @@ import {
   Phone,
 } from "lucide-react"
 import ContactModal from "@/components/contact-modal"
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 
 // Types
 type Dictionary = Awaited<ReturnType<typeof getDictionary>>
@@ -117,7 +121,25 @@ function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
           className="rounded-full border-2 border-border"
         />
         <div className="flex flex-col items-start gap-1">
-          <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">{dict.header.name}</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">{dict.header.name}</h1>
+            <TooltipProvider delayDuration={100}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Badge
+                    variant="outline"
+                    className="flex items-center gap-1 rounded-full border-transparent bg-[#165dfb] px-2 py-0.5 text-[10px] font-medium text-white shadow-sm hover:bg-[#165dfb]"
+                  >
+                    <BadgeCheck className="h-3 w-3 text-white" />
+                    <span>{dict.header.verified}</span>
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent side="top" align="center" className="text-xs">
+                  <p>{dict.header.verifiedTooltip}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
           <p className="text-sm font-medium text-muted-foreground">{dict.header.role}</p>
           <span className="text-xs text-muted-foreground/70 sm:text-sm">{dict.header.location}</span>
         </div>
@@ -242,18 +264,39 @@ function Experience({
                   <span className="text-xs text-muted-foreground">
                     {lang === "ar" ? "في" : "at"}
                   </span>
-                  {/* ✅ Inline logo + company name */}
-                  {/* ✅ Inline logo + company name with hover scale */}
-<span className="flex items-center gap-1 group">
-  <Image
-    src={exp.logo}
-    alt={exp.company}
-    width={14}
-    height={14}
-    className="inline-block rounded-sm transition-transform duration-300 group-hover:scale-150"
-  />
-  <span className="text-sm font-medium text-foreground">{exp.company}</span>
-</span>
+                  <HoverCard openDelay={40} closeDelay={120}>
+                    <HoverCardTrigger asChild>
+                      <button
+                        type="button"
+                        className="group flex items-center gap-1 rounded-sm px-1 py-0.5 text-left transition-colors hover:bg-secondary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      >
+                        <Image
+                          src={exp.logo}
+                          alt={exp.company}
+                          width={14}
+                          height={14}
+                          className="inline-block rounded-sm"
+                        />
+                        <span className="text-sm font-medium text-foreground">{exp.company}</span>
+                      </button>
+                    </HoverCardTrigger>
+                    <HoverCardContent className="w-72 space-y-3">
+                      <div className="flex items-center gap-3">
+                        <Image
+                          src={exp.logo}
+                          alt={exp.company}
+                          width={40}
+                          height={40}
+                          className="h-10 w-10 rounded-md object-contain"
+                        />
+                        <div className="flex flex-col">
+                          <span className="text-sm font-semibold text-foreground">{exp.company}</span>
+                          <span className="text-xs text-muted-foreground">{exp.period}</span>
+                        </div>
+                      </div>
+                      <p className="text-xs leading-relaxed text-muted-foreground">{exp.description}</p>
+                    </HoverCardContent>
+                  </HoverCard>
 
                 </div>
 
