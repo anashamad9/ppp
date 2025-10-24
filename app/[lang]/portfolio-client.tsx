@@ -6,6 +6,7 @@
 
 import React, { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
+import { CopyButton } from "@/components/ui/copy-button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -28,6 +29,9 @@ import {
   Linkedin,
   Bot,
   Phone,
+  Award,
+  Code,
+  Globe,
 } from "lucide-react"
 import ContactModal from "@/components/contact-modal"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
@@ -128,9 +132,9 @@ function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
                 <TooltipTrigger asChild>
                   <Badge
                     variant="outline"
-                    className="flex items-center gap-1 rounded-full border-transparent bg-[#165dfb] px-2 py-0.5 text-[10px] font-medium text-white shadow-sm hover:bg-[#165dfb]"
+                    className="flex items-center gap-1 rounded-full border-transparent bg-[#165dfb] px-1.5 py-[2px] text-[9px] font-medium text-white shadow-sm hover:bg-[#165dfb]"
                   >
-                    <BadgeCheck className="h-3 w-3 text-white" />
+                    <BadgeCheck className="h-2.5 w-2.5 text-white" />
                     <span>{dict.header.verified}</span>
                   </Badge>
                 </TooltipTrigger>
@@ -213,11 +217,21 @@ function CTAButtons({
           </g>
         </svg>
       </Button>
-      <Button asChild variant="outline" className="h-[34px] w-full rounded-[99px] bg-transparent sm:w-auto">
-        <Link href={`/${lang}/articles`} className="flex items-center gap-2">
+      <Button
+        variant="outline"
+        className="h-[34px] w-full rounded-[99px] bg-transparent sm:w-auto"
+        onClick={() => {
+          const target = document.querySelector("#articles")
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth", block: "start" })
+          }
+        }}
+        type="button"
+      >
+        <span className="flex items-center gap-2">
           <span className="text-[13px] leading-5">{dict.nav.articles}</span>
           <BookOpen className="h-3.5 w-3.5" />
-        </Link>
+        </span>
       </Button>
     </div>
   )
@@ -584,13 +598,14 @@ function Articles({
 
   return (
     <div
+      id="articles"
       className={`flex flex-col gap-6 transition-all duration-500 ease-out ${
         isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
       }`}
       style={{ transitionDelay: "750ms" }}
     >
       <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>{dict.sections.articles}</h2>
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-0">
         {enabledArticles.slice(0, 5).map((article) => {
           const isHovered = hoveredId === article.id
           const isDimmed = hoveredId !== null && !isHovered
@@ -598,12 +613,10 @@ function Articles({
           return (
             <Link
               key={article.id}
-              href={`/${lang}/articles`}
+              href={`/${lang}/articles/${article.id}`}
               className={cn(
-                "group relative flex items-center justify-between rounded-xl px-3 py-2 text-sm transition-all duration-150",
-                isHovered
-                  ? "bg-muted/50 text-foreground shadow-sm"
-                  : "text-muted-foreground",
+                "group flex items-center justify-between px-1.5 py-1 text-sm transition-colors",
+                "text-muted-foreground",
                 isDimmed && "opacity-40"
               )}
               onMouseEnter={() => setHoveredId(article.id)}
@@ -614,7 +627,7 @@ function Articles({
               <span className="flex-1 truncate font-medium transition-colors group-hover:text-primary">
                 {article.topic}
               </span>
-              <span className="ml-4 shrink-0 text-xs font-medium text-muted-foreground group-hover:text-foreground">
+              <span className="ml-4 shrink-0 text-xs font-medium text-muted-foreground transition-colors group-hover:text-primary">
                 {article.date}
               </span>
             </Link>
@@ -655,38 +668,123 @@ function SocialLinks({
         return <Bot className="h-4 w-4" />
       case "Kaggle":
         return <Trophy className="h-4 w-4" />
+      case "Portfolio":
+      case "Website":
+        return <Globe className="h-4 w-4" />
+      case "Dev":
+      case "Code":
+        return <Code className="h-4 w-4" />
+      case "Awards":
+        return <Award className="h-4 w-4" />
       default:
         return <ArrowUpRight className="h-4 w-4" />
     }
   }
 
+  const contactLabels = ["Email", "البريد الإلكتروني", "Phone", "الهاتف"]
+  const contactLinks = links.filter((link) => contactLabels.includes(link.label))
+  const socialLinks = links.filter((link) => !contactLabels.includes(link.label))
+
+  const contactHeading = lang === "ar" ? "التواصل المباشر" : "Direct contact"
+  const socialHeading = lang === "ar" ? "الحسابات الاجتماعية" : "Social profiles"
+
+  const wrapperClass = cn(
+    "flex flex-col gap-6 transition-all duration-500 ease-out",
+    isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
+  )
+
   return (
-    <div
-      className={`flex flex-col gap-6 transition-all duration-500 ease-out ${
-        isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
-      }`}
-      style={{ transitionDelay: "800ms" }}
-    >
-      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>{dict.sections.social}</h2>
-      <div className="flex flex-col gap-3">
-        {links.map((link) => (
-          <div key={link.label} className="group">
-            <a
-              href={link.href}
-              className="group flex w-full items-center justify-between rounded-lg p-2 text-sm text-foreground transition-colors hover:bg-accent/10 hover:text-muted-foreground"
-              rel="noopener noreferrer"
-              target={link.label === "Email" || link.label === "البريد الإلكتروني" || link.label === "Phone" || link.label === "الهاتف" ? "_self" : "_blank"}
-            >
-              <div className="flex items-center gap-2">
-                {getIcon(link.label)}
-                <span>{link.display || link.username || link.label}</span>
-              </div>
-              <div className="mx-4 flex-1 border-b border-dotted border-muted-foreground/30"></div>
-              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-            </a>
+    <>
+      {!!contactLinks.length && (
+        <div className={wrapperClass} style={{ transitionDelay: "800ms" }}>
+          <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
+            {contactHeading}
+          </h2>
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3">
+              {contactLinks.map((link) => {
+                const value = link.display || link.value || link.username || link.href
+                const actionLabel =
+                  link.label === "Email" || link.label === "البريد الإلكتروني"
+                    ? lang === "ar" ? "إرسال بريد" : "Send email"
+                    : lang === "ar" ? "اتصال هاتفي" : "Call"
+                const copyLabel = lang === "ar" ? "نسخ" : "Copy"
+
+                const actionIcon = getIcon(link.label)
+
+                return (
+                  <div key={link.label} className="group flex w-full items-center justify-between px-2 py-1.5 text-sm text-foreground">
+                    <div className="flex items-center gap-1.5">
+                      {actionIcon}
+                      <span>{value}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <a
+                        href={link.href}
+                        target="_self"
+                        className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-muted"
+                        aria-label={actionLabel}
+                        rel="noopener noreferrer"
+                      >
+                        {actionIcon}
+                      </a>
+                      <CopyButton
+                        content={value ?? ""}
+                        aria-label={copyLabel}
+                        className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-background text-foreground hover:bg-accent"
+                      />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           </div>
-        ))}
-      </div>
-    </div>
+        </div>
+      )}
+
+      {!!socialLinks.length && (
+        <div className={wrapperClass} style={{ transitionDelay: "850ms" }}>
+          <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
+            {socialHeading}
+          </h2>
+          <div className="flex flex-col gap-2.5">
+            {socialLinks.map((link) => {
+              const rawValue = link.display || link.username || link.label
+              let formatted = rawValue
+
+              if (lang === "ar" && rawValue) {
+                const LRE = "\u202A"
+                const PDF = "\u202C"
+                if (rawValue.startsWith("@")) {
+                  const handle = rawValue.replace(/^@/, "")
+                  formatted = `${LRE}@${handle}${PDF}`
+                } else if (rawValue.endsWith("@")) {
+                  const handle = rawValue.slice(0, -1)
+                  formatted = `${LRE}@${handle}${PDF}`
+                }
+              }
+
+              return (
+                <div key={link.label} className="group">
+                  <a
+                    href={link.href}
+                    className="group flex w-full items-center justify-between rounded-lg px-2 py-2 text-sm text-foreground transition-colors hover:text-muted-foreground"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <div className="flex items-center gap-2">
+                      {getIcon(link.label)}
+                      <span>{formatted}</span>
+                    </div>
+                    <div className="mx-4 flex-1 border-b border-dotted border-muted-foreground/30"></div>
+                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </a>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+    </>
   )
 }

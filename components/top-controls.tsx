@@ -59,7 +59,7 @@ export function TopControls({ lang }: TopControlsProps) {
   }
 
   return (
-    <div className="fixed right-2.5 top-2.5 z-50 flex items-center gap-1.5">
+    <div className="fixed right-3 top-3 z-50 flex items-center gap-1.5 sm:right-6 sm:top-6">
       <ThemeToggleButton
         theme={currentTheme}
         variant="circle-blur"
