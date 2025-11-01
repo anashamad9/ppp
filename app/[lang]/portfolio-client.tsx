@@ -118,7 +118,7 @@ function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
     >
       <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
         <Image
-          src="https://media.licdn.com/dms/image/v2/D4D03AQFcWMsi0rSkeg/profile-displayphoto-shrink_200_200/B4DZbdzBS3GwAY-/0/1747477862106?e=1759968000&v=beta&t=ma4QMe01qxwXubZu3VIMzA6Io-zSNW7JOoVpzbPzDIo"
+          src="/Anas Hamad.jpeg"
           alt={dict.header.name}
           width={80}
           height={80}
