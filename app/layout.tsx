@@ -7,9 +7,9 @@ export const metadata: Metadata = {
   description: "Portfolio of Anas Hamad, an AI & Machine Learning Engineer based in Amman, Jordan.",
   generator: "v0.dev",
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
+    icon: "/Anos.png",
+    shortcut: "/Anos.png",
+    apple: "/Anos.png",
   },
 }
 
@@ -21,10 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-        <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/favicon.ico" />
+        <link rel="icon" href="/Anos.png" sizes="any" />
+        <link rel="icon" href="/Anos.png" type="image/png" />
+        <link rel="shortcut icon" href="/Anos.png" />
+        <link rel="apple-touch-icon" href="/Anos.png" />
       </head>
       <body>{children}</body>
     </html>
