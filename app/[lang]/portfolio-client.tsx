@@ -54,7 +54,7 @@ export default function PortfolioClient({ dict, lang }: { dict: Dictionary; lang
           <CardContent className="flex flex-col gap-8 p-0 sm:gap-12 sm:p-4">
             <Header isLoaded={isLoaded} dict={dict} />
             <Description isLoaded={isLoaded} dict={dict} />
-            <CTAButtons isLoaded={isLoaded} setShowModal={setShowContactModal} dict={dict} lang={lang} />
+            <CTAButtons isLoaded={isLoaded} setShowModal={setShowContactModal} dict={dict} />
             <Experience isLoaded={isLoaded} experiences={dict.experiences} dict={dict} lang={lang} />
             <Education isLoaded={isLoaded} education={dict.education} dict={dict} lang={lang} />
             <CoreTechStack isLoaded={isLoaded} coreStack={coreStack} dict={dict} lang={lang} />
@@ -183,12 +183,10 @@ function CTAButtons({
   isLoaded,
   setShowModal,
   dict,
-  lang,
 }: {
   isLoaded: boolean
   setShowModal: (show: boolean) => void
   dict: Dictionary
-  lang: Locale
 }) {
   return (
     <div
@@ -200,26 +198,13 @@ function CTAButtons({
       <Button
         variant="default"
         onClick={() => setShowModal(true)}
-        className="inline-flex h-[34px] w-full items-center justify-center gap-2.5 rounded-[99px] bg-primary ps-4 pe-3 py-0 text-primary-foreground hover:bg-primary/90 sm:w-auto"
+        className="inline-flex h-[34px] w-full items-center justify-center gap-0 rounded-[99px] bg-primary px-3 py-0 text-primary-foreground hover:bg-primary/90 sm:w-auto"
       >
-        <span className="text-[13px] font-medium leading-5 text-primary-foreground">{dict.cta.contact}</span>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="12"
-          height="12"
-          viewBox="0 0 12 12"
-          className="text-primary-foreground"
-          style={{ transform: lang === "ar" ? "scaleX(-1)" : undefined }}
-        >
-          <title>chevron-right</title>
-          <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5">
-            <polyline points="4.25 10.25 8.5 6 4.25 1.75"></polyline>
-          </g>
-        </svg>
+        <span className="text-[13px] font-medium leading-5 text-primary-foreground">Say hi</span>
       </Button>
       <Button
         variant="outline"
-        className="h-[34px] w-full rounded-[99px] bg-transparent sm:w-auto"
+        className="h-[32px] w-full rounded-[99px] bg-transparent px-3 py-1 sm:w-auto"
         onClick={() => {
           const target = document.querySelector("#articles")
           if (target) {
@@ -228,8 +213,8 @@ function CTAButtons({
         }}
         type="button"
       >
-        <span className="flex items-center gap-2">
-          <span className="text-[13px] leading-5">{dict.nav.articles}</span>
+        <span className="flex items-center gap-1.5">
+          <span className="text-[13px] font-normal leading-5">{dict.nav.articles}</span>
           <BookOpen className="h-3.5 w-3.5" />
         </span>
       </Button>
