@@ -33,7 +33,6 @@ import {
   Code,
   Globe,
 } from "lucide-react"
-import ContactModal from "@/components/contact-modal"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 
 // Types
@@ -41,7 +40,6 @@ type Dictionary = Awaited<ReturnType<typeof getDictionary>>
 
 export default function PortfolioClient({ dict, lang }: { dict: Dictionary; lang: Locale }) {
   const [isLoaded, setIsLoaded] = useState(false)
-  const [showContactModal, setShowContactModal] = useState(false)
 
   useEffect(() => {
     setIsLoaded(true)
@@ -54,7 +52,7 @@ export default function PortfolioClient({ dict, lang }: { dict: Dictionary; lang
           <CardContent className="flex flex-col gap-8 p-0 sm:gap-12 sm:p-4">
             <Header isLoaded={isLoaded} dict={dict} />
             <Description isLoaded={isLoaded} dict={dict} />
-            <CTAButtons isLoaded={isLoaded} setShowModal={setShowContactModal} dict={dict} />
+            <CTAButtons isLoaded={isLoaded} dict={dict} lang={lang} />
             <Experience isLoaded={isLoaded} experiences={dict.experiences} dict={dict} lang={lang} />
             <Education isLoaded={isLoaded} education={dict.education} dict={dict} lang={lang} />
             <CoreTechStack isLoaded={isLoaded} coreStack={coreStack} dict={dict} lang={lang} />
@@ -66,8 +64,6 @@ export default function PortfolioClient({ dict, lang }: { dict: Dictionary; lang
           </CardContent>
         </Card>
       </div>
-
-      <ContactModal isOpen={showContactModal} onClose={() => setShowContactModal(false)} lang={lang} />
     </main>
   )
 }
@@ -181,27 +177,77 @@ function Description({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }
 
 function CTAButtons({
   isLoaded,
-  setShowModal,
   dict,
+  lang,
 }: {
   isLoaded: boolean
-  setShowModal: (show: boolean) => void
   dict: Dictionary
+  lang: Locale
 }) {
+  const [showContacts, setShowContacts] = useState(false)
+  const contactLabel = lang === "ar" ? "تواصل معي" : "Say hi"
+  const contactLinks = dict.socialLinks.filter((link) => link.href?.startsWith("mailto") || link.href?.startsWith("tel"))
+  const emailLink = contactLinks.find((link) => link.href?.startsWith("mailto"))
+  const phoneLink = contactLinks.find((link) => link.href?.startsWith("tel"))
+  const hasContactOptions = Boolean(emailLink || phoneLink)
+
   return (
     <div
-      className={`flex flex-col items-start gap-3 transition-all duration-500 ease-out sm:flex-row sm:items-center sm:gap-2.5 ${
+      className={`flex flex-col items-start gap-3 transition-all duration-500 ease-out sm:flex-row sm:items-center sm:gap-2.5 -mt-4 sm:-mt-5 ${
         isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
       }`}
       style={{ transitionDelay: "300ms" }}
     >
-      <Button
-        variant="default"
-        onClick={() => setShowModal(true)}
-        className="inline-flex h-[34px] w-full items-center justify-center gap-0 rounded-[99px] bg-primary px-3 py-0 text-primary-foreground hover:bg-primary/90 sm:w-auto"
-      >
-        <span className="text-[13px] font-medium leading-5 text-primary-foreground">Say hi</span>
-      </Button>
+      <div className="relative flex flex-none flex-col items-center gap-2">
+        <Button
+          type="button"
+          variant="default"
+          onClick={() => hasContactOptions && setShowContacts((prev) => !prev)}
+          aria-expanded={showContacts}
+          aria-controls="contact-options"
+          className="inline-flex h-[32px] w-auto items-center justify-center gap-1.5 self-start rounded-[99px] bg-primary px-3 py-1 text-[13px] font-medium leading-5 text-primary-foreground hover:bg-primary/90"
+        >
+          <span className="text-[13px] font-medium leading-5 text-primary-foreground">{contactLabel}</span>
+        </Button>
+
+        {hasContactOptions && (
+          <div
+            id="contact-options"
+            className={`absolute left-1/2 top-full mt-2 flex -translate-x-1/2 items-center gap-2 transition-all duration-200 ${
+              showContacts ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 -translate-y-1"
+            }`}
+          >
+            {emailLink && (
+              <Button
+                asChild
+                variant="outline"
+                className="h-[32px] w-auto items-center justify-start gap-1.5 self-start rounded-[99px] bg-transparent px-3 py-1 text-[13px] font-medium"
+              >
+                <a href={emailLink.href} aria-label={emailLink.display ?? emailLink.value ?? emailLink.label ?? "Email"}>
+                  <span className="inline-flex items-center justify-center">
+                    <Mail className="h-4 w-4" />
+                    <span className="sr-only">{emailLink.display ?? emailLink.value ?? emailLink.label ?? "Email"}</span>
+                  </span>
+                </a>
+              </Button>
+            )}
+            {phoneLink && (
+              <Button
+                asChild
+                variant="outline"
+                className="h-[32px] w-auto items-center justify-start gap-1.5 self-start rounded-[99px] bg-transparent px-3 py-1 text-[13px] font-medium"
+              >
+                <a href={phoneLink.href} aria-label={phoneLink.display ?? phoneLink.value ?? phoneLink.label ?? "Phone"}>
+                  <span className="inline-flex items-center justify-center">
+                    <Phone className="h-4 w-4" />
+                    <span className="sr-only">{phoneLink.display ?? phoneLink.value ?? phoneLink.label ?? "Phone"}</span>
+                  </span>
+                </a>
+              </Button>
+            )}
+          </div>
+        )}
+      </div>
       <Button
         variant="outline"
         className="h-[32px] w-full rounded-[99px] bg-transparent px-3 py-1 sm:w-auto"
