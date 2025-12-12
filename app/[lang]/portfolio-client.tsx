@@ -301,6 +301,7 @@ function Experience({
           const isExpanded = expandedJobs.has(jobKey)
           const shouldTruncate = exp.description.length > 120
           const displayDescription = shouldTruncate && !isExpanded ? exp.description.substring(0, 120) + "..." : exp.description
+          const companySummary = (exp as { companySummary?: string }).companySummary ?? exp.description
           return (
             <div key={jobKey} className="flex flex-col gap-y-[-2]">
               <div className="flex items-baseline justify-between">
@@ -339,7 +340,7 @@ function Experience({
                           <span className="text-xs text-muted-foreground">{exp.period}</span>
                         </div>
                       </div>
-                      <p className="text-xs leading-relaxed text-muted-foreground">{exp.description}</p>
+                      <p className="text-xs leading-relaxed text-muted-foreground">{companySummary}</p>
                     </HoverCardContent>
                   </HoverCard>
 

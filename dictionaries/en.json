@@ -44,6 +44,7 @@
       "company": "Onqoud",
       "logo": "https://avatars.githubusercontent.com/u/198729474?s=200&v=4",
       "period": "2024 - present",
+      "companySummary": "Jordanian business intelligence company for restaurants and cafés, providing analytics, cloud POS, ordering, and operations tools.",
       "description": "Led development of a scalable, AI-driven SaaS platform for restaurants and cafés, automating data pipelines and generating 50+ dynamic Python reports. Optimized operations with predictive analytics, increasing performance metrics by 30% and cutting operational costs by 25%."
     },
     {
@@ -51,6 +52,7 @@
       "company": "Digizag",
       "logo": "https://images.crunchbase.com/image/upload/c_pad,h_256,w_256,f_auto,q_auto:eco,dpr_1/q5gghnkvomhp60df5jse",
       "period": "2025 - present",
+      "companySummary": "MENA performance marketing and affiliate network that helps ecommerce brands scale through data-driven campaigns.",
       "description": "Automated 80% of daily data processing across 1M+ records using Python (Pandas, NumPy) and Airflow, saving 60 hours of manual work weekly. Fine-tuned domain LLMs to 90% accuracy and delivered three ML models (XGBoost, LSTM) that boosted prediction accuracy by 20%."
     },
     {
@@ -58,6 +60,7 @@
       "company": "ShAI",
       "logo": "https://www.shai.sa/assets/logo.svg",
       "period": "2024 - 2024",
+      "companySummary": "Jordanian AI startup focused on Arabic-first language and vision solutions for enterprises and government teams.",
       "description": "Engineered ensemble classifiers with Random Forest on 500K+ customer records, reaching 89% accuracy on imbalanced sets via SMOTE (20% oversampling) and 5:1 class weighting. Preprocessed data with Pandas/NumPy, imputing 15% missing values (KNN k=5), removing 2% outliers via IQR, and normalizing 10+ features."
     },
     {
@@ -65,6 +68,7 @@
       "company": "Ahli Bank",
       "logo": "https://ahli.com/wp-content/uploads/2024/10/logo.svg?x57988",
       "period": "2023 - 2023",
+      "companySummary": "Jordan-based retail and corporate bank offering digital banking, financing, and investment services.",
       "description": "Designed custom in-memory Python data structures for financial transactions, cutting batch runtimes by 40% (50 → 30 minutes). Built an AWS Lambda serverless pipeline ingesting 100GB+ of data daily with 99.9% uptime and 20% lower storage costs."
     }
   ],
