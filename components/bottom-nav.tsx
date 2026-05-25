@@ -85,7 +85,7 @@ export default function BottomNav({
         {isOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
       </button>
 
-      {/* Bottom bar container — DO NOT hide this on mobile */}
+      {/* Bottom bar container - DO NOT hide this on mobile */}
       <nav
         dir={isRTL ? "rtl" : "ltr"}
         className={cls(

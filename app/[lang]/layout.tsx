@@ -4,7 +4,7 @@ import type React from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import { TopControls } from "@/components/top-controls"
 import { i18n, type Locale } from "@/i18n-config"
-import { getDictionary } from "@/lib/dictionaries"
+import { SITE_DESCRIPTION_AR, SITE_DESCRIPTION_EN, SITE_TITLE_AR, SITE_TITLE_EN, SITE_URL } from "@/lib/site"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,14 +26,49 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params: { lang } }: { params: { lang: Locale } }) {
-  const dict = await getDictionary(lang)
+  const isArabic = lang === "ar"
   return {
-    title: "Anas Hamad - AI & Machine Learning Engineer",
-    description: "Portfolio of Anas Hamad, an AI & Machine Learning Engineer based in Amman, Jordan.",
+    metadataBase: new URL(SITE_URL),
+    title: isArabic ? SITE_TITLE_AR : SITE_TITLE_EN,
+    description: isArabic ? SITE_DESCRIPTION_AR : SITE_DESCRIPTION_EN,
+    alternates: {
+      canonical: `/${lang}`,
+      languages: {
+        en: "/en",
+        ar: "/ar",
+        "x-default": "/en",
+      },
+    },
+    openGraph: {
+      type: "website",
+      url: `/${lang}`,
+      title: isArabic ? SITE_TITLE_AR : SITE_TITLE_EN,
+      description: isArabic ? SITE_DESCRIPTION_AR : SITE_DESCRIPTION_EN,
+      siteName: "Anas Hamad",
+      locale: isArabic ? "ar_JO" : "en_US",
+      images: [
+        {
+          url: "/anas logo.png",
+          width: 1200,
+          height: 630,
+          alt: "Anas Hamad",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: isArabic ? SITE_TITLE_AR : SITE_TITLE_EN,
+      description: isArabic ? SITE_DESCRIPTION_AR : SITE_DESCRIPTION_EN,
+      images: ["/anas logo.png"],
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
     icons: {
-      icon: "/favicon.ico",
-      shortcut: "/favicon.ico",
-      apple: "/favicon.ico",
+      icon: "/anas logo.png",
+      shortcut: "/anas logo.png",
+      apple: "/anas logo.png",
     },
   }
 }
@@ -53,15 +88,15 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-        <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/favicon.ico" />
+        <link rel="icon" href="/anas logo.png" sizes="any" />
+        <link rel="icon" href="/anas logo.png" type="image/png" />
+        <link rel="shortcut icon" href="/anas logo.png" />
+        <link rel="apple-touch-icon" href="/anas logo.png" />
       </head>
       <body className={params.lang === "ar" ? "font-arabic" : "font-sans"}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <TopControls lang={params.lang} />
           {children}
+          <TopControls lang={params.lang} />
         </ThemeProvider>
       </body>
     </html>

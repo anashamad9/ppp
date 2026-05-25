@@ -1,12 +1,11 @@
 // =============================================
-// File: (your page) PortfolioClient.tsx  — UPDATED
+// File: (your page) PortfolioClient.tsx  - UPDATED
 // Replace your existing file content with this
 // =============================================
 "use client"
 
 import React, { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { CopyButton } from "@/components/ui/copy-button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -28,12 +27,12 @@ import {
   ChevronDown,
   Linkedin,
   Bot,
-  Phone,
   Award,
   Code,
   Globe,
 } from "lucide-react"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
+import { SiWhatsapp } from "@icons-pack/react-simple-icons"
 
 // Types
 type Dictionary = Awaited<ReturnType<typeof getDictionary>>
@@ -46,21 +45,16 @@ export default function PortfolioClient({ dict, lang }: { dict: Dictionary; lang
   }, [])
 
   return (
-    <main className="flex min-h-screen flex-col items-center bg-background font-sans">
-      <div className="w-full min-h-screen bg-background px-4 pt-16 sm:px-6 md:px-8 sm:py-8">
-        <Card className="mb-8 w-full max-w-[500px] border-none bg-transparent shadow-none sm:mb-16 mx-auto">
+    <main className="flex flex-col items-center bg-background pb-8 font-sans">
+      <div className="w-full bg-background px-4 pt-16 sm:px-6 md:px-8 sm:py-8">
+        <Card className="mx-auto w-full max-w-[720px] border-none bg-transparent shadow-none">
           <CardContent className="flex flex-col gap-8 p-0 sm:gap-12 sm:p-4">
-            <Header isLoaded={isLoaded} dict={dict} />
+            <Header isLoaded={isLoaded} dict={dict} lang={lang} />
             <Description isLoaded={isLoaded} dict={dict} />
             <CTAButtons isLoaded={isLoaded} dict={dict} lang={lang} />
             <Experience isLoaded={isLoaded} experiences={dict.experiences} dict={dict} lang={lang} />
-            <Education isLoaded={isLoaded} education={dict.education} dict={dict} lang={lang} />
             <CoreTechStack isLoaded={isLoaded} coreStack={coreStack} dict={dict} lang={lang} />
-            <Achievements isLoaded={isLoaded} achievements={dict.achievements} dict={dict} lang={lang} />
-            <Certifications isLoaded={isLoaded} certifications={dict.certifications} dict={dict} lang={lang} />
-            <Projects isLoaded={isLoaded} projects={dict.projects} dict={dict} lang={lang} />
             <Articles isLoaded={isLoaded} articles={dict.articles} lang={lang} dict={dict} />
-            <SocialLinks isLoaded={isLoaded} links={dict.socialLinks} dict={dict} lang={lang} />
           </CardContent>
         </Card>
       </div>
@@ -104,7 +98,7 @@ const coreStack = [
 ]
 
 /* ---------- Sections (unchanged below this line) ---------- */
-function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
+function Header({ isLoaded, dict, lang }: { isLoaded: boolean; dict: Dictionary; lang: Locale }) {
   return (
     <header
       className={`flex w-full flex-col gap-3 transition-all duration-500 ease-out ${
@@ -113,16 +107,29 @@ function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
       style={{ transitionDelay: "100ms" }}
     >
       <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
-        <Image
-          src="/Anas Hamad.jpeg"
-          alt={dict.header.name}
-          width={80}
-          height={80}
-          className="rounded-full border-2 border-border"
-        />
+        <div className="group h-20 w-20 [perspective:800px]">
+          <div className="relative h-full w-full rounded-full transition-transform duration-300 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
+            <Image
+              src="/Anas Hamad.jpeg"
+              alt={dict.header.name}
+              width={80}
+              height={80}
+              className="absolute inset-0 rounded-full border-2 border-border [backface-visibility:hidden]"
+            />
+            <Image
+              src="/anas logo.png"
+              alt="Anas logo"
+              width={80}
+              height={80}
+              className="absolute inset-0 rounded-full border-2 border-border [backface-visibility:hidden] [transform:rotateY(180deg)]"
+            />
+          </div>
+        </div>
         <div className="flex flex-col items-start gap-1">
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">{dict.header.name}</h1>
+            <h1 className={cn("text-xl font-semibold tracking-tight text-foreground sm:text-2xl", lang === "ar" && "font-thmanyah-serif-text")}>
+              {dict.header.name}
+            </h1>
             <TooltipProvider delayDuration={100}>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -148,7 +155,7 @@ function Header({ isLoaded, dict }: { isLoaded: boolean; dict: Dictionary }) {
         {dict.topTechStack.map((tech) => (
           <span
             key={tech}
-            className="cursor-default rounded-md border bg-secondary px-2 py-0.5 text-xs text-secondary-foreground transition-all duration-200 hover:scale-105 hover:bg-secondary/80"
+            className="cursor-default rounded-md bg-muted px-2 py-0.5 text-xs text-foreground transition-all duration-200 hover:scale-105 hover:bg-muted/80"
           >
             {tech}
           </span>
@@ -189,6 +196,8 @@ function CTAButtons({
   const contactLinks = dict.socialLinks.filter((link) => link.href?.startsWith("mailto") || link.href?.startsWith("tel"))
   const emailLink = contactLinks.find((link) => link.href?.startsWith("mailto"))
   const phoneLink = contactLinks.find((link) => link.href?.startsWith("tel"))
+  const whatsappNumber = phoneLink?.href?.replace("tel:", "").replace(/\D/g, "") ?? ""
+  const whatsappHref = whatsappNumber ? `https://wa.me/${whatsappNumber}` : "#"
   const hasContactOptions = Boolean(emailLink || phoneLink)
 
   return (
@@ -221,11 +230,11 @@ function CTAButtons({
               <Button
                 asChild
                 variant="outline"
-                className="h-[32px] w-auto items-center justify-start gap-1.5 self-start rounded-[99px] bg-transparent px-3 py-1 text-[13px] font-medium"
+                className="h-[28px] w-auto items-center justify-start gap-1 self-start rounded-[99px] bg-transparent px-2.5 py-1 text-[12px] font-medium"
               >
                 <a href={emailLink.href} aria-label={emailLink.display ?? emailLink.value ?? emailLink.label ?? "Email"}>
                   <span className="inline-flex items-center justify-center">
-                    <Mail className="h-4 w-4" />
+                    <Mail className="h-3.5 w-3.5" />
                     <span className="sr-only">{emailLink.display ?? emailLink.value ?? emailLink.label ?? "Email"}</span>
                   </span>
                 </a>
@@ -235,12 +244,17 @@ function CTAButtons({
               <Button
                 asChild
                 variant="outline"
-                className="h-[32px] w-auto items-center justify-start gap-1.5 self-start rounded-[99px] bg-transparent px-3 py-1 text-[13px] font-medium"
+                className="h-[28px] w-auto items-center justify-start gap-1 self-start rounded-[99px] bg-transparent px-2.5 py-1 text-[12px] font-medium"
               >
-                <a href={phoneLink.href} aria-label={phoneLink.display ?? phoneLink.value ?? phoneLink.label ?? "Phone"}>
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={lang === "ar" ? "واتساب" : "WhatsApp"}
+                >
                   <span className="inline-flex items-center justify-center">
-                    <Phone className="h-4 w-4" />
-                    <span className="sr-only">{phoneLink.display ?? phoneLink.value ?? phoneLink.label ?? "Phone"}</span>
+                    <SiWhatsapp className="h-3.5 w-3.5 text-[#25D366]" />
+                    <span className="sr-only">{lang === "ar" ? "واتساب" : "WhatsApp"}</span>
                   </span>
                 </a>
               </Button>
@@ -250,7 +264,7 @@ function CTAButtons({
       </div>
       <Button
         variant="outline"
-        className="h-[32px] w-full rounded-[99px] bg-transparent px-3 py-1 sm:w-auto"
+        className="h-[32px] w-full rounded-[99px] border-0 bg-muted px-3 py-1 hover:bg-muted/80 sm:w-auto"
         onClick={() => {
           const target = document.querySelector("#articles")
           if (target) {
@@ -280,6 +294,7 @@ function Experience({
   lang: Locale
 }) {
   const [expandedJobs, setExpandedJobs] = useState<Set<string>>(new Set())
+  const [hoveredJobKey, setHoveredJobKey] = useState<string | null>(null)
 
   const toggleJobExpansion = (jobKey: string) => {
     const s = new Set(expandedJobs)
@@ -289,22 +304,39 @@ function Experience({
 
   return (
     <div
-      className={`flex flex-col gap-4 transition-all duration-500 ease-out ${
+      className={`relative z-20 flex flex-col gap-4 transition-all duration-500 ease-out ${
         isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
       }`}
       style={{ transitionDelay: "400ms" }}
     >
       <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>{dict.sections.experience}</h2>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1">
         {experiences.map((exp) => {
           const jobKey = exp.role + exp.company
           const isExpanded = expandedJobs.has(jobKey)
-          const shouldTruncate = exp.description.length > 120
-          const displayDescription = shouldTruncate && !isExpanded ? exp.description.substring(0, 120) + "..." : exp.description
+          const isHovered = hoveredJobKey === jobKey
+          const isDimmed = hoveredJobKey !== null && !isHovered
           const companySummary = (exp as { companySummary?: string }).companySummary ?? exp.description
           return (
-            <div key={jobKey} className="flex flex-col gap-y-[-2]">
-              <div className="flex items-baseline justify-between">
+            <div
+              key={jobKey}
+              className={cn("flex flex-col gap-y-0 transition-opacity", isDimmed && "opacity-40")}
+              onMouseEnter={() => setHoveredJobKey(jobKey)}
+              onMouseLeave={() => setHoveredJobKey(null)}
+            >
+              <div
+                className="flex cursor-pointer items-baseline justify-between rounded-md px-1 py-0.5"
+                onClick={() => toggleJobExpansion(jobKey)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault()
+                    toggleJobExpansion(jobKey)
+                  }
+                }}
+                aria-expanded={isExpanded}
+              >
                 <div className="flex items-baseline gap-1">
                   <span className="text-sm font-medium text-foreground">{exp.role}</span>
                   <span className="text-xs text-muted-foreground">
@@ -314,6 +346,7 @@ function Experience({
                     <HoverCardTrigger asChild>
                       <button
                         type="button"
+                        onClick={(e) => e.stopPropagation()}
                         className="group flex items-center gap-1 rounded-sm px-1 py-0.5 text-left transition-colors hover:bg-secondary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       >
                         <Image
@@ -326,7 +359,7 @@ function Experience({
                         <span className="text-sm font-medium text-foreground">{exp.company}</span>
                       </button>
                     </HoverCardTrigger>
-                    <HoverCardContent className="w-72 space-y-3">
+                    <HoverCardContent className="z-[9999] w-72 space-y-3">
                       <div className="flex items-center gap-3">
                         <Image
                           src={exp.logo}
@@ -346,18 +379,19 @@ function Experience({
 
                 </div>
 
-                <span className="text-sm text-muted-foreground">{exp.period}</span>
+                <div className="flex items-center gap-1">
+                  <span className="text-sm text-muted-foreground">{exp.period}</span>
+                  <button
+                    onClick={() => toggleJobExpansion(jobKey)}
+                    onClickCapture={(e) => e.stopPropagation()}
+                    className="rounded p-1 transition-colors hover:bg-secondary/50"
+                    aria-label={isExpanded ? "Collapse description" : "Expand description"}
+                  >
+                    <ChevronDown className={`h-3 w-3 text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                  </button>
+                </div>
               </div>
-              <div className="flex flex-col gap-2">
-                <p className="text-sm text-muted-foreground">{displayDescription}</p>
-                {shouldTruncate && (
-                  <div className="flex justify-center">
-                    <button onClick={() => toggleJobExpansion(jobKey)} className="rounded p-1 transition-colors hover:bg-secondary/50">
-                      <ChevronDown className={`h-3 w-3 text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-                    </button>
-                  </div>
-                )}
-              </div>
+              {isExpanded && <p className="text-sm text-muted-foreground">{exp.description}</p>}
             </div>
           )
         })}
@@ -436,13 +470,10 @@ function CoreTechStack({
 
       <div className="w-full overflow-x-auto">
         <div className="grid min-w-[80px] grid-cols-3 items-stretch">
-          {coreStack.map((cat, idx) => (
+          {coreStack.map((cat) => (
             <div
               key={cat.category}
-              className={cn(
-                "h-full px-4 py-1",
-                idx > 0 && "border-s border-border/60"
-              )}
+              className="h-full px-4 py-1"
             >
               <div className="mb-2">
                 <span className="text-[11px] tracking-wide text-muted-foreground/80 uppercase">
@@ -667,156 +698,5 @@ function Articles({
         })}
       </div>
     </div>
-  )
-}
-
-function SocialLinks({
-  isLoaded,
-  links,
-  dict,
-  lang,
-}: {
-  isLoaded: boolean
-  links: Dictionary["socialLinks"]
-  dict: Dictionary
-  lang: Locale
-}) {
-  const getIcon = (label: string) => {
-    switch (label) {
-      case "Email":
-      case "البريد الإلكتروني":
-        return <Mail className="h-4 w-4" />
-      case "Phone":
-      case "الهاتف":
-        return <Phone className="h-4 w-4" />
-      case "X":
-        return <Twitter className="h-4 w-4" />
-      case "LinkedIn":
-      case "لينكد إن":
-        return <Linkedin className="h-4 w-4" />
-      case "GitHub":
-        return <Github className="h-4 w-4" />
-      case "Hugging Face":
-        return <Bot className="h-4 w-4" />
-      case "Kaggle":
-        return <Trophy className="h-4 w-4" />
-      case "Portfolio":
-      case "Website":
-        return <Globe className="h-4 w-4" />
-      case "Dev":
-      case "Code":
-        return <Code className="h-4 w-4" />
-      case "Awards":
-        return <Award className="h-4 w-4" />
-      default:
-        return <ArrowUpRight className="h-4 w-4" />
-    }
-  }
-
-  const contactLabels = ["Email", "البريد الإلكتروني", "Phone", "الهاتف"]
-  const contactLinks = links.filter((link) => contactLabels.includes(link.label))
-  const socialLinks = links.filter((link) => !contactLabels.includes(link.label))
-
-  const contactHeading = lang === "ar" ? "التواصل المباشر" : "Direct contact"
-  const socialHeading = lang === "ar" ? "الحسابات الاجتماعية" : "Social profiles"
-
-  const wrapperClass = cn(
-    "flex flex-col gap-6 transition-all duration-500 ease-out",
-    isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
-  )
-
-  return (
-    <>
-      {!!contactLinks.length && (
-        <div className={wrapperClass} style={{ transitionDelay: "800ms" }}>
-          <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
-            {contactHeading}
-          </h2>
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-col gap-3">
-              {contactLinks.map((link) => {
-                const value = link.display || link.value || link.username || link.href
-                const actionLabel =
-                  link.label === "Email" || link.label === "البريد الإلكتروني"
-                    ? lang === "ar" ? "إرسال بريد" : "Send email"
-                    : lang === "ar" ? "اتصال هاتفي" : "Call"
-                const copyLabel = lang === "ar" ? "نسخ" : "Copy"
-
-                const actionIcon = getIcon(link.label)
-
-                return (
-                  <div key={link.label} className="group flex w-full items-center justify-between px-2 py-1.5 text-sm text-foreground">
-                    <div className="flex items-center gap-1.5">
-                      {actionIcon}
-                      <span>{value}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <a
-                        href={link.href}
-                        target="_self"
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-muted"
-                        aria-label={actionLabel}
-                        rel="noopener noreferrer"
-                      >
-                        {actionIcon}
-                      </a>
-                      <CopyButton
-                        content={value ?? ""}
-                        aria-label={copyLabel}
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-background text-foreground hover:bg-accent"
-                      />
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {!!socialLinks.length && (
-        <div className={wrapperClass} style={{ transitionDelay: "850ms" }}>
-          <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
-            {socialHeading}
-          </h2>
-          <div className="flex flex-col gap-2.5">
-            {socialLinks.map((link) => {
-              const rawValue = link.display || link.username || link.label
-              let formatted = rawValue
-
-              if (lang === "ar" && rawValue) {
-                const LRE = "\u202A"
-                const PDF = "\u202C"
-                if (rawValue.startsWith("@")) {
-                  const handle = rawValue.replace(/^@/, "")
-                  formatted = `${LRE}@${handle}${PDF}`
-                } else if (rawValue.endsWith("@")) {
-                  const handle = rawValue.slice(0, -1)
-                  formatted = `${LRE}@${handle}${PDF}`
-                }
-              }
-
-              return (
-                <div key={link.label} className="group">
-                  <a
-                    href={link.href}
-                    className="group flex w-full items-center justify-between rounded-lg px-2 py-2 text-sm text-foreground transition-colors hover:text-muted-foreground"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    <div className="flex items-center gap-2">
-                      {getIcon(link.label)}
-                      <span>{formatted}</span>
-                    </div>
-                    <div className="mx-4 flex-1 border-b border-dotted border-muted-foreground/30"></div>
-                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                  </a>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      )}
-    </>
   )
 }

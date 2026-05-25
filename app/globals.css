@@ -2,6 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Thmanyah Serif Text";
+  src: url("/Thmanyah-Font-Family-2/thmanyah%20typeface/thmanyahseriftext/woff2/thmanyahseriftext-Regular.woff2")
+    format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Thmanyah Serif Text";
+  src: url("/Thmanyah-Font-Family-2/thmanyah%20typeface/thmanyahseriftext/woff2/thmanyahseriftext-Medium.woff2")
+    format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Thmanyah Serif Text";
+  src: url("/Thmanyah-Font-Family-2/thmanyah%20typeface/thmanyahseriftext/woff2/thmanyahseriftext-Bold.woff2")
+    format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -78,6 +105,14 @@
   -moz-osx-font-smoothing: grayscale;
   direction: rtl;
   text-align: right;
+}
+
+.font-thmanyah-serif-text {
+  font-family: "Thmanyah Serif Text", serif !important;
+}
+
+[dir="rtl"] .font-thmanyah-serif-text {
+  font-family: "Thmanyah Serif Text", serif !important;
 }
 
 /* Ensure Arabic text displays correctly */

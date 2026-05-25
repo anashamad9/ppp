@@ -1,12 +1,15 @@
 "use client"
 
-import { useEffect, useState, ReactNode } from "react"
+import { isValidElement, useEffect, useState } from "react"
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Calendar, Clock } from "lucide-react"
 import type { Locale } from "@/i18n-config"
 import { ArticleChartBlock } from "./article-charts"
 import type { BundledLanguage } from "@/components/ui/shadcn-io/code-block"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
+import rehypeRaw from "rehype-raw"
 import {
   CodeBlock,
   CodeBlockBody,
@@ -16,11 +19,6 @@ import {
   CodeBlockFiles,
   CodeBlockHeader,
   CodeBlockItem,
-  CodeBlockSelect,
-  CodeBlockSelectContent,
-  CodeBlockSelectItem,
-  CodeBlockSelectTrigger,
-  CodeBlockSelectValue,
 } from "@/components/ui/shadcn-io/code-block"
 
 type Article = {
@@ -45,158 +43,111 @@ export default function ArticleDetailClient({
     setIsLoaded(true)
   }, [])
 
+  const renderCodeSnippet = (codeValue: string, rawLanguage?: string) => {
+    const languageMeta = rawLanguage ?? "text"
+    const [langToken, filenameToken] = languageMeta.split(":")
+    const normalizedLanguage = (langToken?.trim().toLowerCase() || "text") as BundledLanguage
+    const filename =
+      filenameToken?.trim() ||
+      (normalizedLanguage && normalizedLanguage !== "text" ? `snippet.${normalizedLanguage}` : "snippet.txt")
+
+    const data = [
+      {
+        language: normalizedLanguage,
+        filename,
+        code: codeValue.replace(/\n$/, ""),
+      },
+    ]
+
+    return (
+      <CodeBlock data={data} defaultValue={data[0].language} className="mb-6 border-border/60 bg-muted/40">
+        <CodeBlockHeader className="gap-2">
+          <CodeBlockFiles>
+            {(item) => (
+              <CodeBlockFilename key={item.language} value={item.language}>
+                {item.filename}
+              </CodeBlockFilename>
+            )}
+          </CodeBlockFiles>
+          <CodeBlockCopyButton />
+        </CodeBlockHeader>
+        <CodeBlockBody>
+          {(item) => (
+            <CodeBlockItem
+              key={item.language}
+              value={item.language}
+              lineNumbers={false}
+              className="[&_code]:overflow-x-visible [&_code]:whitespace-pre-wrap [&_code]:break-words [&_.line]:whitespace-pre-wrap [&_.line]:break-words"
+            >
+              <CodeBlockContent language={item.language} syntaxHighlighting={item.language !== "text"}>
+                {item.code}
+              </CodeBlockContent>
+            </CodeBlockItem>
+          )}
+        </CodeBlockBody>
+      </CodeBlock>
+    )
+  }
+
+  const renderMarkdown = (markdown: string) => (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      rehypePlugins={[rehypeRaw]}
+      components={{
+        h1: ({ children }) => <h2 className="mt-6 mb-3 text-xl font-semibold text-foreground">{children}</h2>,
+        h2: ({ children }) => <h2 className="mt-6 mb-3 text-lg font-semibold text-foreground">{children}</h2>,
+        h3: ({ children }) => <h3 className="mt-4 mb-2 text-sm font-semibold text-foreground">{children}</h3>,
+        p: ({ children }) => <p className="mb-4 text-sm leading-relaxed text-muted-foreground">{children}</p>,
+        strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
+        hr: () => <hr className="my-6 border-border/60" />,
+        ul: ({ children }) => <ul className="mb-4 list-disc space-y-2 ps-6 text-sm text-muted-foreground">{children}</ul>,
+        ol: ({ children }) => <ol className="mb-4 list-decimal space-y-2 ps-6 text-sm text-muted-foreground">{children}</ol>,
+        li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+        a: ({ href, children }) => (
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-4 transition-colors hover:text-foreground"
+          >
+            {children}
+          </a>
+        ),
+        pre: ({ children }) => {
+          const firstChild = Array.isArray(children) ? children[0] : children
+          if (isValidElement(firstChild)) {
+            const className = String((firstChild.props as { className?: string }).className ?? "")
+            const codeValue = String((firstChild.props as { children?: unknown }).children ?? "")
+            const rawLanguage = className.match(/language-([^\s]+)/)?.[1] ?? "text"
+            return renderCodeSnippet(codeValue, rawLanguage)
+          }
+          return <pre className="mb-6 overflow-x-auto rounded-md bg-muted p-3 text-sm">{children}</pre>
+        },
+        code: ({ children }) => {
+          const text = String(children ?? "")
+          return <code className="rounded bg-muted px-1 py-0.5 text-[0.85em] text-foreground">{text}</code>
+        },
+      }}
+    >
+      {markdown}
+    </ReactMarkdown>
+  )
+
   const renderArticleContent = () => {
     const content = article.content ?? ""
-    const lines = content.split("\n")
-    const elements: ReactNode[] = []
-    let i = 0
-    let key = 0
+    const chartRegex = /(\[chart:[a-z0-9-]+\])/gi
+    const segments = content.split(chartRegex)
 
-    while (i < lines.length) {
-      const rawLine = lines[i]
-      const trimmed = rawLine.trim()
-
-      if (!trimmed) {
-        i += 1
-        continue
-      }
-
-      if (trimmed.startsWith("```")) {
-        const rawMeta = trimmed.replace("```", "").trim()
-        let language: BundledLanguage = "text"
-        let filename = "snippet.txt"
-
-        if (rawMeta) {
-          const colonSplit = rawMeta.split(":")
-          if (colonSplit.length > 1 && colonSplit[0].trim()) {
-            language = colonSplit[0].trim().toLowerCase() as BundledLanguage
-            const potentialFilename = colonSplit.slice(1).join(":").trim()
-            if (potentialFilename) {
-              filename = potentialFilename
-            } else if (language && language !== "text") {
-              filename = `snippet.${language}`
-            }
-          } else {
-            const tokens = rawMeta.split(/\s+/).filter(Boolean)
-            if (tokens.length > 0) {
-              language = tokens[0].toLowerCase() as BundledLanguage
-              if (tokens.length > 1) {
-                filename = tokens.slice(1).join(" ")
-              } else if (language && language !== "text") {
-                filename = `snippet.${language}`
-              }
-            }
-          }
-        }
-
-        const codeLines: string[] = []
-        i += 1
-        while (i < lines.length && !lines[i].trim().startsWith("```")) {
-          codeLines.push(lines[i])
-          i += 1
-        }
-        i += 1
-
-        const data = [
-          {
-            language,
-            filename,
-            code: codeLines.join("\n"),
-          },
-        ]
-
-        const defaultLanguage = data[0]?.language ?? "text"
-        const shouldShowSelect = data.length > 1
-
-        elements.push(
-          <CodeBlock
-            key={`code-${key}`}
-            data={data}
-            defaultValue={defaultLanguage}
-            className="mb-6 border-border/60 bg-muted/40"
-          >
-            <CodeBlockHeader className="gap-2">
-              <CodeBlockFiles>
-                {(item) => (
-                  <CodeBlockFilename key={item.language} value={item.language}>
-                    {item.filename}
-                  </CodeBlockFilename>
-                )}
-              </CodeBlockFiles>
-              {shouldShowSelect ? (
-                <CodeBlockSelect>
-                  <CodeBlockSelectTrigger>
-                    <CodeBlockSelectValue />
-                  </CodeBlockSelectTrigger>
-                  <CodeBlockSelectContent>
-                    {(item) => (
-                      <CodeBlockSelectItem key={item.language} value={item.language}>
-                        {item.language}
-                      </CodeBlockSelectItem>
-                    )}
-                  </CodeBlockSelectContent>
-                </CodeBlockSelect>
-              ) : null}
-              <CodeBlockCopyButton />
-            </CodeBlockHeader>
-            <CodeBlockBody>
-              {(item) => (
-                <CodeBlockItem key={item.language} value={item.language}>
-                  <CodeBlockContent
-                    language={item.language}
-                    syntaxHighlighting={item.language !== "text"}
-                  >
-                    {item.code}
-                  </CodeBlockContent>
-                </CodeBlockItem>
-              )}
-            </CodeBlockBody>
-          </CodeBlock>
-        )
-        key += 1
-        continue
-      }
-
-      if (trimmed.startsWith("##")) {
-        elements.push(
-          <h2 key={`heading-${key}`} className="mt-6 mb-3 text-lg font-semibold text-foreground">
-            {trimmed.replace("##", "").trim()}
-          </h2>
-        )
-        key += 1
-        i += 1
-        continue
-      }
-
-      const chartMatch = trimmed.match(/^\[chart:([a-z0-9-]+)\]$/i)
+    return segments.map((segment, index) => {
+      const chartMatch = segment.trim().match(/^\[chart:([a-z0-9-]+)\]$/i)
       if (chartMatch) {
-        elements.push(<ArticleChartBlock key={`chart-${chartMatch[1]}-${key}`} id={chartMatch[1]} lang={lang} />)
-        key += 1
-        i += 1
-        continue
+        return <ArticleChartBlock key={`chart-${chartMatch[1]}-${index}`} id={chartMatch[1]} lang={lang} />
       }
-
-      if (trimmed.startsWith("**") && trimmed.endsWith("**") && trimmed.length > 4) {
-        elements.push(
-          <h3 key={`subheading-${key}`} className="mt-4 mb-2 text-sm font-semibold text-foreground">
-            {trimmed.replace(/\*\*/g, "")}
-          </h3>
-        )
-        key += 1
-        i += 1
-        continue
+      if (!segment.trim()) {
+        return null
       }
-
-      elements.push(
-        <p key={`paragraph-${key}`} className="mb-4 text-sm leading-relaxed text-muted-foreground">
-          {trimmed}
-        </p>
-      )
-      key += 1
-      i += 1
-    }
-
-    return elements
+      return <div key={`md-${index}`}>{renderMarkdown(segment)}</div>
+    })
   }
 
   return (
