@@ -46,7 +46,7 @@ export default function PortfolioClient({ dict, lang }: { dict: Dictionary; lang
 
   return (
     <main className="flex flex-col items-center bg-background pb-8 font-sans">
-      <div className="w-full bg-background px-4 pt-16 sm:px-6 md:px-8 sm:py-8">
+      <div className="w-full bg-background px-4 pt-8 sm:px-6 sm:pt-10 md:px-8 md:pt-12">
         <Card className="mx-auto w-full max-w-[720px] border-none bg-transparent shadow-none">
           <CardContent className="flex flex-col gap-8 p-0 sm:gap-12 sm:p-4">
             <Header isLoaded={isLoaded} dict={dict} lang={lang} />
@@ -202,7 +202,7 @@ function CTAButtons({
 
   return (
     <div
-      className={`flex flex-col items-start gap-3 transition-all duration-500 ease-out sm:flex-row sm:items-center sm:gap-2.5 -mt-4 sm:-mt-5 ${
+      className={`flex flex-row items-center gap-2.5 transition-all duration-500 ease-out -mt-4 sm:-mt-5 ${
         isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
       }`}
       style={{ transitionDelay: "300ms" }}
@@ -264,7 +264,7 @@ function CTAButtons({
       </div>
       <Button
         variant="outline"
-        className="h-[32px] w-full rounded-[99px] border-0 bg-muted px-3 py-1 hover:bg-muted/80 sm:w-auto"
+        className="h-[32px] w-auto self-start rounded-[99px] border-0 bg-muted px-3 py-1 hover:bg-muted/80"
         onClick={() => {
           const target = document.querySelector("#articles")
           if (target) {
