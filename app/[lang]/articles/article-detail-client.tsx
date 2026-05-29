@@ -28,16 +28,22 @@ type Article = {
   date: string
   readTime: string
   content?: string
+  coverImage?: string
+  coverAlt?: string
 }
 
 export default function ArticleDetailClient({
   lang,
   article,
+  relatedArticles,
 }: {
   lang: Locale
   article: Article
+  relatedArticles: Article[]
 }) {
   const [isLoaded, setIsLoaded] = useState(false)
+  const headerImage = article.coverImage || "/anas logo.png"
+  const headerAlt = article.coverAlt || article.topic
 
   useEffect(() => {
     setIsLoaded(true)
@@ -150,6 +156,19 @@ export default function ArticleDetailClient({
     })
   }
 
+  const extractPreviewText = (content?: string) => {
+    if (!content) return ""
+    const cleaned = content
+      .replace(/```[\s\S]*?```/g, " ")
+      .replace(/!\[[^\]]*]\([^)]+\)/g, " ")
+      .replace(/\[[^\]]+]\([^)]+\)/g, " ")
+      .replace(/^#+\s+/gm, "")
+      .replace(/[*_`>|-]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+    return cleaned.slice(0, 180)
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center bg-background font-sans">
       <div
@@ -160,12 +179,9 @@ export default function ArticleDetailClient({
         <Card className="mx-auto mb-8 w-full max-w-[720px] border-none bg-transparent shadow-none sm:mb-16">
           <CardContent className="flex flex-col gap-6 p-0 sm:p-4">
             <div className="flex flex-col gap-4">
-              <Link
-                href={`/${lang}#articles`}
-                className="text-xs font-medium text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
-              >
-                {lang === "ar" ? "العودة إلى المقالات" : "Back to articles"}
-              </Link>
+              <div className="overflow-hidden rounded-3xl border border-border/50 bg-muted/20">
+                <img src={headerImage} alt={headerAlt} className="h-auto w-full object-cover" loading="eager" />
+              </div>
               <h1 className="text-2xl font-bold leading-tight text-foreground sm:text-3xl">{article.topic}</h1>
               <div className="flex items-center gap-4 text-xs text-muted-foreground sm:text-sm">
                 <span className="flex items-center gap-1">
@@ -181,15 +197,43 @@ export default function ArticleDetailClient({
 
             <div className="prose prose-sm max-w-none">{renderArticleContent()}</div>
 
+            {relatedArticles.length > 0 ? (
+              <section className="mt-4 space-y-4">
+                <h2 className="text-xl font-bold text-foreground">
+                  {lang === "ar" ? "اقرأ المزيد من المقالات" : "Read more articles"}
+                </h2>
+                <div className="space-y-4">
+                  {relatedArticles.map((related) => {
+                    const relatedImage = related.coverImage || "/anas logo.png"
+                    const relatedAlt = related.coverAlt || related.topic
+                    const preview = extractPreviewText(related.content)
+
+                    return (
+                      <Link
+                        key={related.id}
+                        href={`/${lang}/articles/${related.id}`}
+                        className="group block rounded-3xl border border-border/60 bg-background/80 p-3 transition-colors hover:bg-muted/30"
+                      >
+                        <div className={`flex items-center gap-4 ${lang === "ar" ? "flex-row-reverse" : ""}`}>
+                          <div className="min-w-0 flex-1 space-y-2">
+                            <h3 className="text-lg font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">
+                              {related.topic}
+                            </h3>
+                            {preview ? <p className="line-clamp-2 text-sm text-muted-foreground">{preview}...</p> : null}
+                            <p className="text-sm text-muted-foreground">{related.date}</p>
+                          </div>
+                          <div className="h-28 w-36 shrink-0 overflow-hidden rounded-2xl border border-border/50 bg-muted/20 sm:h-32 sm:w-44">
+                            <img src={relatedImage} alt={relatedAlt} className="h-full w-full object-cover" loading="lazy" />
+                          </div>
+                        </div>
+                      </Link>
+                    )
+                  })}
+                </div>
+              </section>
+            ) : null}
+
             <div className="flex flex-wrap items-center gap-3 pt-2">
-              <Link
-                href={`/${lang}#articles`}
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <span className="border-b border-border pb-[2px]">
-                  {lang === "ar" ? "العودة إلى المقالات" : "Back to articles"}
-                </span>
-              </Link>
               <button
                 type="button"
                 onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}

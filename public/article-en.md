@@ -1,3 +1,8 @@
+---
+coverImage: /poster%202.png
+coverAlt: Skills article poster
+---
+
 # Skills: How to Teach AI to Work the Way You Want
 
 There's a simple idea that completely changes how you work with AI. It's called **Skills**.

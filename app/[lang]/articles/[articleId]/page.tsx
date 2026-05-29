@@ -3,7 +3,7 @@ import type { Locale } from "@/i18n-config"
 import { getDictionary } from "@/lib/dictionaries"
 import ArticleDetailClient from "../article-detail-client"
 import { notFound } from "next/navigation"
-import { SITE_DESCRIPTION_AR, SITE_DESCRIPTION_EN, SITE_TITLE_AR, SITE_TITLE_EN } from "@/lib/site"
+import { SITE_DESCRIPTION_AR, SITE_DESCRIPTION_EN, SITE_TITLE_AR, SITE_TITLE_EN, SITE_URL } from "@/lib/site"
 
 type ArticleParams = {
   params: {
@@ -25,9 +25,30 @@ export async function generateMetadata({ params }: ArticleParams): Promise<Metad
     }
   }
 
+  const previewImage = article.coverImage || "/anas logo.png"
+  const previewImageUrl = previewImage.startsWith("http") ? previewImage : `${SITE_URL}${previewImage}`
+  const previewImageAlt = article.coverAlt || article.topic
+
   return {
     title: `${article.topic} | ${isArabic ? "المقالات" : "Articles"} | Anas Hamad`,
     description: article.content?.slice(0, 160) || (isArabic ? SITE_DESCRIPTION_AR : SITE_DESCRIPTION_EN),
+    openGraph: {
+      type: "article",
+      title: article.topic,
+      description: article.content?.slice(0, 160) || (isArabic ? SITE_DESCRIPTION_AR : SITE_DESCRIPTION_EN),
+      images: [
+        {
+          url: previewImageUrl,
+          alt: previewImageAlt,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: article.topic,
+      description: article.content?.slice(0, 160) || (isArabic ? SITE_DESCRIPTION_AR : SITE_DESCRIPTION_EN),
+      images: [previewImageUrl],
+    },
     alternates: {
       canonical: `/${params.lang}/articles/${params.articleId}`,
       languages: {
@@ -46,5 +67,9 @@ export default async function ArticlePage({ params }: ArticleParams) {
     notFound()
   }
 
-  return <ArticleDetailClient lang={params.lang} article={article} />
+  const relatedArticles = dict.articles
+    .filter((item) => item.enabled && item.id !== article.id)
+    .slice(0, 3)
+
+  return <ArticleDetailClient lang={params.lang} article={article} relatedArticles={relatedArticles} />
 }
