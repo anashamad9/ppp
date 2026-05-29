@@ -1,4 +1,8 @@
+const vercelPreviewUrl =
+  process.env.VERCEL_ENV === "preview" && process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : ""
+
 const inferredSiteUrl =
+  vercelPreviewUrl ||
   process.env.NEXT_PUBLIC_SITE_URL ||
   process.env.VERCEL_PROJECT_PRODUCTION_URL ||
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "") ||
@@ -12,7 +16,7 @@ export const SITE_TITLE_AR = "أنس حمد | مهندس ذكاء اصطناعي
 export const SITE_DESCRIPTION_EN =
   "Hey, I'm Anas. I build practical AI things, share what I learn, and write about real projects and experiments."
 export const SITE_DESCRIPTION_AR =
-  "مرحباً، أنا أنس. أبني أشياء عملية بالذكاء الاصطناعي، وبشارك تجاربي ومشاريعي والمقالات اللي بتلخّص اللي بتعلّمته."
+  "مرحباً، أنا أنس. أبني أشياء عملية بالذكاء الاصطناعي، وأشارك تجاربي ومشاريعي والمقالات اللي أكتبها ."
 
 export const PERSON_NAME_EN = "Anas Hamad"
 export const PERSON_NAME_AR = "أنس حمد"
