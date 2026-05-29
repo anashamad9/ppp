@@ -4,9 +4,9 @@ export const SITE_NAME = "Anas Hamad"
 export const SITE_TITLE_EN = "Anas Hamad | AI & Machine Learning Engineer"
 export const SITE_TITLE_AR = "أنس حمد | مهندس ذكاء اصطناعي وتعلم آلة"
 export const SITE_DESCRIPTION_EN =
-  "Official portfolio of Anas Hamad, AI & Machine Learning Engineer. Projects, experience, articles, and contact."
+  "Hey, I'm Anas. I build practical AI things, share what I learn, and write about real projects and experiments."
 export const SITE_DESCRIPTION_AR =
-  "الموقع الرسمي لأنس حمد، مهندس ذكاء اصطناعي وتعلم آلة. الخبرات، المشاريع، المقالات، وطرق التواصل."
+  "مرحباً، أنا أنس. أبني أشياء عملية بالذكاء الاصطناعي، وبشارك تجاربي ومشاريعي والمقالات اللي بتلخّص اللي بتعلّمته."
 
 export const PERSON_NAME_EN = "Anas Hamad"
 export const PERSON_NAME_AR = "أنس حمد"
