@@ -48,7 +48,7 @@ export async function generateMetadata({ params: { lang } }: { params: { lang: L
       locale: isArabic ? "ar_JO" : "en_US",
       images: [
         {
-          url: "/Anas%20Preview.png",
+          url: "/anas-preview.png",
           width: 1200,
           height: 630,
           alt: "Anas Hamad",
@@ -59,7 +59,7 @@ export async function generateMetadata({ params: { lang } }: { params: { lang: L
       card: "summary_large_image",
       title: isArabic ? SITE_TITLE_AR : SITE_TITLE_EN,
       description: isArabic ? SITE_DESCRIPTION_AR : SITE_DESCRIPTION_EN,
-      images: ["/Anas%20Preview.png"],
+      images: ["/anas-preview.png"],
     },
     robots: {
       index: true,

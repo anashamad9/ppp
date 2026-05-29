@@ -1,4 +1,10 @@
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://anashamad.com").replace(/\/$/, "")
+const inferredSiteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  process.env.VERCEL_PROJECT_PRODUCTION_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "") ||
+  "https://anashamad.com"
+
+export const SITE_URL = inferredSiteUrl.replace(/\/$/, "")
 
 export const SITE_NAME = "Anas Hamad"
 export const SITE_TITLE_EN = "Anas Hamad | AI & Machine Learning Engineer"

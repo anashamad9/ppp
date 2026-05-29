@@ -1,5 +1,5 @@
 ---
-coverImage: /Poster%201.png
+coverImage: /poster-1.png
 coverAlt: Memory article poster
 ---
 

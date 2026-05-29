@@ -1,5 +1,5 @@
 ---
-coverImage: /poster%202.png
+coverImage: /poster-2.png
 coverAlt: Skills article poster
 ---
 
