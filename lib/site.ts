@@ -3,9 +3,9 @@ const vercelPreviewUrl =
 
 const inferredSiteUrlRaw =
   vercelPreviewUrl ||
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  process.env.VERCEL_PROJECT_PRODUCTION_URL ||
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "") ||
+  process.env.VERCEL_PROJECT_PRODUCTION_URL ||
+  process.env.NEXT_PUBLIC_SITE_URL ||
   "https://anashamad.com"
 
 const normalizeSiteUrl = (value: string) => {

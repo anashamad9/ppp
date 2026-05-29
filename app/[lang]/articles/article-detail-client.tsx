@@ -44,6 +44,7 @@ export default function ArticleDetailClient({
   const [isLoaded, setIsLoaded] = useState(false)
   const headerImage = article.coverImage || "/anas logo.png"
   const headerAlt = article.coverAlt || article.topic
+  const forceSnippetLtr = lang === "ar"
 
   useEffect(() => {
     setIsLoaded(true)
@@ -66,7 +67,14 @@ export default function ArticleDetailClient({
     ]
 
     return (
-      <CodeBlock data={data} defaultValue={data[0].language} className="mb-6 border-border/60 bg-muted/40">
+      <CodeBlock
+        data={data}
+        defaultValue={data[0].language}
+        dir={forceSnippetLtr ? "ltr" : undefined}
+        className={`mb-6 border-border/60 bg-card ${
+          forceSnippetLtr ? "[&_pre]:text-left [&_code]:text-left [&_.line]:text-left" : ""
+        }`}
+      >
         <CodeBlockHeader className="gap-2">
           <CodeBlockFiles>
             {(item) => (
@@ -83,9 +91,13 @@ export default function ArticleDetailClient({
               key={item.language}
               value={item.language}
               lineNumbers={false}
-              className="[&_code]:overflow-x-visible [&_code]:whitespace-pre-wrap [&_code]:break-words [&_.line]:whitespace-pre-wrap [&_.line]:break-words"
+              className="bg-muted/40 text-foreground [&_code]:overflow-x-visible [&_code]:whitespace-pre-wrap [&_code]:break-words [&_.line]:whitespace-pre-wrap [&_.line]:break-words"
             >
-              <CodeBlockContent language={item.language} syntaxHighlighting={item.language !== "text"}>
+              <CodeBlockContent
+                language={item.language}
+                syntaxHighlighting={item.language !== "text"}
+                themes={{ light: "vitesse-light", dark: "vitesse-dark" }}
+              >
                 {item.code}
               </CodeBlockContent>
             </CodeBlockItem>
@@ -192,6 +204,14 @@ export default function ArticleDetailClient({
                   <Clock className="h-4 w-4" />
                   {article.readTime}
                 </span>
+                <Link
+                  href={`/${lang}`}
+                  className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground sm:text-sm"
+                >
+                  <span className="border-b border-border pb-[2px]">
+                    {lang === "ar" ? "العودة للرئيسية" : "Back to home"}
+                  </span>
+                </Link>
               </div>
             </div>
 
@@ -234,6 +254,14 @@ export default function ArticleDetailClient({
             ) : null}
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
+              <Link
+                href={`/${lang}`}
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <span className="border-b border-border pb-[2px]">
+                  {lang === "ar" ? "العودة للرئيسية" : "Back to home"}
+                </span>
+              </Link>
               <button
                 type="button"
                 onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
