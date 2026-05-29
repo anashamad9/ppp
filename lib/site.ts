@@ -1,14 +1,20 @@
 const vercelPreviewUrl =
   process.env.VERCEL_ENV === "preview" && process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : ""
 
-const inferredSiteUrl =
+const inferredSiteUrlRaw =
   vercelPreviewUrl ||
   process.env.NEXT_PUBLIC_SITE_URL ||
   process.env.VERCEL_PROJECT_PRODUCTION_URL ||
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "") ||
   "https://anashamad.com"
 
-export const SITE_URL = inferredSiteUrl.replace(/\/$/, "")
+const normalizeSiteUrl = (value: string) => {
+  const trimmed = value.trim()
+  const withProtocol = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`
+  return withProtocol.replace(/\/$/, "")
+}
+
+export const SITE_URL = normalizeSiteUrl(inferredSiteUrlRaw)
 
 export const SITE_NAME = "Anas Hamad"
 export const SITE_TITLE_EN = "Anas Hamad | AI & Machine Learning Engineer"
