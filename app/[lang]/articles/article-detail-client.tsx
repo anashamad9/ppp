@@ -71,7 +71,7 @@ export default function ArticleDetailClient({
         data={data}
         defaultValue={data[0].language}
         dir={forceSnippetLtr ? "ltr" : undefined}
-        className={`mb-6 border-border/60 bg-card ${
+        className={`mb-6 border-zinc-700/80 bg-zinc-950 text-zinc-100 [&_.bg-secondary]:!bg-zinc-900 [&_.border-b]:!border-zinc-700/80 [&_.text-muted-foreground]:!text-zinc-300 ${
           forceSnippetLtr ? "[&_pre]:text-left [&_code]:text-left [&_.line]:text-left" : ""
         }`}
       >
@@ -91,12 +91,12 @@ export default function ArticleDetailClient({
               key={item.language}
               value={item.language}
               lineNumbers={false}
-              className="bg-muted/40 text-foreground [&_code]:overflow-x-visible [&_code]:whitespace-pre-wrap [&_code]:break-words [&_.line]:whitespace-pre-wrap [&_.line]:break-words"
+              className="bg-zinc-950 text-zinc-100 [&_code]:overflow-x-visible [&_code]:whitespace-pre-wrap [&_code]:break-words [&_.line]:whitespace-pre-wrap [&_.line]:break-words"
             >
               <CodeBlockContent
                 language={item.language}
                 syntaxHighlighting={item.language !== "text"}
-                themes={{ light: "vitesse-light", dark: "vitesse-dark" }}
+                themes={{ light: "vitesse-dark", dark: "vitesse-dark" }}
               >
                 {item.code}
               </CodeBlockContent>
