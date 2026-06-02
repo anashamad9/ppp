@@ -28,6 +28,7 @@ function extractMarkdownTitle(markdown: string): string | null {
 function parseMarkdownFrontmatter(markdown: string): {
   body: string
   coverImage?: string
+  ogImage?: string
   coverAlt?: string
 } {
   const trimmed = markdown.trim()
@@ -62,6 +63,7 @@ function parseMarkdownFrontmatter(markdown: string): {
   return {
     body,
     coverImage: frontmatter.coverImage || frontmatter.cover_image,
+    ogImage: frontmatter.ogImage || frontmatter.og_image,
     coverAlt: frontmatter.coverAlt || frontmatter.cover_alt,
   }
 }
@@ -87,7 +89,7 @@ export const getDictionary = async (locale: Locale) => {
       try {
         const markdownPath = path.join(process.cwd(), "public", filename)
         const rawMarkdown = await readFile(markdownPath, "utf8")
-        const { body, coverImage, coverAlt } = parseMarkdownFrontmatter(rawMarkdown)
+        const { body, coverImage, ogImage, coverAlt } = parseMarkdownFrontmatter(rawMarkdown)
         const title = extractMarkdownTitle(body)
 
         article.content = body
@@ -96,6 +98,9 @@ export const getDictionary = async (locale: Locale) => {
         }
         if (coverImage) {
           article.coverImage = coverImage
+        }
+        if (ogImage) {
+          article.ogImage = ogImage
         }
         if (coverAlt) {
           article.coverAlt = coverAlt

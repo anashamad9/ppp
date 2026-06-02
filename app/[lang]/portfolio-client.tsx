@@ -106,8 +106,8 @@ function Header({ isLoaded, dict, lang }: { isLoaded: boolean; dict: Dictionary;
       }`}
       style={{ transitionDelay: "100ms" }}
     >
-      <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
-        <div className="group h-20 w-20 [perspective:800px]">
+      <div className="flex items-center gap-3 sm:gap-4">
+        <div className="group h-20 w-20 shrink-0 [perspective:800px]">
           <div className="relative h-full w-full rounded-full transition-transform duration-300 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
             <Image
               src="/Anas Hamad.jpeg"
@@ -125,9 +125,9 @@ function Header({ isLoaded, dict, lang }: { isLoaded: boolean; dict: Dictionary;
             />
           </div>
         </div>
-        <div className="flex flex-col items-start gap-1">
-          <div className="flex items-center gap-2">
-            <h1 className={cn("text-xl font-semibold tracking-tight text-foreground sm:text-2xl", lang === "ar" && "font-thmanyah-serif-text")}>
+        <div className="flex min-w-0 flex-col items-start gap-1">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <h1 className={cn("min-w-0 text-lg font-semibold tracking-tight text-foreground sm:text-2xl", lang === "ar" && "font-thmanyah-serif-text")}>
               {dict.header.name}
             </h1>
             <TooltipProvider delayDuration={100}>
@@ -147,7 +147,7 @@ function Header({ isLoaded, dict, lang }: { isLoaded: boolean; dict: Dictionary;
               </Tooltip>
             </TooltipProvider>
           </div>
-          <p className="text-sm font-medium text-muted-foreground">{dict.header.role}</p>
+          <p className="text-sm font-medium leading-snug text-muted-foreground sm:text-base">{dict.header.role}</p>
           <span className="text-xs text-muted-foreground/70 sm:text-sm">{dict.header.location}</span>
         </div>
       </div>

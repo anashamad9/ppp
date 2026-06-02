@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: ArticleParams): Promise<Metad
     }
   }
 
-  const previewImage = article.coverImage || "/anas logo.png"
+  const previewImage = article.ogImage || article.coverImage || "/anas-preview.png"
   const previewImageUrl = previewImage.startsWith("http") ? previewImage : `${SITE_URL}${previewImage}`
   const previewImageAlt = article.coverAlt || article.topic
 
@@ -39,6 +39,8 @@ export async function generateMetadata({ params }: ArticleParams): Promise<Metad
       images: [
         {
           url: previewImageUrl,
+          width: 1200,
+          height: 629,
           alt: previewImageAlt,
         },
       ],

@@ -1,5 +1,6 @@
 ---
 coverImage: /poster-1.png
+ogImage: /poster-1-og.jpg
 coverAlt: Memory article poster
 ---
 

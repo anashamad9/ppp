@@ -1,5 +1,6 @@
 ---
 coverImage: /poster-2.png
+ogImage: /poster-2-og.jpg
 coverAlt: Skills article poster
 ---
 

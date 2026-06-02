@@ -29,6 +29,7 @@ type Article = {
   readTime: string
   content?: string
   coverImage?: string
+  ogImage?: string
   coverAlt?: string
 }
 
