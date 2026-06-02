@@ -6,6 +6,7 @@ import { ArrowUpRight, ChevronDown } from "lucide-react"
 import { useTheme } from "next-themes"
 
 import type { Locale } from "@/i18n-config"
+import { SITE_EMAIL } from "@/lib/site"
 import { cn } from "@/lib/utils"
 import { ThemeToggleButton, useThemeTransition } from "@/components/ui/shadcn-io/theme-toggle-button"
 import { CopyButton } from "@/components/ui/copy-button"
@@ -37,7 +38,7 @@ export function TopControls({ lang }: TopControlsProps) {
       toggle: isRTL ? "تبديل المظهر" : "Toggle theme",
       switchLang: isRTL ? "تبديل اللغة" : "Switch language",
       contact: isRTL ? "تواصل معي على:" : "Contact me at:",
-      email: "hi.anashamad@gmail.com",
+      email: SITE_EMAIL,
       english: "English",
       arabic: "العربية",
     }),
@@ -133,7 +134,7 @@ export function TopControls({ lang }: TopControlsProps) {
           <div className="flex min-w-0 items-center gap-2">
             <span className="shrink-0 text-sm text-muted-foreground">{labels.contact}</span>
             <a
-              href="mailto:hi.anashamad@gmail.com"
+              href={`mailto:${SITE_EMAIL}`}
               className="truncate text-sm text-black transition-opacity hover:opacity-90 dark:text-white"
             >
               {labels.email}

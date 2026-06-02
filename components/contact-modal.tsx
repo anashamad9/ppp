@@ -12,6 +12,7 @@ import {
   Trophy,
 } from "lucide-react"
 import type { Locale } from "@/i18n-config"
+import { SITE_EMAIL } from "@/lib/site"
 
 // ✅ Hugging Face logo (external SVG URL, consistent size with others)
 const HuggingFaceIcon = () => (
@@ -47,7 +48,7 @@ export default function ContactModal({
   }
 
   const links = [
-    { label: text.email, icon: <Mail className="h-5 w-5" />, href: "mailto:hi.anashamad@gmail.com" },
+    { label: text.email, icon: <Mail className="h-5 w-5" />, href: `mailto:${SITE_EMAIL}` },
     { label: text.phone, icon: <Phone className="h-5 w-5" />, href: "tel:+962795874662" },
     { label: "LinkedIn", icon: <Linkedin className="h-5 w-5" />, href: "https://www.linkedin.com/in/anas-hamad1909/" },
     { label: "X", icon: <Twitter className="h-5 w-5" />, href: "https://x.com/its_anas9" },
@@ -95,7 +96,7 @@ export default function ContactModal({
           <div className="space-y-2 mb-4">
             <div className="flex items-center gap-2 text-sm">
               <Mail className="h-5 w-5" />
-              <span>hi.anashamad@gmail.com</span>
+              <span>{SITE_EMAIL}</span>
             </div>
             <div className="flex items-center gap-2 text-sm">
               <Phone className="h-5 w-5" />

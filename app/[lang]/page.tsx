@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import type { Locale } from "@/i18n-config"
 import { getDictionary } from "@/lib/dictionaries"
-import { absUrl, PERSON_NAME_AR, PERSON_NAME_AR_STYLED, PERSON_NAME_EN, SITE_DESCRIPTION_AR, SITE_DESCRIPTION_EN, SITE_TITLE_AR, SITE_TITLE_EN } from "@/lib/site"
+import { absUrl, PERSON_NAME_AR, PERSON_NAME_AR_STYLED, PERSON_NAME_EN, SITE_DESCRIPTION_AR, SITE_DESCRIPTION_EN, SITE_EMAIL, SITE_TITLE_AR, SITE_TITLE_EN } from "@/lib/site"
 import PortfolioClient from "./portfolio-client"
 
 export async function generateMetadata({ params }: { params: { lang: Locale } }): Promise<Metadata> {
@@ -46,7 +46,7 @@ export default async function Page({ params }: { params: { lang: Locale } }) {
       "https://x.com/its_anas9",
       "https://huggingface.co/anashamad",
     ],
-    email: "hi.anashamad@gmail.com",
+    email: SITE_EMAIL,
   }
 
   // Render the client component and pass data via props

@@ -8,6 +8,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import type { Locale } from "@/types/locale" // Declare Locale type
+import { SITE_EMAIL, SITE_URL } from "@/lib/site"
 
 export default function BusinessCard({ params: { lang } }: { params: { lang: Locale } }) {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -18,7 +19,7 @@ export default function BusinessCard({ params: { lang } }: { params: { lang: Loc
     setIsLoaded(true)
   }, [])
 
-  const currentUrl = typeof window !== "undefined" ? window.location.href : `https://yoursite.com/${lang}/card`
+  const currentUrl = typeof window !== "undefined" ? window.location.href : `${SITE_URL}/${lang}/card`
 
   const handleCardClick = () => {
     if (!showQR) {
@@ -149,7 +150,7 @@ export default function BusinessCard({ params: { lang } }: { params: { lang: Loc
                     <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
                       <Mail className="w-4 h-4" />
                     </div>
-                    <span className="text-sm">hi.anashamad@gmail.com</span>
+                    <span className="text-sm">{SITE_EMAIL}</span>
                   </div>
                   <div className="flex items-center gap-3 text-white/90">
                     <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">

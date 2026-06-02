@@ -3,7 +3,7 @@
 import { isValidElement, useEffect, useState } from "react"
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
-import { Calendar, Clock } from "lucide-react"
+import { ArrowLeft, ArrowRight, Calendar, Clock, LockKeyhole } from "lucide-react"
 import type { Locale } from "@/i18n-config"
 import { ArticleChartBlock } from "./article-charts"
 import type { BundledLanguage } from "@/components/ui/shadcn-io/code-block"
@@ -42,6 +42,7 @@ export default function ArticleDetailClient({
   relatedArticles: Article[]
 }) {
   const [isLoaded, setIsLoaded] = useState(false)
+  const isProtectedArticle = [4, 5, 6].includes(article.id)
   const headerImage = article.coverImage || "/anas logo.png"
   const headerAlt = article.coverAlt || article.topic
   const forceSnippetLtr = lang === "ar"
@@ -179,6 +180,54 @@ export default function ArticleDetailClient({
       .replace(/\s+/g, " ")
       .trim()
     return cleaned.slice(0, 180)
+  }
+
+  if (isProtectedArticle) {
+    const BackIcon = lang === "ar" ? ArrowRight : ArrowLeft
+
+    return (
+      <main className="flex flex-col items-center bg-background font-sans">
+        <div className="flex w-full flex-col bg-background px-4 pt-16 pb-8 sm:px-6 sm:py-10 md:px-8">
+          <Card className="mx-auto flex w-full max-w-[720px] border-none bg-transparent shadow-none">
+            <CardContent
+              className={`flex min-h-[calc(100vh-13rem)] w-full flex-col justify-center gap-6 p-0 transition-all duration-700 ease-out sm:p-4 ${
+                isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
+              }`}
+            >
+              <section className="flex flex-col gap-6">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <LockKeyhole className="h-4 w-4" />
+                  <span className={lang === "ar" ? "" : "uppercase"}>
+                    {lang === "ar" ? "مقال مخفي" : "Protected article"}
+                  </span>
+                </div>
+                <div className="max-w-[560px] space-y-3">
+                  <h1 className="text-2xl font-bold leading-tight text-foreground sm:text-3xl">
+                    {lang === "ar" ? "هذا المقال محمي أو مخفي من المالك" : "This article is protected or hidden by the owner"}
+                  </h1>
+                  <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+                    {lang === "ar"
+                      ? "يمكنك الرجوع إلى قائمة المقالات وقراءة المقالات المتاحة حالياً."
+                      : "You can go back to the articles list and read the articles that are currently available."}
+                  </p>
+                </div>
+                <div>
+                  <Link
+                    href={`/${lang}#articles`}
+                    className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    <BackIcon className="h-4 w-4" />
+                    <span className="border-b border-border pb-[2px]">
+                      {lang === "ar" ? "العودة للمقالات" : "Back to articles"}
+                    </span>
+                  </Link>
+                </div>
+              </section>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
+    )
   }
 
   return (

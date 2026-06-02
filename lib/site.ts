@@ -3,9 +3,10 @@ const vercelPreviewUrl =
 
 const inferredSiteUrlRaw =
   vercelPreviewUrl ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "") ||
-  process.env.VERCEL_PROJECT_PRODUCTION_URL ||
   process.env.NEXT_PUBLIC_SITE_URL ||
+  process.env.VERCEL_PROJECT_PRODUCTION_URL ||
+  (process.env.VERCEL_ENV === "production" ? "https://anashamad.com" : "") ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "") ||
   "https://anashamad.com"
 
 const normalizeSiteUrl = (value: string) => {
@@ -15,6 +16,7 @@ const normalizeSiteUrl = (value: string) => {
 }
 
 export const SITE_URL = normalizeSiteUrl(inferredSiteUrlRaw)
+export const SITE_EMAIL = "hi@anashamad.com"
 
 export const SITE_NAME = "Anas Hamad"
 export const SITE_TITLE_EN = "Anas Hamad | AI & Machine Learning Engineer"
