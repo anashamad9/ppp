@@ -10,7 +10,9 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function ResumePage({ params }: { params: { lang: Locale } }) {
-  const dict = await getDictionary(params.lang)
-  return <PortfolioClient dict={dict} lang={params.lang} />
+export default async function ResumePage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang: langParam } = await params
+  const lang = langParam as Locale
+  const dict = await getDictionary(lang)
+  return <PortfolioClient dict={dict} lang={lang} />
 }

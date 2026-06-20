@@ -17,7 +17,14 @@ function getLocale(request: NextRequest): string {
 }
 
 export function middleware(request: NextRequest) {
+  const hostname = request.headers.get("host") || ""
   const pathname = request.nextUrl.pathname
+
+  // Subdomain: build.anashamad.com → rewrite to /en/build
+  if (hostname === "build.anashamad.com") {
+    const locale = getLocale(request)
+    return NextResponse.rewrite(new URL(`/${locale}/build`, request.url))
+  }
 
   // Skip files in public folder and API routes
   if (

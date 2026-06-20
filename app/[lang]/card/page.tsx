@@ -6,11 +6,13 @@ import { HomeIcon, Mail, Phone, MapPin, QrCode, X } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import Image from "next/image"
 import Link from "next/link"
-import { useState, useEffect } from "react"
-import type { Locale } from "@/types/locale" // Declare Locale type
+import { useState, useEffect, use } from "react"
+import type { Locale } from "@/i18n-config"
 import { SITE_EMAIL, SITE_URL } from "@/lib/site"
 
-export default function BusinessCard({ params: { lang } }: { params: { lang: Locale } }) {
+export default function BusinessCard({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang: langParam } = use(params)
+  const lang = langParam as Locale
   const [isLoaded, setIsLoaded] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
   const [showQR, setShowQR] = useState(false)

@@ -20,6 +20,12 @@ const markdownArticleFiles: Record<Locale, Record<number, string>> = {
   },
 }
 
+type ArticlePreviewFields = {
+  coverImage?: string
+  ogImage?: string
+  coverAlt?: string
+}
+
 function extractMarkdownTitle(markdown: string): string | null {
   const match = markdown.match(/^#\s+(.+)$/m)
   return match?.[1]?.trim() ?? null
@@ -80,7 +86,9 @@ export const getDictionary = async (locale: Locale) => {
   await Promise.all(
     Object.entries(fileMap).map(async ([articleId, filename]) => {
       const id = Number(articleId)
-      const article = dictionary.articles.find((item) => item.id === id)
+      const article = dictionary.articles.find((item) => item.id === id) as
+        | (typeof dictionary.articles[number] & ArticlePreviewFields)
+        | undefined
 
       if (!article) {
         return

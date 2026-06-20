@@ -3,6 +3,8 @@ import { SITE_URL } from "@/lib/site"
 import enDictionary from "@/dictionaries/en.json"
 import arDictionary from "@/dictionaries/ar.json"
 
+const featuredArticleIds = new Set([1, 3, 4, 5])
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date()
   const articleUrls = [
@@ -10,13 +12,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${SITE_URL}/en/articles/${article.id}`,
       lastModified: now,
       changeFrequency: "monthly" as const,
-      priority: 0.6,
+      priority: featuredArticleIds.has(article.id) ? 0.85 : 0.45,
     })),
     ...arDictionary.articles.filter((article) => article.enabled).map((article) => ({
       url: `${SITE_URL}/ar/articles/${article.id}`,
       lastModified: now,
       changeFrequency: "monthly" as const,
-      priority: 0.6,
+      priority: featuredArticleIds.has(article.id) ? 0.85 : 0.45,
     })),
   ]
 
@@ -32,6 +34,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "weekly",
       priority: 1,
+    },
+    {
+      url: `${SITE_URL}/en/build`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.75,
+    },
+    {
+      url: `${SITE_URL}/ar/build`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.75,
     },
     ...articleUrls,
     {
