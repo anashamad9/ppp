@@ -68,9 +68,9 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       follow: true,
     },
     icons: {
-      icon: "/anas logo.png",
-      shortcut: "/anas logo.png",
-      apple: "/anas logo.png",
+      icon: "/anas-logo.png",
+      shortcut: "/anas-logo.png",
+      apple: "/anas-logo.png",
     },
   }
 }
@@ -93,10 +93,10 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <link rel="icon" href="/anas logo.png" sizes="any" />
-        <link rel="icon" href="/anas logo.png" type="image/png" />
-        <link rel="shortcut icon" href="/anas logo.png" />
-        <link rel="apple-touch-icon" href="/anas logo.png" />
+        <link rel="icon" href="/anas-logo.png" sizes="any" />
+        <link rel="icon" href="/anas-logo.png" type="image/png" />
+        <link rel="shortcut icon" href="/anas-logo.png" />
+        <link rel="apple-touch-icon" href="/anas-logo.png" />
       </head>
       <body className={lang === "ar" ? "font-arabic" : "font-sans"}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>

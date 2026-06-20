@@ -52,7 +52,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
     name: PERSON_NAME_EN,
     alternateName: [PERSON_NAME_AR, PERSON_NAME_AR_STYLED, dict.header.name],
     url: absUrl(`/${lang}`),
-    image: absUrl("/anas logo.png"),
+    image: absUrl("/anas-logo.png"),
     jobTitle: lang === "ar" ? "مهندس ذكاء اصطناعي وتعلم آلة" : "AI & Machine Learning Engineer",
     sameAs: [
       "https://www.linkedin.com/in/anas-hamad1909/",

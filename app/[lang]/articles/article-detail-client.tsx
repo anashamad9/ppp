@@ -44,7 +44,7 @@ export default function ArticleDetailClient({
 }) {
   const [isLoaded, setIsLoaded] = useState(false)
   const isProtectedArticle = [4, 5, 6].includes(article.id)
-  const headerImage = article.coverImage || "/anas logo.png"
+  const headerImage = article.coverImage || "/anas-logo.png"
   const headerAlt = article.coverAlt || article.topic
   const forceSnippetLtr = lang === "ar"
 
@@ -274,7 +274,7 @@ export default function ArticleDetailClient({
                 </h2>
                 <div className="space-y-4">
                   {relatedArticles.map((related) => {
-                    const relatedImage = related.coverImage || "/anas logo.png"
+                    const relatedImage = related.coverImage || "/anas-logo.png"
                     const relatedAlt = related.coverAlt || related.topic
                     const preview = extractPreviewText(related.content)
 

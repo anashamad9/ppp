@@ -1,5 +1,5 @@
 ---
-coverImage: /anas logo.png
+coverImage: /anas-logo.png
 coverAlt: Header image for the article
 ---
 

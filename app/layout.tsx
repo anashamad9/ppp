@@ -13,9 +13,9 @@ export const metadata: Metadata = {
     follow: true,
   },
   icons: {
-    icon: "/anas logo.png",
-    shortcut: "/anas logo.png",
-    apple: "/anas logo.png",
+    icon: "/anas-logo.png",
+    shortcut: "/anas-logo.png",
+    apple: "/anas-logo.png",
   },
 }
 
@@ -27,10 +27,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/anas logo.png" sizes="any" />
-        <link rel="icon" href="/anas logo.png" type="image/png" />
-        <link rel="shortcut icon" href="/anas logo.png" />
-        <link rel="apple-touch-icon" href="/anas logo.png" />
+        <link rel="icon" href="/anas-logo.png" sizes="any" />
+        <link rel="icon" href="/anas-logo.png" type="image/png" />
+        <link rel="shortcut icon" href="/anas-logo.png" />
+        <link rel="apple-touch-icon" href="/anas-logo.png" />
       </head>
       <body>{children}</body>
     </html>

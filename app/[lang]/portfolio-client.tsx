@@ -218,14 +218,14 @@ function Header({
         <div className="group h-20 w-20 shrink-0 [perspective:800px]">
           <div className="relative h-full w-full rounded-full transition-transform duration-300 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
             <Image
-              src="/Anas Hamad.jpeg"
+              src="/anas-hamad.jpeg"
               alt={dict.header.name}
               width={80}
               height={80}
               className="absolute inset-0 rounded-full border-2 border-border [backface-visibility:hidden]"
             />
             <Image
-              src="/anas logo.png"
+              src="/anas-logo.png"
               alt="Anas logo"
               width={80}
               height={80}
@@ -440,7 +440,7 @@ function CTAButtons({
             <Button
               asChild
               variant="outline"
-              className="h-[32px] w-auto rounded-[99px] border-0 bg-[#25D366] px-3 py-1 text-[13px] font-medium text-white hover:bg-[#25D366]/90"
+              className="h-[32px] w-auto rounded-[99px] border-0 bg-[#25D366] px-3 py-1 text-[13px] font-medium text-black hover:bg-[#25D366]/90"
             >
               <a href={whatsappHref} target="_blank" rel="noopener noreferrer" aria-label={lang === "ar" ? "واتساب" : "WhatsApp"}>
                 <span className="inline-flex items-center gap-1.5">
