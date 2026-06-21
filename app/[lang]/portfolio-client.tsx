@@ -354,11 +354,7 @@ function CTAButtons({
   const whatsappNumber = phoneLink?.href?.replace("tel:", "").replace(/\D/g, "") ?? ""
   const whatsappHref = whatsappNumber ? `https://wa.me/${whatsappNumber}` : "#"
   const hasContactOptions = Boolean(emailLink || phoneLink)
-  const meetingHref = emailLink
-    ? `${emailLink.href}${emailLink.href.includes("?") ? "&" : "?"}subject=${encodeURIComponent(
-        lang === "ar" ? "حجز اجتماع" : "Book a Meeting",
-      )}`
-    : "#"
+  const meetingHref = "https://cal.com/anashamed/30min?user=anashamed&overlayCalendar=true"
   const actionLabel = secondaryActionLabel ?? dict.nav.articles
   const ActionIcon = secondaryActionIcon === "eye" ? Eye : BookOpen
 
@@ -414,7 +410,7 @@ function CTAButtons({
               asChild
               className="h-[32px] w-auto rounded-[99px] bg-[#165dfb] px-3 py-1 text-[13px] font-medium text-white hover:bg-[#165dfb]/90"
             >
-              <a href={meetingHref} aria-label={lang === "ar" ? "احجز اجتماع" : "Book a Meeting"}>
+              <a href={meetingHref} target="_blank" rel="noopener noreferrer" aria-label={lang === "ar" ? "احجز اجتماع" : "Book a Meeting"}>
                 <span className="inline-flex items-center gap-1.5">
                   <CalendarDays className="h-3.5 w-3.5" />
                   <span>{lang === "ar" ? "احجز اجتماع" : "Book a Meeting"}</span>
