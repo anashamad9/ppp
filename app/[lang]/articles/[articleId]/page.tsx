@@ -3,7 +3,8 @@ import type { Locale } from "@/i18n-config"
 import { getDictionary } from "@/lib/dictionaries"
 import ArticleDetailClient from "../article-detail-client"
 import { notFound } from "next/navigation"
-import { PERSON_NAME_EN, SITE_DESCRIPTION_AR, SITE_DESCRIPTION_EN, SITE_TITLE_AR, SITE_TITLE_EN, SITE_URL, absUrl } from "@/lib/site"
+import { PERSON_NAME_EN, SITE_DESCRIPTION_AR, SITE_DESCRIPTION_EN, SITE_TITLE_AR, SITE_TITLE_EN } from "@/lib/site"
+import { getRequestSiteUrl } from "@/lib/site-url.server"
 
 type ArticleParams = {
   params: Promise<{
@@ -43,6 +44,7 @@ const toIsoDate = (value: string | undefined) => {
 export async function generateMetadata({ params }: ArticleParams): Promise<Metadata> {
   const { lang: langParam, articleId } = await params
   const lang = langParam as Locale
+  const siteUrl = await getRequestSiteUrl()
   const dict = await getDictionary(lang)
   const article = dict.articles.find((item) => item.enabled && String(item.id) === articleId)
   const isArabic = lang === "ar"
@@ -57,7 +59,7 @@ export async function generateMetadata({ params }: ArticleParams): Promise<Metad
 
   const articlePreview = article as typeof article & ArticlePreviewFields
   const previewImage = articlePreview.ogImage || articlePreview.coverImage || "/anas-preview.png"
-  const previewImageUrl = previewImage.startsWith("http") ? previewImage : `${SITE_URL}${previewImage}`
+  const previewImageUrl = previewImage.startsWith("http") ? previewImage : `${siteUrl}${previewImage}`
   const previewImageAlt = articlePreview.coverAlt || article.topic
   const description = getDescription(article.content, isArabic ? SITE_DESCRIPTION_AR : SITE_DESCRIPTION_EN)
   const canonicalPath = `/${lang}/articles/${articleId}`
@@ -66,7 +68,7 @@ export async function generateMetadata({ params }: ArticleParams): Promise<Metad
   return {
     title: `${article.topic} | ${isArabic ? "المقالات" : "Articles"} | Anas Hamad`,
     description,
-    authors: [{ name: PERSON_NAME_EN, url: SITE_URL }],
+    authors: [{ name: PERSON_NAME_EN, url: siteUrl }],
     creator: PERSON_NAME_EN,
     publisher: PERSON_NAME_EN,
     robots: {
@@ -75,7 +77,7 @@ export async function generateMetadata({ params }: ArticleParams): Promise<Metad
     },
     openGraph: {
       type: "article",
-      url: absUrl(canonicalPath),
+      url: `${siteUrl}${canonicalPath}`,
       title: article.topic,
       description,
       siteName: "Anas Hamad",
@@ -110,6 +112,7 @@ export async function generateMetadata({ params }: ArticleParams): Promise<Metad
 export default async function ArticlePage({ params }: ArticleParams) {
   const { lang: langParam, articleId } = await params
   const lang = langParam as Locale
+  const siteUrl = await getRequestSiteUrl()
   const dict = await getDictionary(lang)
   const article = dict.articles.find((item) => item.enabled && String(item.id) === articleId)
   const isArabic = lang === "ar"
@@ -129,20 +132,20 @@ export default async function ArticlePage({ params }: ArticleParams) {
     "@type": "Article",
     headline: article.topic,
     description: getDescription(article.content, isArabic ? SITE_DESCRIPTION_AR : SITE_DESCRIPTION_EN),
-    image: previewImage.startsWith("http") ? previewImage : absUrl(previewImage),
+    image: previewImage.startsWith("http") ? previewImage : `${siteUrl}${previewImage}`,
     datePublished: publishedDate,
     dateModified: publishedDate,
     author: {
       "@type": "Person",
       name: PERSON_NAME_EN,
-      url: SITE_URL,
+      url: siteUrl,
     },
     publisher: {
       "@type": "Person",
       name: PERSON_NAME_EN,
-      url: SITE_URL,
+      url: siteUrl,
     },
-    mainEntityOfPage: absUrl(`/${lang}/articles/${articleId}`),
+    mainEntityOfPage: `${siteUrl}/${lang}/articles/${articleId}`,
     inLanguage: isArabic ? "ar" : "en",
   }
 

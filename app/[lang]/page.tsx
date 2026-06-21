@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 import type { Locale } from "@/i18n-config"
 import { getDictionary } from "@/lib/dictionaries"
-import { absUrl, PERSON_NAME_AR, PERSON_NAME_AR_STYLED, PERSON_NAME_EN, SITE_DESCRIPTION_AR, SITE_DESCRIPTION_EN, SITE_EMAIL, SITE_TITLE_AR, SITE_TITLE_EN } from "@/lib/site"
+import { PERSON_NAME_AR, PERSON_NAME_AR_STYLED, PERSON_NAME_EN, SITE_DESCRIPTION_AR, SITE_DESCRIPTION_EN, SITE_EMAIL, SITE_TITLE_AR, SITE_TITLE_EN } from "@/lib/site"
+import { getRequestSiteUrl } from "@/lib/site-url.server"
 import PortfolioClient from "./portfolio-client"
 
 const featuredArticleIds = new Set([1, 3, 4, 5])
@@ -43,6 +44,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
   const { lang: langParam } = await params
   const lang = langParam as Locale
+  const siteUrl = await getRequestSiteUrl()
   // Load the correct language dictionary on the server
   const dict = await getDictionary(lang)
   const featuredArticles = dict.articles.filter((article) => article.enabled && featuredArticleIds.has(article.id)).slice(0, 4)
@@ -51,8 +53,8 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
     "@type": "Person",
     name: PERSON_NAME_EN,
     alternateName: [PERSON_NAME_AR, PERSON_NAME_AR_STYLED, dict.header.name],
-    url: absUrl(`/${lang}`),
-    image: absUrl("/anas-logo.png"),
+    url: `${siteUrl}/${lang}`,
+    image: `${siteUrl}/anas-logo.png`,
     jobTitle: lang === "ar" ? "مهندس ذكاء اصطناعي وتعلم آلة" : "AI & Machine Learning Engineer",
     sameAs: [
       "https://www.linkedin.com/in/anas-hamad1909/",
@@ -74,7 +76,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       "@type": "ListItem",
       position: index + 1,
       name: article.topic,
-      url: absUrl(`/${lang}/articles/${article.id}`),
+      url: `${siteUrl}/${lang}/articles/${article.id}`,
     })),
   }
   const websiteJsonLd = {
@@ -82,17 +84,17 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
     "@type": "WebSite",
     name: "Anas Hamad",
     alternateName: ["Anas Hamad Portfolio", "Anas Hamad Articles", PERSON_NAME_AR],
-    url: absUrl(`/${lang}`),
+    url: `${siteUrl}/${lang}`,
     inLanguage: lang,
     publisher: {
       "@type": "Person",
       name: PERSON_NAME_EN,
-      url: absUrl(`/${lang}`),
+      url: `${siteUrl}/${lang}`,
     },
     hasPart: featuredArticles.map((article) => ({
       "@type": "Article",
       headline: article.topic,
-      url: absUrl(`/${lang}/articles/${article.id}`),
+      url: `${siteUrl}/${lang}/articles/${article.id}`,
       author: {
         "@type": "Person",
         name: PERSON_NAME_EN,

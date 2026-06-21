@@ -2,19 +2,19 @@ import type { Metadata } from "next"
 import type { Locale } from "@/i18n-config"
 import { getDictionary } from "@/lib/dictionaries"
 import {
-  absUrl,
   PERSON_NAME_AR,
   PERSON_NAME_AR_STYLED,
   PERSON_NAME_EN,
   SITE_EMAIL,
-  SITE_URL,
 } from "@/lib/site"
+import { getRequestSiteUrl } from "@/lib/site-url.server"
 import PortfolioClient from "../portfolio-client"
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang: langParam } = await params
   const lang = langParam as Locale
   const isArabic = lang === "ar"
+  const siteUrl = await getRequestSiteUrl()
   const title = isArabic ? "أنس حمد | مطور منتجات تقنية ومواقع" : "Anas Hamad | Product & Website Developer"
   const description = isArabic
     ? "أنس حمد مطور منتجات تقنية ومواقع يساعد الشركات الناشئة والمستقلين والأعمال على بناء مواقع، تطبيقات، منصات SaaS، لوحات تحكم، وأنظمة مخصصة."
@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       locale: isArabic ? "ar_JO" : "en_US",
       images: [
         {
-          url: `${SITE_URL}${image}`,
+          url: `${siteUrl}${image}`,
           width: 1200,
           height: 630,
           alt: "Anas Hamad",
@@ -68,6 +68,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 export default async function BuildPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang: langParam } = await params
   const lang = langParam as Locale
+  const siteUrl = await getRequestSiteUrl()
   const dict = await getDictionary(lang)
   const role = lang === "ar" ? "مطور منتجات تقنية ومواقع" : "Product & Website Developer"
   const topTags =
@@ -318,8 +319,8 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
     "@type": "Person",
     name: PERSON_NAME_EN,
     alternateName: [PERSON_NAME_AR, PERSON_NAME_AR_STYLED, dict.header.name],
-    url: absUrl(`/${lang}/build`),
-    image: absUrl("/anas-logo.png"),
+    url: `${siteUrl}/${lang}/build`,
+    image: `${siteUrl}/anas-logo.png`,
     jobTitle: role,
     sameAs: [
       "https://www.linkedin.com/in/anas-hamad1909/",

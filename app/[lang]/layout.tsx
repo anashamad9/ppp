@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { TopControls } from "@/components/top-controls"
 import { i18n, type Locale } from "@/i18n-config"
 import { SITE_DESCRIPTION_AR, SITE_DESCRIPTION_EN, SITE_TITLE_AR, SITE_TITLE_EN, SITE_URL } from "@/lib/site"
+import { getRequestSiteUrl } from "@/lib/site-url.server"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -29,8 +30,9 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const { lang: langParam } = await params
   const lang = langParam as Locale
   const isArabic = lang === "ar"
+  const siteUrl = await getRequestSiteUrl()
   return {
-    metadataBase: new URL(SITE_URL),
+    metadataBase: new URL(siteUrl),
     title: isArabic ? SITE_TITLE_AR : SITE_TITLE_EN,
     description: isArabic ? SITE_DESCRIPTION_AR : SITE_DESCRIPTION_EN,
     alternates: {

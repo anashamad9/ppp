@@ -31,17 +31,22 @@ export function middleware(request: NextRequest) {
   if (hostname === "build.anashamad.com") {
     const pathSegments = pathname.split("/").filter(Boolean)
     const requestedLocale = i18n.locales.find((locale) => pathSegments[0] === locale)
-    const locale = requestedLocale ?? getLocale(request)
 
-    if (pathname === `/${locale}/build`) {
+    if (requestedLocale) {
+      if (pathname === `/${requestedLocale}` || pathname === `/${requestedLocale}/`) {
+        return NextResponse.rewrite(new URL(`/${requestedLocale}/build`, request.url))
+      }
+
       return NextResponse.next()
     }
 
-    if (pathname === `/${locale}` || pathname === `/${locale}/`) {
+    const locale = getLocale(request)
+
+    if (pathname === "/") {
       return NextResponse.rewrite(new URL(`/${locale}/build`, request.url))
     }
 
-    return NextResponse.rewrite(new URL(`/${locale}/build`, request.url))
+    return NextResponse.rewrite(new URL(`/${locale}${pathname}`, request.url))
   }
 
   // If it's the root path, redirect to /en
