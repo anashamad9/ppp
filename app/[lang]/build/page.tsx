@@ -95,9 +95,9 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
       ? [
           {
             tag: "موقع",
-            title: "مواقع سريعة وواضحة تركّز على التحويل",
-            description: "أصمم وأطوّر مواقع تعكس الهوية بشكل أنيق وتحوّل الزائر إلى عميل بخبرة استخدام مرتبة وأداء سريع.",
-            badges: ["Marketing Sites", "Brand Pages", "Responsive UI", "SEO Ready"],
+            title: "منتجات وتطبيقات ومواقع حديثة مبنية بعناية",
+            description: "أبني منتجات وتطبيقات ومواقع حديثة تبدو متقنة ومفيدة وجاهزة للاستخدام في العالم الحقيقي.",
+            badges: ["مواقع تسويقية", "صفحات علامة تجارية", "واجهة متجاوبة", "جاهز لـ SEO"],
             imageSrc: "/first-card/First image.png",
             imageAlt: "معاينة موقع ويب",
           },
@@ -180,11 +180,11 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
     lang === "ar"
       ? [
           "أنا <u>مطوّر برمجيات</u> و<u>مطور منتجات تقنية</u> أساعد [icon:startup]<u>الشركات الناشئة</u>، [icon:freelancer]<u>المستقلين</u>، [icon:business]<u>الأعمال</u>، و[icon:entrepreneur]<u>روّاد الأعمال</u> على تحويل الأفكار إلى <u>منتجات رقمية حقيقية</u>. أصمم وأطوّر <u>المواقع الإلكترونية</u>، <u>تطبيقات الويب</u>، <u>تطبيقات الموبايل</u>، <u>منصات SaaS</u>، <u>لوحات التحكم</u>، و<u>الأنظمة التجارية المخصصة</u> المبنية لحل مشاكل فعلية وصناعة قيمة قابلة للقياس. من التخطيط وتصميم تجربة المستخدم إلى التطوير والإطلاق والتوسّع، أستمتع بتحويل المتطلبات المعقدة إلى حلول بسيطة وموثوقة وسهلة الاستخدام.",
-          "خلال السنوات الماضية، عملت على منتجات في مجالات <u>الذكاء الاصطناعي</u>، <u>تحليل البيانات</u>، <u>الأتمتة</u>، و<u>ذكاء الأعمال</u>. وبصفتي مؤسس <u>Onqoud</u>، بنيت منصة تساعد المطاعم على اتخاذ قرارات أفضل باستخدام البيانات والتحليلات التنبؤية. أسلوبي يجمع بين <u>الخبرة التقنية</u> و<u>التفكير المنتجّي</u>، حتى يكون كل مشروع ليس فقط مبنياً بشكل ممتاز، بل أيضاً متوافقاً مع أهداف العمل واحتياجات المستخدمين. سواء كان المشروع <u>MVP لشركة ناشئة</u>، أو <u>لوحة تحكم لشركة</u>، أو <u>حل برمجي مخصص</u>، فأنا أركز على بناء منتجات عملية، قابلة للتوسع، وجاهزة للاستخدام في العالم الحقيقي.",
+          "خلال السنوات الماضية، عملت على منتجات في مجالات <u>الذكاء الاصطناعي</u>، <u>تحليل البيانات</u>، <u>الأتمتة</u>، و<u>ذكاء الأعمال</u>. أسلوبي يجمع بين <u>الخبرة التقنية</u> و<u>التفكير المنتجّي</u>، حتى يكون كل مشروع ليس فقط مبنياً بشكل ممتاز، بل أيضاً متوافقاً مع أهداف العمل واحتياجات المستخدمين. سواء كان المشروع <u>MVP لشركة ناشئة</u>، أو <u>لوحة تحكم لشركة</u>، أو <u>حل برمجي مخصص</u>، فأنا أركز على بناء منتجات عملية، قابلة للتوسع، وجاهزة للاستخدام في العالم الحقيقي.",
         ]
       : [
           "I'm a <u>Developer</u> and <u>Product Builder</u> who helps [icon:startup]<u>startups</u>, [icon:freelancer]<u>freelancers</u>, [icon:business]<u>businesses</u>, and [icon:entrepreneur]<u>entrepreneurs</u> turn ideas into <u>real digital products</u>. I design and develop <u>websites</u>, <u>web applications</u>, <u>mobile apps</u>, <u>SaaS platforms</u>, <u>dashboards</u>, and <u>custom business systems</u> that are built to solve real problems and create measurable value. From planning and user experience design to development, deployment, and scaling, I enjoy transforming complex requirements into simple, reliable, and easy-to-use solutions.",
-          "Over the years, I have worked on products across <u>AI</u>, <u>data analytics</u>, <u>automation</u>, and <u>business intelligence</u>. As the founder of <u>Onqoud</u>, I built a platform that helps restaurants make better decisions using data and predictive analytics. My approach combines <u>technical expertise</u> with <u>product thinking</u>, ensuring that every project is not only well-built but also aligned with business goals and user needs. Whether it's a <u>startup MVP</u>, a <u>company dashboard</u>, or a <u>custom software solution</u>, I focus on building products that are practical, scalable, and ready for real-world use.",
+          "Over the years, I have worked on products across <u>AI</u>, <u>data analytics</u>, <u>automation</u>, and <u>business intelligence</u>. My approach combines <u>technical expertise</u> with <u>product thinking</u>, ensuring that every project is not only well-built but also aligned with business goals and user needs. Whether it's a <u>startup MVP</u>, a <u>company dashboard</u>, or a <u>custom software solution</u>, I focus on building products that are practical, scalable, and ready for real-world use.",
         ]
   const projectsCard =
     lang === "ar"

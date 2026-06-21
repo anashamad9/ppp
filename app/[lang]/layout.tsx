@@ -86,24 +86,17 @@ export default async function RootLayout({
   const lang = langParam as Locale
 
   return (
-    <html
-      lang={lang}
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+      <div
+        lang={lang}
       dir={lang === "ar" ? "rtl" : "ltr"}
       className={`${inter.variable} ${ibmPlexSansArabic.variable}`}
-      suppressHydrationWarning
-    >
-      <head>
-        <link rel="icon" href="/anas-logo.png" sizes="any" />
-        <link rel="icon" href="/anas-logo.png" type="image/png" />
-        <link rel="shortcut icon" href="/anas-logo.png" />
-        <link rel="apple-touch-icon" href="/anas-logo.png" />
-      </head>
-      <body className={lang === "ar" ? "font-arabic" : "font-sans"}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+      >
+        <div className={lang === "ar" ? "font-arabic" : "font-sans"}>
           {children}
           <TopControls lang={lang} />
-        </ThemeProvider>
-      </body>
-    </html>
+        </div>
+      </div>
+    </ThemeProvider>
   )
 }

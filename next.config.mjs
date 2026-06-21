@@ -1,3 +1,5 @@
+import path from "path"
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
@@ -9,6 +11,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  output: "standalone",
+  outputFileTracingRoot: path.join(process.cwd()),
 }
 
 export default nextConfig

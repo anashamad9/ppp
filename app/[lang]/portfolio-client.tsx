@@ -440,9 +440,15 @@ function CTAButtons({
             <Button
               asChild
               variant="outline"
-              className="h-[32px] w-auto rounded-[99px] border-0 bg-[#25D366] px-3 py-1 text-[13px] font-medium text-black hover:bg-[#25D366]/90"
+              className="h-[32px] w-auto rounded-[99px] border-0 bg-[#25D366] px-3 py-1 text-[13px] font-medium text-white hover:bg-[#25D366]/90"
             >
-              <a href={whatsappHref} target="_blank" rel="noopener noreferrer" aria-label={lang === "ar" ? "واتساب" : "WhatsApp"}>
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={lang === "ar" ? "واتساب" : "WhatsApp"}
+                className="text-white"
+              >
                 <span className="inline-flex items-center gap-1.5">
                   <SiWhatsapp className="h-3.5 w-3.5" />
                   <span>{lang === "ar" ? "واتساب" : "WhatsApp"}</span>
@@ -719,8 +725,8 @@ function BuildShowcaseCard({
       style={{ transitionDelay: "600ms" }}
     >
       <div className="overflow-hidden rounded-2xl bg-muted">
-        <div className="grid grid-cols-1 md:grid-cols-[1.45fr_0.95fr]">
-          <div className="flex min-h-[320px] flex-col p-5 sm:p-7">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_1.3fr]">
+          <div className="flex min-h-[340px] flex-col p-5 sm:min-h-[390px] sm:p-7">
             <Badge
               variant="secondary"
               className="mb-4 w-fit rounded-full border-0 bg-background/80 px-2.5 py-1 text-[11px] font-medium text-foreground shadow-none"
@@ -748,7 +754,7 @@ function BuildShowcaseCard({
               ))}
             </div>
           </div>
-          <div className="relative min-h-[240px] overflow-hidden border-t border-background/60 md:min-h-full md:border-s">
+          <div className="relative min-h-[260px] overflow-hidden border-t border-background/60 md:min-h-full md:border-s">
             {showcaseSlides.map((slide, index) => (
               <div
                 key={`${slide.imageSrc}-${index}`}
@@ -968,8 +974,10 @@ function TestimonialCtaSection({
                 <Button asChild className="h-[32px] rounded-[99px] px-3 py-1 text-[13px] font-medium">
                   <a href={testimonialCta.primaryHref}>{testimonialCta.primaryLabel}</a>
                 </Button>
-              <Button asChild variant="outline" className="h-[32px] rounded-[99px] border-0 bg-white px-3 py-1 text-[13px] font-medium text-foreground hover:bg-white/90 hover:text-foreground">
-                  <a href={testimonialCta.secondaryHref}>{testimonialCta.secondaryLabel}</a>
+              <Button asChild variant="outline" className="h-[32px] rounded-[99px] border-0 bg-white px-3 py-1 text-[13px] font-medium text-black hover:bg-white/90 hover:text-black">
+                  <a href={testimonialCta.secondaryHref} className="text-black">
+                    {testimonialCta.secondaryLabel}
+                  </a>
                 </Button>
               </div>
             </div>

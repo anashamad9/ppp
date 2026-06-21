@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/anas-logo.png" sizes="any" />
         <link rel="icon" href="/anas-logo.png" type="image/png" />

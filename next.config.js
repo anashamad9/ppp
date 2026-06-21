@@ -1,3 +1,5 @@
+const path = require("path")
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -19,6 +21,7 @@ const nextConfig = {
   // Add this to ensure static files are properly handled
   trailingSlash: false,
   output: "standalone",
+  outputFileTracingRoot: path.join(__dirname),
 }
 
 module.exports = nextConfig
