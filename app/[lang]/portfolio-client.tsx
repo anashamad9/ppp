@@ -424,7 +424,7 @@ function CTAButtons({
               variant="outline"
               className="h-[32px] w-auto rounded-[99px] border-0 bg-black px-3 py-1 text-[13px] font-medium text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
             >
-              <a href={emailLink.href} aria-label={lang === "ar" ? "إرسال بريد" : "Send Email"}>
+              <a href={emailLink.href} aria-label={lang === "ar" ? "إرسال بريد" : "Send Email"} className="text-white hover:text-white dark:text-black dark:hover:text-black">
                 <span className="inline-flex items-center gap-1.5">
                   <Mail className="h-3.5 w-3.5" />
                   <span>{lang === "ar" ? "إرسال بريد" : "Send Email"}</span>
@@ -443,7 +443,7 @@ function CTAButtons({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={lang === "ar" ? "واتساب" : "WhatsApp"}
-                className="text-white"
+                className="text-white hover:text-white"
               >
                 <span className="inline-flex items-center gap-1.5">
                   <SiWhatsapp className="h-3.5 w-3.5" />
@@ -702,14 +702,16 @@ function BuildShowcaseCard({
   lang: Locale
 }) {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [isManualPause, setIsManualPause] = useState(false)
 
   useEffect(() => {
-    const intervalId = window.setInterval(() => {
+    const timeoutId = window.setTimeout(() => {
       setActiveIndex((current) => (current + 1) % showcaseSlides.length)
-    }, 7000)
+      setIsManualPause(false)
+    }, isManualPause ? 4000 : 7000)
 
-    return () => window.clearInterval(intervalId)
-  }, [showcaseSlides.length])
+    return () => window.clearTimeout(timeoutId)
+  }, [activeIndex, isManualPause, showcaseSlides.length])
 
   const activeSlide = showcaseSlides[activeIndex]
 
@@ -774,7 +776,10 @@ function BuildShowcaseCard({
                 <button
                   key={`${slide.title}-${index}`}
                   type="button"
-                  onClick={() => setActiveIndex(index)}
+                  onClick={() => {
+                    setActiveIndex(index)
+                    setIsManualPause(true)
+                  }}
                   aria-label={`Show slide ${index + 1}`}
                   className={cn(
                     "h-2 rounded-full bg-white/55 transition-all duration-300 hover:bg-white",

@@ -106,7 +106,9 @@ export function TopControls({ lang }: TopControlsProps) {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="min-w-[9rem]">
-                <DropdownMenuItem onClick={() => handleSwitchLang("en")}>{labels.english}</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleSwitchLang("en")} className="font-sans text-left" dir="ltr">
+                  {labels.english}
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleSwitchLang("ar")}
                   className="font-arabic text-right"

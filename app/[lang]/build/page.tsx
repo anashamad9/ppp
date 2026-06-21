@@ -104,9 +104,9 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
           },
           {
             tag: "لوحات تحكم",
-            title: "لوحات تحكم تساعدك تشوف الصورة كاملة",
-            description: "أبني لوحات معلومات ومنصات داخلية تنظّم البيانات والعمليات بشكل سهل وواضح لاتخاذ قرارات أفضل.",
-            badges: ["Dashboards", "Analytics", "Admin Panels", "Reporting"],
+            title: "تفاصيل صغيرة، تصميم نظيف، ونتائج أفضل",
+            description: "أركّز على التفاصيل الصغيرة وأحافظ على نظافة التصميم حتى تبدو كل شاشة مقصودة وسهلة الاستخدام.",
+            badges: ["لوحات تحكم", "تحليلات", "لوحات إدارة", "تقارير"],
             imageSrc: "/first-card/second image.jpg",
             imageAlt: "معاينة لوحة تحكم",
           },
