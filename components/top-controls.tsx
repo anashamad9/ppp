@@ -77,7 +77,7 @@ export function TopControls({ lang }: TopControlsProps) {
 
   if (isMainHomepage) {
     return (
-      <div className="fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full bg-background/75 p-1.5 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/50">
+      <div className="fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button

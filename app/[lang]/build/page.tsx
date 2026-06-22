@@ -401,6 +401,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
         showcaseSlides={showcaseSlides}
         projectsCard={projectsCard}
         testimonialCta={testimonialCta}
+        showArticleFooter
       />
     </>
   )

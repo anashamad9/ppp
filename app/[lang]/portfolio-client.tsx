@@ -107,6 +107,7 @@ export default function PortfolioClient({
   showcaseSlides,
   projectsCard,
   testimonialCta,
+  showArticleFooter = false,
 }: {
   dict: Dictionary
   lang: Locale
@@ -123,6 +124,7 @@ export default function PortfolioClient({
   showcaseSlides?: ShowcaseCard[]
   projectsCard?: ProjectsCard
   testimonialCta?: TestimonialCtaCard
+  showArticleFooter?: boolean
 }) {
   const [isLoaded, setIsLoaded] = useState(false)
   const [descriptionView, setDescriptionView] = useState<DescriptionView>("summary")
@@ -162,10 +164,40 @@ export default function PortfolioClient({
             {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} /> : null}
             {!hideArticles && <Articles isLoaded={isLoaded} articles={dict.articles} lang={lang} dict={dict} />}
             {testimonialCta ? <TestimonialCtaSection isLoaded={isLoaded} testimonialCta={testimonialCta} lang={lang} /> : null}
+            {showArticleFooter ? <ArticleStyleFooter lang={lang} isLoaded={isLoaded} /> : null}
           </CardContent>
         </Card>
       </div>
     </main>
+  )
+}
+
+function ArticleStyleFooter({ lang, isLoaded }: { lang: Locale; isLoaded: boolean }) {
+  return (
+    <div
+      className={`flex flex-wrap items-center gap-3 pt-2 transition-all duration-500 ease-out ${
+        isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
+      }`}
+      style={{ transitionDelay: "750ms" }}
+    >
+      <Link
+        href={`/${lang}`}
+        className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+      >
+        <span className="border-b border-border pb-[2px]">
+          {lang === "ar" ? "العودة للرئيسية" : "Back to home"}
+        </span>
+      </Link>
+      <button
+        type="button"
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+      >
+        <span className="border-b border-border pb-[2px]">
+          {lang === "ar" ? "العودة للأعلى" : "Back to top"}
+        </span>
+      </button>
+    </div>
   )
 }
 
