@@ -108,6 +108,7 @@ export default function PortfolioClient({
   projectsCard,
   testimonialCta,
   showArticleFooter = false,
+  articleFooterHomeHref,
 }: {
   dict: Dictionary
   lang: Locale
@@ -125,6 +126,7 @@ export default function PortfolioClient({
   projectsCard?: ProjectsCard
   testimonialCta?: TestimonialCtaCard
   showArticleFooter?: boolean
+  articleFooterHomeHref?: string
 }) {
   const [isLoaded, setIsLoaded] = useState(false)
   const [descriptionView, setDescriptionView] = useState<DescriptionView>("summary")
@@ -169,7 +171,7 @@ export default function PortfolioClient({
             {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} /> : null}
             {!hideArticles && <Articles isLoaded={isLoaded} articles={dict.articles} lang={lang} dict={dict} />}
             {testimonialCta ? <TestimonialCtaSection isLoaded={isLoaded} testimonialCta={testimonialCta} lang={lang} /> : null}
-            {showArticleFooter ? <ArticleStyleFooter lang={lang} isLoaded={isLoaded} /> : null}
+            {showArticleFooter ? <ArticleStyleFooter lang={lang} isLoaded={isLoaded} homeHref={articleFooterHomeHref} /> : null}
           </CardContent>
         </Card>
       </div>
@@ -177,7 +179,7 @@ export default function PortfolioClient({
   )
 }
 
-function ArticleStyleFooter({ lang, isLoaded }: { lang: Locale; isLoaded: boolean }) {
+function ArticleStyleFooter({ lang, isLoaded, homeHref }: { lang: Locale; isLoaded: boolean; homeHref?: string }) {
   return (
     <div
       className={`flex flex-wrap items-center gap-3 pt-2 transition-all duration-500 ease-out ${
@@ -186,7 +188,7 @@ function ArticleStyleFooter({ lang, isLoaded }: { lang: Locale; isLoaded: boolea
       style={{ transitionDelay: "750ms" }}
     >
       <Link
-        href={`/${lang}`}
+        href={homeHref ?? `/${lang}`}
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
       >
         <span className="border-b border-border pb-[2px]">

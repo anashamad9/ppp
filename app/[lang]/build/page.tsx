@@ -402,6 +402,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
         projectsCard={projectsCard}
         testimonialCta={testimonialCta}
         showArticleFooter
+        articleFooterHomeHref={`https://anashamad.com/${lang}`}
       />
     </>
   )
