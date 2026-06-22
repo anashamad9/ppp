@@ -273,20 +273,20 @@ function Header({
       style={{ transitionDelay: "100ms" }}
     >
       <div className={cn("flex items-center", !compact && "gap-2.5 sm:gap-3")}>
-        <div className={cn("group shrink-0 [perspective:800px]", compact ? "h-10 w-10 sm:h-12 sm:w-12" : "h-20 w-20")}>
+        <div className={cn("group shrink-0 [perspective:800px]", compact ? "h-16 w-16 sm:h-20 sm:w-20" : "h-20 w-20")}>
           <div className="relative h-full w-full rounded-full transition-transform duration-300 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
             <Image
               src="/anas-hamad.jpeg"
               alt={dict.header.name}
-              width={compact ? 48 : 80}
-              height={compact ? 48 : 80}
+              width={80}
+              height={80}
               className="absolute inset-0 rounded-full border-2 border-border [backface-visibility:hidden]"
             />
             <Image
               src="/anas-logo.png"
               alt="Anas logo"
-              width={compact ? 48 : 80}
-              height={compact ? 48 : 80}
+              width={80}
+              height={80}
               className="absolute inset-0 rounded-full border-2 border-border [backface-visibility:hidden] [transform:rotateY(180deg)]"
             />
           </div>
@@ -355,6 +355,7 @@ function Description({
     },
   ]
   const companyByName = new Map(companyProfiles.map((company) => [company.company.toLowerCase(), company]))
+  const emphasisClassName = interactive ? "font-medium text-foreground no-underline" : undefined
 
   const renderParagraph = (paragraph: string) => {
     const parts = paragraph.split(/(\[icon:[^\]]+\]|\[company:[^\]]+\]|\[tech-stack:[^\]]+\]|\[copy:[^\]]+\]|\[social:[^\]]+\]|<u>.*?<\/u>)/g).filter(Boolean)
@@ -387,7 +388,7 @@ function Description({
             key={`tech-stack-${index}`}
             type="button"
             onClick={() => setActiveView("tech-stack")}
-            className="inline-flex items-center gap-1 rounded-sm font-normal text-[#165dfb] underline underline-offset-4 transition-colors hover:bg-secondary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-flex items-center gap-1 rounded-sm font-medium text-foreground no-underline transition-colors hover:bg-secondary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <Link2 className="h-3.5 w-3.5" />
             {techStackMatch[1]}
@@ -417,25 +418,36 @@ function Description({
             href={socialLink.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-normal text-foreground underline underline-offset-4 transition-colors hover:text-primary"
+            className={cn(
+              "transition-colors hover:text-primary",
+              interactive ? "font-medium text-foreground no-underline" : "font-normal text-foreground underline underline-offset-4",
+            )}
           >
             {label}
           </a>
         ) : (
-          <u key={`social-fallback-${label}-${index}`}>{label}</u>
+          <span key={`social-fallback-${label}-${index}`} className={emphasisClassName}>
+            {label}
+          </span>
         )
       }
 
       const underlineMatch = part.match(/^<u>(.*?)<\/u>$/)
       if (underlineMatch) {
-        return (
-          <u key={`u-${index}`}>
+        return interactive ? (
+          <span key={`u-${index}`} className={emphasisClassName}>
             {underlineMatch[1]}
-          </u>
+          </span>
+        ) : (
+          <u key={`u-${index}`}>{underlineMatch[1]}</u>
         )
       }
 
-      return <span key={`t-${index}`}>{part}</span>
+      return (
+        <span key={`t-${index}`} className={interactive ? "text-muted-foreground" : undefined}>
+          {part}
+        </span>
+      )
     })
   }
 
@@ -450,7 +462,7 @@ function Description({
         <button
           type="button"
           onClick={() => setActiveView("summary")}
-          className="w-fit rounded-sm text-sm font-normal text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="w-fit rounded-sm text-sm font-medium text-foreground no-underline transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           {lang === "ar" ? "العودة للنبذة" : "Back to summary"}
         </button>
@@ -471,7 +483,7 @@ function Description({
         <button
           type="button"
           onClick={() => setActiveView("summary")}
-          className="w-fit rounded-sm text-sm font-normal text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="w-fit rounded-sm text-sm font-medium text-foreground no-underline transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           {lang === "ar" ? "العودة للنبذة" : "Back to summary"}
         </button>
@@ -489,7 +501,7 @@ function Description({
     >
       <div className="flex flex-col gap-4 sm:gap-5">
         {(description ?? dict.description).map((paragraph, index) => (
-          <p key={index} className="text-sm leading-relaxed text-foreground">
+          <p key={index} className={cn("text-sm leading-relaxed", interactive ? "text-muted-foreground" : "text-foreground")}>
             {renderParagraph(paragraph)}
           </p>
         ))}
