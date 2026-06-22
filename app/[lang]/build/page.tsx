@@ -343,11 +343,11 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
     lang === "ar"
       ? {
           quoteTag: "رأي عميل",
-          quote: "اشتغل أنس معنا بعقلية منتج حقيقية. لم يكتفِ بالتنفيذ، بل ساعدنا نحسّن الفكرة نفسها ونطلق بشكل أوضح وأسرع.",
-          author: "عميل سابق",
-          role: "مؤسس شركة ناشئة",
-          avatarSrc: "/images/profile.jpeg",
-          avatarAlt: "صورة العميل",
+          quote: "الحق يقال، أكتر اشي لفت نظري بالعمل معهم هو انهم سمعوا بالزبط شو بحتاج، وأعطوني نصائح لمصلحتي وتسليم المشروع كان بالموعد المحدد. شكراً كتيييير لطولة باله وصبره لأنس علي، والأجمل من ذلك خدمة الرد السريع وحل المشكلات والمتابعة مع العميل بعد تسليم المشروع.",
+          author: "رندا متولي",
+          role: "أكاديمية رندا",
+          avatarSrc: "/484632640_978221624285463_7620032291749332988_n.jpg",
+          avatarAlt: "رندا متولي",
           ctaTitle: "إذا عندك فكرة أو مشروع، خلّينا نبنيه بشكل صح",
           primaryLabel: "تواصل معي",
           primaryHref: "mailto:anashamad1909@gmail.com",
@@ -356,11 +356,11 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
         }
       : {
           quoteTag: "Client Feedback",
-          quote: "Anas worked with real product thinking. He did not just execute, he helped improve the idea itself and made the launch clearer and faster.",
-          author: "Past Client",
-          role: "Startup Founder",
-          avatarSrc: "/images/profile.jpeg",
-          avatarAlt: "Client avatar",
+          quote: "To be fair, what stood out most about working with them was that they listened exactly to what I needed, gave me advice that was truly in my best interest, and delivered the project on time. Thank you so much to Anas for his patience and understanding with me. Even better was the fast response service, problem solving, and follow-up with the client after project delivery.",
+          author: "Randa Mitwalli",
+          role: "Randa Academy",
+          avatarSrc: "/484632640_978221624285463_7620032291749332988_n.jpg",
+          avatarAlt: "Randa Mitwalli",
           ctaTitle: "If you have an idea or product in mind, let's build it properly",
           primaryLabel: "Contact Me",
           primaryHref: "mailto:anashamad1909@gmail.com",

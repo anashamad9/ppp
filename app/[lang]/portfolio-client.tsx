@@ -134,7 +134,12 @@ export default function PortfolioClient({
   }, [])
 
   return (
-    <main className={cn("flex flex-col items-center bg-background font-sans", compactHome ? "min-h-svh justify-center px-4 py-10 sm:px-6" : "pb-8")}>
+    <main
+      className={cn(
+        "flex flex-col items-center bg-background font-sans",
+        compactHome ? "min-h-svh justify-start px-4 pb-10 pt-6 sm:justify-center sm:px-6 sm:py-10" : "pb-8",
+      )}
+    >
       <div className={cn("w-full bg-background", compactHome ? "" : "px-4 pt-8 sm:px-6 sm:pt-10 md:px-8 md:pt-12")}>
         <Card className="mx-auto w-full max-w-[720px] border-none bg-transparent shadow-none">
           <CardContent className={cn("flex flex-col p-0 sm:p-4", compactHome ? "gap-3 sm:gap-4" : "gap-8 sm:gap-12")}>
