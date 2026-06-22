@@ -31,8 +31,11 @@ import {
   Linkedin,
   Bot,
   Award,
+  Check,
   Code,
+  Copy,
   Globe,
+  Link2,
   Eye,
   CalendarDays,
   Rocket,
@@ -86,12 +89,16 @@ type TestimonialCtaCard = {
   secondaryLabel: string
   secondaryHref: string
 }
+type DescriptionView = "summary" | "tech-stack" | "articles"
 
 export default function PortfolioClient({
   dict,
   lang,
   headerRole,
   hideExperience = false,
+  hideTechStack = false,
+  hideArticles = false,
+  compactHome = false,
   topTags,
   description,
   secondaryActionLabel,
@@ -105,6 +112,9 @@ export default function PortfolioClient({
   lang: Locale
   headerRole?: string
   hideExperience?: boolean
+  hideTechStack?: boolean
+  hideArticles?: boolean
+  compactHome?: boolean
   topTags?: string[]
   description?: string[]
   secondaryActionLabel?: string
@@ -115,18 +125,28 @@ export default function PortfolioClient({
   testimonialCta?: TestimonialCtaCard
 }) {
   const [isLoaded, setIsLoaded] = useState(false)
+  const [descriptionView, setDescriptionView] = useState<DescriptionView>("summary")
 
   useEffect(() => {
     setIsLoaded(true)
   }, [])
 
   return (
-    <main className="flex flex-col items-center bg-background pb-8 font-sans">
-      <div className="w-full bg-background px-4 pt-8 sm:px-6 sm:pt-10 md:px-8 md:pt-12">
+    <main className={cn("flex flex-col items-center bg-background font-sans", compactHome ? "min-h-svh justify-center px-4 py-10 sm:px-6" : "pb-8")}>
+      <div className={cn("w-full bg-background", compactHome ? "" : "px-4 pt-8 sm:px-6 sm:pt-10 md:px-8 md:pt-12")}>
         <Card className="mx-auto w-full max-w-[720px] border-none bg-transparent shadow-none">
-          <CardContent className="flex flex-col gap-8 p-0 sm:gap-12 sm:p-4">
-            <Header isLoaded={isLoaded} dict={dict} lang={lang} headerRole={headerRole} topTags={topTags} />
-            <Description isLoaded={isLoaded} dict={dict} description={description} />
+          <CardContent className={cn("flex flex-col p-0 sm:p-4", compactHome ? "gap-3 sm:gap-4" : "gap-8 sm:gap-12")}>
+            <Header isLoaded={isLoaded} dict={dict} lang={lang} headerRole={headerRole} topTags={topTags} compact={compactHome} />
+            <Description
+              isLoaded={isLoaded}
+              dict={dict}
+              lang={lang}
+              topTags={topTags}
+              description={description}
+              activeView={descriptionView}
+              setActiveView={setDescriptionView}
+              interactive={compactHome}
+            />
             <CTAButtons
               isLoaded={isLoaded}
               dict={dict}
@@ -134,12 +154,13 @@ export default function PortfolioClient({
               secondaryActionLabel={secondaryActionLabel}
               secondaryActionTargetId={secondaryActionTargetId}
               secondaryActionIcon={secondaryActionIcon}
+              onShowArticles={compactHome && !secondaryActionTargetId ? () => setDescriptionView("articles") : undefined}
             />
             {!hideExperience && <Experience isLoaded={isLoaded} experiences={dict.experiences} dict={dict} lang={lang} />}
             {showcaseSlides?.length ? <BuildShowcaseCard isLoaded={isLoaded} showcaseSlides={showcaseSlides} lang={lang} /> : null}
-            <CoreTechStack isLoaded={isLoaded} coreStack={coreStack} dict={dict} lang={lang} />
+            {!hideTechStack && <CoreTechStack isLoaded={isLoaded} coreStack={coreStack} dict={dict} lang={lang} />}
             {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} /> : null}
-            <Articles isLoaded={isLoaded} articles={dict.articles} lang={lang} dict={dict} />
+            {!hideArticles && <Articles isLoaded={isLoaded} articles={dict.articles} lang={lang} dict={dict} />}
             {testimonialCta ? <TestimonialCtaSection isLoaded={isLoaded} testimonialCta={testimonialCta} lang={lang} /> : null}
           </CardContent>
         </Card>
@@ -201,75 +222,72 @@ function Header({
   lang,
   headerRole,
   topTags,
+  compact = false,
 }: {
   isLoaded: boolean
   dict: Dictionary
   lang: Locale
   headerRole?: string
   topTags?: string[]
+  compact?: boolean
 }) {
   return (
     <header
-      className={`flex w-full flex-col gap-3 transition-all duration-500 ease-out ${
+      className={cn(
+        "flex w-full flex-col gap-3 transition-all duration-500 ease-out",
+        compact && "mb-[-0.25rem] sm:mb-[-0.5rem]",
         isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
-      }`}
+      )}
       style={{ transitionDelay: "100ms" }}
     >
-      <div className="flex items-center gap-2.5 sm:gap-3">
-        <div className="group h-20 w-20 shrink-0 [perspective:800px]">
+      <div className={cn("flex items-center", !compact && "gap-2.5 sm:gap-3")}>
+        <div className={cn("group shrink-0 [perspective:800px]", compact ? "h-10 w-10 sm:h-12 sm:w-12" : "h-20 w-20")}>
           <div className="relative h-full w-full rounded-full transition-transform duration-300 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
             <Image
               src="/anas-hamad.jpeg"
               alt={dict.header.name}
-              width={80}
-              height={80}
+              width={compact ? 48 : 80}
+              height={compact ? 48 : 80}
               className="absolute inset-0 rounded-full border-2 border-border [backface-visibility:hidden]"
             />
             <Image
               src="/anas-logo.png"
               alt="Anas logo"
-              width={80}
-              height={80}
+              width={compact ? 48 : 80}
+              height={compact ? 48 : 80}
               className="absolute inset-0 rounded-full border-2 border-border [backface-visibility:hidden] [transform:rotateY(180deg)]"
             />
           </div>
         </div>
-        <div className="flex min-w-0 flex-col items-start gap-0">
-          <div className="flex min-w-0 flex-wrap items-center gap-1.5">
-            <h1 className={cn("min-w-0 text-lg font-semibold tracking-tight text-foreground sm:text-2xl", lang === "ar" && "font-thmanyah-serif-text")}>
-              {dict.header.name}
-            </h1>
-            <TooltipProvider delayDuration={100}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Badge
-                    variant="outline"
-                    className="flex items-center gap-1 rounded-full border-transparent bg-[#165dfb] px-1.5 py-[2px] text-[9px] font-medium text-white shadow-sm hover:bg-[#165dfb]"
-                  >
-                    <BadgeCheck className="h-2.5 w-2.5 text-white" />
-                    <span>{dict.header.verified}</span>
-                  </Badge>
-                </TooltipTrigger>
-                <TooltipContent side="top" align="center" className="text-xs">
-                  <p>{dict.header.verifiedTooltip}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+        {!compact && (
+          <div className="flex min-w-0 flex-col items-start gap-0">
+            <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+              <h1 className={cn("min-w-0 text-lg font-semibold tracking-tight text-foreground sm:text-2xl", lang === "ar" && "font-thmanyah-serif-text")}>
+                {dict.header.name}
+              </h1>
+              <TooltipProvider delayDuration={100}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge
+                      variant="outline"
+                      className="flex items-center gap-1 rounded-full border-transparent bg-[#165dfb] px-1.5 py-[2px] text-[9px] font-medium text-white shadow-sm hover:bg-[#165dfb]"
+                    >
+                      <BadgeCheck className="h-2.5 w-2.5 text-white" />
+                      <span>{dict.header.verified}</span>
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" align="center" className="text-xs">
+                    <p>{dict.header.verifiedTooltip}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <p className="text-sm font-medium leading-tight text-muted-foreground sm:text-base">{headerRole ?? dict.header.role}</p>
+            <span className="text-xs leading-none text-muted-foreground/70 sm:text-sm">{dict.header.location}</span>
           </div>
-          <p className="text-sm font-medium leading-tight text-muted-foreground sm:text-base">{headerRole ?? dict.header.role}</p>
-          <span className="text-xs leading-none text-muted-foreground/70 sm:text-sm">{dict.header.location}</span>
-        </div>
+        )}
       </div>
-      <div className="flex flex-wrap gap-1.5">
-        {(topTags ?? dict.topTechStack).map((tech) => (
-          <span
-            key={tech}
-            className="cursor-default rounded-md bg-muted px-2 py-0.5 text-xs text-foreground transition-all duration-200 hover:scale-105 hover:bg-muted/80"
-          >
-            {tech}
-          </span>
-        ))}
-      </div>
+      {!compact && <TechBadges tags={topTags ?? dict.topTechStack} />}
     </header>
   )
 }
@@ -277,14 +295,37 @@ function Header({
 function Description({
   isLoaded,
   dict,
+  lang,
+  topTags,
   description,
+  activeView = "summary",
+  setActiveView,
+  interactive = false,
 }: {
   isLoaded: boolean
   dict: Dictionary
+  lang?: Locale
+  topTags?: string[]
   description?: string[]
+  activeView?: DescriptionView
+  setActiveView?: React.Dispatch<React.SetStateAction<DescriptionView>>
+  interactive?: boolean
 }) {
+  const companyProfiles = [
+    ...dict.experiences,
+    {
+      role: "Founder",
+      company: "Atmet",
+      logo: "/Atmet.png",
+      period: "Now",
+      companySummary: "A coworker agent platform that automates business workflows by integrating apps and applying reusable skills.",
+      description: "Atmet is a coworker agent platform that connects business apps, applies skills, and automates recurring workflows.",
+    },
+  ]
+  const companyByName = new Map(companyProfiles.map((company) => [company.company.toLowerCase(), company]))
+
   const renderParagraph = (paragraph: string) => {
-    const parts = paragraph.split(/(\[icon:[^\]]+\]|<u>.*?<\/u>)/g).filter(Boolean)
+    const parts = paragraph.split(/(\[icon:[^\]]+\]|\[company:[^\]]+\]|\[tech-stack:[^\]]+\]|\[copy:[^\]]+\]|\[social:[^\]]+\]|<u>.*?<\/u>)/g).filter(Boolean)
 
     return parts.map((part, index) => {
       const iconMatch = part.match(/^\[icon:([^\]]+)\]$/)
@@ -301,6 +342,58 @@ function Description({
         return Icon ? <Icon key={`${iconName}-${index}`} className="mx-1 inline h-4 w-4 align-[-2px]" /> : null
       }
 
+      const companyMatch = part.match(/^\[company:([^\]]+)\]$/)
+      if (companyMatch && interactive) {
+        const company = companyByName.get(companyMatch[1].toLowerCase())
+        return company ? <CompanyHoverLink key={`company-${company.company}-${index}`} experience={company} /> : null
+      }
+
+      const techStackMatch = part.match(/^\[tech-stack:([^\]]+)\]$/)
+      if (techStackMatch && interactive && setActiveView) {
+        return (
+          <button
+            key={`tech-stack-${index}`}
+            type="button"
+            onClick={() => setActiveView("tech-stack")}
+            className="inline-flex items-center gap-1 rounded-sm font-normal text-[#165dfb] underline underline-offset-4 transition-colors hover:bg-secondary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <Link2 className="h-3.5 w-3.5" />
+            {techStackMatch[1]}
+          </button>
+        )
+      }
+
+      const copyMatch = part.match(/^\[copy:([^\]]+)\]$/)
+      if (copyMatch && interactive) {
+        return (
+          <InlineCopyButton
+            key={`copy-${index}`}
+            content={copyMatch[1]}
+            label={lang === "ar" ? "نسخ البريد الإلكتروني" : "Copy email"}
+          />
+        )
+      }
+
+      const socialMatch = part.match(/^\[social:([^\]]+)\]$/)
+      if (socialMatch && interactive) {
+        const label = socialMatch[1]
+        const socialLink = dict.socialLinks.find((link) => link.label.toLowerCase() === label.toLowerCase())
+
+        return socialLink?.href ? (
+          <a
+            key={`social-${label}-${index}`}
+            href={socialLink.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-normal text-foreground underline underline-offset-4 transition-colors hover:text-primary"
+          >
+            {label}
+          </a>
+        ) : (
+          <u key={`social-fallback-${label}-${index}`}>{label}</u>
+        )
+      }
+
       const underlineMatch = part.match(/^<u>(.*?)<\/u>$/)
       if (underlineMatch) {
         return (
@@ -312,6 +405,47 @@ function Description({
 
       return <span key={`t-${index}`}>{part}</span>
     })
+  }
+
+  if (interactive && activeView === "tech-stack" && setActiveView) {
+    return (
+      <div
+        className={`flex flex-col gap-4 transition-all duration-500 ease-out ${
+          isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
+        }`}
+        style={{ transitionDelay: "200ms" }}
+      >
+        <button
+          type="button"
+          onClick={() => setActiveView("summary")}
+          className="w-fit rounded-sm text-sm font-normal text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          {lang === "ar" ? "العودة للنبذة" : "Back to summary"}
+        </button>
+        <TechBadges tags={topTags ?? dict.topTechStack} />
+        <CoreTechStack isLoaded={isLoaded} coreStack={coreStack} dict={dict} lang={lang ?? "en"} hideTitle />
+      </div>
+    )
+  }
+
+  if (interactive && activeView === "articles" && setActiveView) {
+    return (
+      <div
+        className={`flex flex-col gap-4 transition-all duration-500 ease-out ${
+          isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
+        }`}
+        style={{ transitionDelay: "200ms" }}
+      >
+        <button
+          type="button"
+          onClick={() => setActiveView("summary")}
+          className="w-fit rounded-sm text-sm font-normal text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          {lang === "ar" ? "العودة للنبذة" : "Back to summary"}
+        </button>
+        <Articles isLoaded={isLoaded} articles={dict.articles} lang={lang ?? "en"} dict={dict} hideTitle />
+      </div>
+    )
   }
 
   return (
@@ -332,6 +466,90 @@ function Description({
   )
 }
 
+function CompanyHoverLink({ experience }: { experience: Dictionary["experiences"][number] }) {
+  const companySummary = (experience as { companySummary?: string }).companySummary ?? experience.description
+
+  return (
+    <HoverCard openDelay={40} closeDelay={120}>
+      <HoverCardTrigger asChild>
+        <button
+          type="button"
+          className="group inline-flex items-center gap-1 rounded-sm px-1 py-0.5 align-middle transition-colors hover:bg-secondary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <Image
+            src={experience.logo}
+            alt={experience.company}
+            width={14}
+            height={14}
+            className="inline-block rounded-sm object-contain"
+            unoptimized={experience.logo.startsWith("http")}
+          />
+          <span className="text-sm font-medium text-foreground">{experience.company}</span>
+        </button>
+      </HoverCardTrigger>
+      <HoverCardContent className="z-[9999] w-72 space-y-3">
+        <div className="flex items-center gap-3">
+          <Image
+            src={experience.logo}
+            alt={experience.company}
+            width={40}
+            height={40}
+            className="h-10 w-10 rounded-md object-contain"
+            unoptimized={experience.logo.startsWith("http")}
+          />
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold text-foreground">{experience.company}</span>
+            <span className="text-xs text-muted-foreground">{experience.period}</span>
+          </div>
+        </div>
+        <p className="text-xs leading-relaxed text-muted-foreground">{companySummary}</p>
+      </HoverCardContent>
+    </HoverCard>
+  )
+}
+
+function TechBadges({ tags }: { tags: string[] }) {
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {tags.map((tech) => (
+        <span
+          key={tech}
+          className="cursor-default rounded-md bg-muted px-2 py-0.5 text-xs text-foreground transition-all duration-200 hover:scale-105 hover:bg-muted/80"
+        >
+          {tech}
+        </span>
+      ))}
+    </div>
+  )
+}
+
+function InlineCopyButton({ content, label }: { content: string; label: string }) {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(content)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1600)
+    } catch (error) {
+      console.error("Failed to copy", error)
+    }
+  }
+
+  const Icon = copied ? Check : Copy
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      aria-label={copied ? (label === "Copy email" ? "Copied" : "تم النسخ") : label}
+      className="mx-1 inline-flex h-4 w-4 items-center justify-center align-[-2px] text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    >
+      <Icon className="h-3.5 w-3.5" />
+    </button>
+  )
+}
+
 function CTAButtons({
   isLoaded,
   dict,
@@ -339,6 +557,7 @@ function CTAButtons({
   secondaryActionLabel,
   secondaryActionTargetId,
   secondaryActionIcon,
+  onShowArticles,
 }: {
   isLoaded: boolean
   dict: Dictionary
@@ -346,6 +565,7 @@ function CTAButtons({
   secondaryActionLabel?: string
   secondaryActionTargetId?: string
   secondaryActionIcon?: "book" | "eye"
+  onShowArticles?: () => void
 }) {
   const [showContacts, setShowContacts] = useState(false)
   const contactLabel = lang === "ar" ? "تواصل معي" : "Say hi"
@@ -363,7 +583,8 @@ function CTAButtons({
     <div
       dir="ltr"
       className={cn(
-        "flex w-full flex-col gap-2 transition-all duration-500 ease-out -mt-4 sm:-mt-5",
+        "flex w-full flex-col gap-2 transition-all duration-500 ease-out",
+        onShowArticles ? "pt-2 sm:pt-3" : "-mt-4 sm:-mt-5",
         lang === "ar" ? "items-end" : "items-start",
         isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]",
       )}
@@ -384,6 +605,11 @@ function CTAButtons({
           variant="outline"
           className="h-[32px] w-auto rounded-[99px] border-0 bg-muted px-3 py-1 hover:bg-muted/80"
           onClick={() => {
+            if (onShowArticles) {
+              onShowArticles()
+              return
+            }
+
             const target = document.querySelector(secondaryActionTargetId ?? "#articles")
             if (target) {
               target.scrollIntoView({ behavior: "smooth", block: "start" })
@@ -626,11 +852,13 @@ function CoreTechStack({
   coreStack,
   dict,
   lang,
+  hideTitle = false,
 }: {
   isLoaded: boolean
   coreStack: CoreStackCategory[]
   dict: Dictionary
   lang: Locale
+  hideTitle?: boolean
 }) {
   return (
     <section
@@ -639,11 +867,13 @@ function CoreTechStack({
       }`}
       style={{ transitionDelay: "550ms" }}
     >
-      <div className="flex items-center justify-between">
-        <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
-          {dict.sections.tech_stack}
-        </h2>
-      </div>
+      {!hideTitle && (
+        <div className="flex items-center justify-between">
+          <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>
+            {dict.sections.tech_stack}
+          </h2>
+        </div>
+      )}
 
       <div className="w-full">
         <div className="grid w-full grid-cols-4 items-start gap-2">
@@ -1090,11 +1320,13 @@ function Articles({
   articles,
   lang,
   dict,
+  hideTitle = false,
 }: {
   isLoaded: boolean
   articles: Dictionary["articles"]
   lang: Locale
   dict: Dictionary
+  hideTitle?: boolean
 }) {
   const enabledArticles = articles.filter((article) => article.enabled)
   const [hoveredId, setHoveredId] = useState<number | null>(null)
@@ -1107,7 +1339,7 @@ function Articles({
       }`}
       style={{ transitionDelay: "750ms" }}
     >
-      <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>{dict.sections.articles}</h2>
+      {!hideTitle && <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>{dict.sections.articles}</h2>}
       <div className="flex flex-col gap-0">
         {enabledArticles.slice(0, 5).map((article) => {
           const isHovered = hoveredId === article.id

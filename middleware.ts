@@ -27,6 +27,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  if (pathname === "/old-homepage") {
+    return NextResponse.next()
+  }
+
   // Subdomain: build.anashamad.com → rewrite to /en/build
   if (hostname === "build.anashamad.com") {
     const pathSegments = pathname.split("/").filter(Boolean)

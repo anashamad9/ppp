@@ -54,6 +54,7 @@ export function TopControls({ lang }: TopControlsProps) {
   const activeTheme = mounted ? resolvedTheme ?? theme : undefined
   const isDark = activeTheme === "dark"
   const currentTheme = isDark ? "dark" : "light"
+  const isMainHomepage = pathname === `/${lang}`
 
   const handleSwitchLang = (nextLang: Locale) => {
     if (!pathname) {
@@ -72,6 +73,50 @@ export function TopControls({ lang }: TopControlsProps) {
   const handleToggleTheme = () => {
     const next = isDark ? "light" : "dark"
     startTransition(() => setTheme(next))
+  }
+
+  if (isMainHomepage) {
+    return (
+      <div className="fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full bg-background/75 p-1.5 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/50">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              className="inline-flex h-7 items-center gap-1 rounded-full border-0 bg-muted px-2.5 text-[11px] font-medium text-foreground transition-colors hover:bg-muted/80"
+              aria-label={labels.switchLang}
+              title={labels.switchLang}
+            >
+              {lang === "ar" ? labels.arabic : labels.english}
+              <ChevronDown className="h-3 w-3" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center" className="min-w-[9rem]">
+            <DropdownMenuItem onClick={() => handleSwitchLang("en")} className="font-sans text-left" dir="ltr">
+              {labels.english}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleSwitchLang("ar")}
+              className="font-arabic text-right"
+              dir="rtl"
+            >
+              {labels.arabic}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <ThemeToggleButton
+          theme={currentTheme}
+          variant="circle-blur"
+          start="center"
+          onClick={handleToggleTheme}
+          className={cn(
+            "h-7 w-7 rounded-full border-0 bg-muted text-foreground hover:bg-muted/80 hover:text-foreground",
+            !mounted && "opacity-0"
+          )}
+          aria-label={labels.toggle}
+          title={labels.toggle}
+        />
+      </div>
+    )
   }
 
   return (
