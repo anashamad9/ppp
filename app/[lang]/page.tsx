@@ -108,7 +108,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleItemListJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
-      <PortfolioClient dict={dict} lang={lang} hideExperience hideTechStack hideArticles compactHome />
+      <PortfolioClient dict={dict} lang={lang} hideExperience hideTechStack hideArticles compactHome directContactHref={`mailto:${SITE_EMAIL}`} />
     </>
   )
 }

@@ -104,6 +104,7 @@ export default function PortfolioClient({
   secondaryActionLabel,
   secondaryActionTargetId,
   secondaryActionIcon = "book",
+  directContactHref,
   showcaseSlides,
   projectsCard,
   testimonialCta,
@@ -122,6 +123,7 @@ export default function PortfolioClient({
   secondaryActionLabel?: string
   secondaryActionTargetId?: string
   secondaryActionIcon?: "book" | "eye"
+  directContactHref?: string
   showcaseSlides?: ShowcaseCard[]
   projectsCard?: ProjectsCard
   testimonialCta?: TestimonialCtaCard
@@ -163,6 +165,7 @@ export default function PortfolioClient({
               secondaryActionLabel={secondaryActionLabel}
               secondaryActionTargetId={secondaryActionTargetId}
               secondaryActionIcon={secondaryActionIcon}
+              directContactHref={directContactHref}
               onShowArticles={compactHome && !secondaryActionTargetId ? () => setDescriptionView("articles") : undefined}
             />
             {!hideExperience && <Experience isLoaded={isLoaded} experiences={dict.experiences} dict={dict} lang={lang} />}
@@ -608,6 +611,7 @@ function CTAButtons({
   secondaryActionLabel,
   secondaryActionTargetId,
   secondaryActionIcon,
+  directContactHref,
   onShowArticles,
 }: {
   isLoaded: boolean
@@ -616,6 +620,7 @@ function CTAButtons({
   secondaryActionLabel?: string
   secondaryActionTargetId?: string
   secondaryActionIcon?: "book" | "eye"
+  directContactHref?: string
   onShowArticles?: () => void
 }) {
   const [showContacts, setShowContacts] = useState(false)
@@ -625,7 +630,7 @@ function CTAButtons({
   const phoneLink = contactLinks.find((link) => link.href?.startsWith("tel"))
   const whatsappNumber = phoneLink?.href?.replace("tel:", "").replace(/\D/g, "") ?? ""
   const whatsappHref = whatsappNumber ? `https://wa.me/${whatsappNumber}` : "#"
-  const hasContactOptions = Boolean(emailLink || phoneLink)
+  const hasContactOptions = !directContactHref && Boolean(emailLink || phoneLink)
   const meetingHref = "https://cal.com/anashamed/30min?user=anashamed&overlayCalendar=true"
   const actionLabel = secondaryActionLabel ?? dict.nav.articles
   const ActionIcon = secondaryActionIcon === "eye" ? Eye : BookOpen
@@ -642,16 +647,28 @@ function CTAButtons({
       style={{ transitionDelay: "300ms" }}
     >
       <div className={cn("flex w-full items-center gap-2.5", lang === "ar" ? "flex-row-reverse justify-start" : "flex-row justify-start")}>
-        <Button
-          type="button"
-          variant="default"
-          onClick={() => hasContactOptions && setShowContacts((prev) => !prev)}
-          aria-expanded={showContacts}
-          aria-controls="contact-options"
-          className="inline-flex h-[32px] w-auto items-center justify-center gap-1.5 rounded-[99px] bg-primary px-3 py-1 text-[13px] font-medium leading-5 text-primary-foreground hover:bg-primary/90"
-        >
-          <span className="text-[13px] font-medium leading-5 text-primary-foreground">{contactLabel}</span>
-        </Button>
+        {directContactHref ? (
+          <Button
+            asChild
+            variant="default"
+            className="inline-flex h-[32px] w-auto items-center justify-center gap-1.5 rounded-[99px] bg-primary px-3 py-1 text-[13px] font-medium leading-5 text-primary-foreground hover:bg-primary/90"
+          >
+            <a href={directContactHref}>
+              <span className="text-[13px] font-medium leading-5 text-primary-foreground">{contactLabel}</span>
+            </a>
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            variant="default"
+            onClick={() => hasContactOptions && setShowContacts((prev) => !prev)}
+            aria-expanded={showContacts}
+            aria-controls="contact-options"
+            className="inline-flex h-[32px] w-auto items-center justify-center gap-1.5 rounded-[99px] bg-primary px-3 py-1 text-[13px] font-medium leading-5 text-primary-foreground hover:bg-primary/90"
+          >
+            <span className="text-[13px] font-medium leading-5 text-primary-foreground">{contactLabel}</span>
+          </Button>
+        )}
         <Button
           variant="outline"
           className="h-[32px] w-auto rounded-[99px] border-0 bg-muted px-3 py-1 hover:bg-muted/80"
