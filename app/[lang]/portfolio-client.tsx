@@ -137,6 +137,47 @@ export default function PortfolioClient({
     setIsLoaded(true)
   }, [])
 
+  useEffect(() => {
+    if (!compactHome) return
+
+    const state = window.history.state
+    if (!state?.portfolioDescriptionView) {
+      window.history.replaceState({ ...state, portfolioDescriptionView: "summary" }, "", window.location.href)
+    }
+
+    const handlePopState = (event: PopStateEvent) => {
+      const view = event.state?.portfolioDescriptionView
+      setDescriptionView(view === "tech-stack" || view === "articles" ? view : "summary")
+    }
+
+    window.addEventListener("popstate", handlePopState)
+    return () => window.removeEventListener("popstate", handlePopState)
+  }, [compactHome])
+
+  const navigateDescriptionView = (view: DescriptionView) => {
+    if (!compactHome) {
+      setDescriptionView(view)
+      return
+    }
+
+    if (view === descriptionView) return
+
+    if (view === "summary") {
+      const currentState = window.history.state
+      if (currentState?.portfolioDescriptionView && currentState.portfolioDescriptionView !== "summary") {
+        window.history.back()
+        return
+      }
+
+      setDescriptionView("summary")
+      window.history.replaceState({ ...currentState, portfolioDescriptionView: "summary" }, "", window.location.href)
+      return
+    }
+
+    setDescriptionView(view)
+    window.history.pushState({ ...window.history.state, portfolioDescriptionView: view }, "", window.location.href)
+  }
+
   return (
     <main
       className={cn(
@@ -155,7 +196,7 @@ export default function PortfolioClient({
               topTags={topTags}
               description={description}
               activeView={descriptionView}
-              setActiveView={setDescriptionView}
+              setActiveView={navigateDescriptionView}
               interactive={compactHome}
             />
             <CTAButtons
@@ -166,7 +207,7 @@ export default function PortfolioClient({
               secondaryActionTargetId={secondaryActionTargetId}
               secondaryActionIcon={secondaryActionIcon}
               directContactHref={directContactHref}
-              onShowArticles={compactHome && !secondaryActionTargetId ? () => setDescriptionView("articles") : undefined}
+              onShowArticles={compactHome && !secondaryActionTargetId ? () => navigateDescriptionView("articles") : undefined}
             />
             {!hideExperience && <Experience isLoaded={isLoaded} experiences={dict.experiences} dict={dict} lang={lang} />}
             {showcaseSlides?.length ? <BuildShowcaseCard isLoaded={isLoaded} showcaseSlides={showcaseSlides} lang={lang} /> : null}
@@ -174,7 +215,7 @@ export default function PortfolioClient({
             {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} /> : null}
             {!hideArticles && <Articles isLoaded={isLoaded} articles={dict.articles} lang={lang} dict={dict} />}
             {testimonialCta ? <TestimonialCtaSection isLoaded={isLoaded} testimonialCta={testimonialCta} lang={lang} /> : null}
-            {showArticleFooter ? <ArticleStyleFooter lang={lang} isLoaded={isLoaded} homeHref={articleFooterHomeHref} /> : null}
+            {showArticleFooter ? <ArticleStyleFooter lang={lang} homeHref={articleFooterHomeHref} /> : null}
           </CardContent>
         </Card>
       </div>
@@ -182,14 +223,9 @@ export default function PortfolioClient({
   )
 }
 
-function ArticleStyleFooter({ lang, isLoaded, homeHref }: { lang: Locale; isLoaded: boolean; homeHref?: string }) {
+function ArticleStyleFooter({ lang, homeHref }: { lang: Locale; homeHref?: string }) {
   return (
-    <div
-      className={`flex flex-wrap items-center gap-3 pt-2 transition-all duration-500 ease-out ${
-        isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
-      }`}
-      style={{ transitionDelay: "750ms" }}
-    >
+    <div className="flex flex-wrap items-center gap-3 pt-2">
       <Link
         href={homeHref ?? `/${lang}`}
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -350,7 +386,7 @@ function Description({
   topTags?: string[]
   description?: string[]
   activeView?: DescriptionView
-  setActiveView?: React.Dispatch<React.SetStateAction<DescriptionView>>
+  setActiveView?: (view: DescriptionView) => void
   interactive?: boolean
 }) {
   const companyProfiles = [
