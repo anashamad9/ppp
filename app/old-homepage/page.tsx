@@ -34,7 +34,7 @@ export default async function OldHomepagePage() {
     image: `${siteUrl}/anas-logo.png`,
     jobTitle: "مهندس ذكاء اصطناعي وتعلم آلة",
     sameAs: [
-      "https://www.linkedin.com/in/anas-hamad1909/",
+      "https://www.linkedin.com/in/anas-hamad1909",
       "https://github.com/anashamad9",
       "https://x.com/its_anas9",
       "https://huggingface.co/anashamad",

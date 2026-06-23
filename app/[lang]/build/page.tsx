@@ -377,7 +377,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
     image: `${siteUrl}/anas-logo.png`,
     jobTitle: role,
     sameAs: [
-      "https://www.linkedin.com/in/anas-hamad1909/",
+      "https://www.linkedin.com/in/anas-hamad1909",
       "https://github.com/anashamad9",
       "https://x.com/its_anas9",
       "https://huggingface.co/anashamad",
@@ -401,8 +401,6 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
         showcaseSlides={showcaseSlides}
         projectsCard={projectsCard}
         testimonialCta={testimonialCta}
-        showArticleFooter
-        articleFooterHomeHref={`https://anashamad.com/${lang}`}
       />
     </>
   )

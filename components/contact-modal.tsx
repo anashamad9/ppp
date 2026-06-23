@@ -50,7 +50,7 @@ export default function ContactModal({
   const links = [
     { label: text.email, icon: <Mail className="h-5 w-5" />, href: `mailto:${SITE_EMAIL}` },
     { label: text.phone, icon: <Phone className="h-5 w-5" />, href: "tel:+962795874662" },
-    { label: "LinkedIn", icon: <Linkedin className="h-5 w-5" />, href: "https://www.linkedin.com/in/anas-hamad1909/" },
+    { label: "LinkedIn", icon: <Linkedin className="h-5 w-5" />, href: "https://www.linkedin.com/in/anas-hamad1909" },
     { label: "X", icon: <Twitter className="h-5 w-5" />, href: "https://x.com/its_anas9" },
     { label: "GitHub", icon: <Github className="h-5 w-5" />, href: "https://github.com/anashamad9" },
     { label: "Hugging Face", icon: <HuggingFaceIcon />, href: "https://huggingface.co/anashamad" },

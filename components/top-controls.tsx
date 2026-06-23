@@ -46,7 +46,7 @@ export function TopControls({ lang }: TopControlsProps) {
   )
   const socialLinks = [
     { label: "X", href: "https://x.com/its_anas9" },
-    { label: "LinkedIn", href: "https://www.linkedin.com/in/anas-hamad1909/" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/anas-hamad1909" },
     { label: "GitHub", href: "https://github.com/anashamad9" },
     { label: "Hugging Face", href: "https://huggingface.co/anashamad" },
   ]
