@@ -13,6 +13,7 @@ import Image from "next/image"
 import Link from "next/link"
 import type { Locale } from "@/i18n-config"
 import type { getDictionary } from "@/lib/dictionaries"
+import { ArticleFooter } from "@/components/article-footer"
 import { cn } from "@/lib/utils"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
@@ -187,7 +188,12 @@ export default function PortfolioClient({
     >
       <div className={cn("w-full bg-background", compactHome ? "" : "px-4 pt-8 sm:px-6 sm:pt-10 md:px-8 md:pt-12")}>
         <Card className="mx-auto w-full max-w-[720px] border-none bg-transparent shadow-none">
-          <CardContent className={cn("flex flex-col p-0 sm:p-4", compactHome ? "gap-3 sm:gap-4" : "gap-8 sm:gap-12")}>
+          <CardContent
+            className={cn(
+              "flex flex-col p-0 sm:p-4",
+              compactHome ? "gap-3 sm:gap-4" : showArticleFooter ? "gap-6" : "gap-8 sm:gap-12",
+            )}
+          >
             <Header isLoaded={isLoaded} dict={dict} lang={lang} headerRole={headerRole} topTags={topTags} compact={compactHome} />
             <Description
               isLoaded={isLoaded}
@@ -215,35 +221,11 @@ export default function PortfolioClient({
             {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} /> : null}
             {!hideArticles && <Articles isLoaded={isLoaded} articles={dict.articles} lang={lang} dict={dict} />}
             {testimonialCta ? <TestimonialCtaSection isLoaded={isLoaded} testimonialCta={testimonialCta} lang={lang} /> : null}
-            {showArticleFooter ? <ArticleStyleFooter lang={lang} homeHref={articleFooterHomeHref} /> : null}
+            {showArticleFooter ? <ArticleFooter lang={lang} homeHref={articleFooterHomeHref} /> : null}
           </CardContent>
         </Card>
       </div>
     </main>
-  )
-}
-
-function ArticleStyleFooter({ lang, homeHref }: { lang: Locale; homeHref?: string }) {
-  return (
-    <div className="flex flex-wrap items-center gap-3 pt-2">
-      <Link
-        href={homeHref ?? `/${lang}`}
-        className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-      >
-        <span className="border-b border-border pb-[2px]">
-          {lang === "ar" ? "العودة للرئيسية" : "Back to home"}
-        </span>
-      </Link>
-      <button
-        type="button"
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-      >
-        <span className="border-b border-border pb-[2px]">
-          {lang === "ar" ? "العودة للأعلى" : "Back to top"}
-        </span>
-      </button>
-    </div>
   )
 }
 

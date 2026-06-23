@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { ArrowLeft, ArrowRight, Calendar, Clock, LockKeyhole } from "lucide-react"
 import type { Locale } from "@/i18n-config"
+import { ArticleFooter } from "@/components/article-footer"
 import { ArticleChartBlock } from "./article-charts"
 import type { BundledLanguage } from "@/components/ui/shadcn-io/code-block"
 import ReactMarkdown from "react-markdown"
@@ -303,25 +304,7 @@ export default function ArticleDetailClient({
               </section>
             ) : null}
 
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <Link
-                href={`/${lang}`}
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <span className="border-b border-border pb-[2px]">
-                  {lang === "ar" ? "العودة للرئيسية" : "Back to home"}
-                </span>
-              </Link>
-              <button
-                type="button"
-                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <span className="border-b border-border pb-[2px]">
-                  {lang === "ar" ? "العودة للأعلى" : "Back to top"}
-                </span>
-              </button>
-            </div>
+            <ArticleFooter lang={lang} />
           </CardContent>
         </Card>
       </div>
