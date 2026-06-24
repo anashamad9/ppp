@@ -62,6 +62,11 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       description,
       images: [image],
     },
+    icons: {
+      icon: "/anas-logo.png",
+      shortcut: "/anas-logo.png",
+      apple: "/anas-logo.png",
+    },
   }
 }
 

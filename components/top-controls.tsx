@@ -26,10 +26,12 @@ export function TopControls({ lang }: TopControlsProps) {
   const pathname = usePathname()
   const { resolvedTheme, setTheme, theme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const [isBuildHost, setIsBuildHost] = useState(false)
   const { startTransition } = useThemeTransition()
 
   useEffect(() => {
     setMounted(true)
+    setIsBuildHost(window.location.hostname === "build.anashamad.com")
   }, [])
 
   const isRTL = lang === "ar"
@@ -55,6 +57,7 @@ export function TopControls({ lang }: TopControlsProps) {
   const isDark = activeTheme === "dark"
   const currentTheme = isDark ? "dark" : "light"
   const isMainHomepage = pathname === `/${lang}`
+  const shouldUseCompactHomeControls = isMainHomepage && !isBuildHost
 
   const handleSwitchLang = (nextLang: Locale) => {
     if (!pathname) {
@@ -75,7 +78,7 @@ export function TopControls({ lang }: TopControlsProps) {
     startTransition(() => setTheme(next))
   }
 
-  if (isMainHomepage) {
+  if (shouldUseCompactHomeControls) {
     return (
       <div className="fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2">
         <DropdownMenu>
