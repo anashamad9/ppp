@@ -15,9 +15,9 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const lang = langParam as Locale
   const isArabic = lang === "ar"
   const siteUrl = await getRequestSiteUrl()
-  const title = isArabic ? "أنس حمد | مطور منتجات تقنية ومواقع" : "Anas Hamad | Product & Website Developer"
+  const title = isArabic ? "أنس حمد | مهندس ذكاء اصطناعي ومنتجات تقنية" : "Anas Hamad | AI and Product Engineer"
   const description = isArabic
-    ? "أنس حمد مطور منتجات تقنية ومواقع يساعد الشركات الناشئة والمستقلين والأعمال على بناء مواقع، تطبيقات، منصات SaaS، لوحات تحكم، وأنظمة مخصصة."
+    ? "أنس حمد مهندس ذكاء اصطناعي ومنتجات تقنية يساعد الشركات الناشئة والمستقلين والأعمال على بناء مواقع، تطبيقات، منصات SaaS، لوحات تحكم، وأنظمة مخصصة."
     : "Anas Hamad is a product and website developer helping startups, freelancers, and businesses build websites, apps, SaaS platforms, dashboards, and custom systems."
   const canonical = `/${lang}/build`
   const image = "/anas-preview.png"
@@ -70,7 +70,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
   const lang = langParam as Locale
   const siteUrl = await getRequestSiteUrl()
   const dict = await getDictionary(lang)
-  const role = lang === "ar" ? "مطور منتجات تقنية ومواقع" : "Product & Website Developer"
+  const role = lang === "ar" ? "مهندس ذكاء اصطناعي ومنتجات تقنية" : "AI and Product Engineer"
   const topTags =
     lang === "ar"
       ? [
@@ -95,97 +95,97 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
     lang === "ar"
       ? [
           {
-            tag: "موقع",
-            title: "منتجات وتطبيقات ومواقع حديثة مبنية بعناية",
-            description: "أبني منتجات وتطبيقات ومواقع حديثة تبدو متقنة ومفيدة وجاهزة للاستخدام في العالم الحقيقي.",
-            badges: ["مواقع تسويقية", "صفحات علامة تجارية", "واجهة متجاوبة", "جاهز لـ SEO"],
+            tag: "وكلاء ذكاء اصطناعي",
+            title: "وكلاء مخصصون يتولون المهام الحقيقية",
+            description: "أبني وكلاء ذكاء اصطناعي مخصصين يتصلون بأدواتك، ينفذون الأعمال الفعلية، ويعملون بدون متابعة مستمرة.",
+            badges: ["AI Agents", "Tool Integrations", "Task Execution", "Autonomous Workflows"],
             imageSrc: "/first-card/First image.png",
-            imageAlt: "معاينة موقع ويب",
+            imageAlt: "معاينة وكلاء ذكاء اصطناعي",
           },
           {
-            tag: "لوحات تحكم",
-            title: "تفاصيل صغيرة، تصميم نظيف، ونتائج أفضل",
-            description: "أركّز على التفاصيل الصغيرة وأحافظ على نظافة التصميم حتى تبدو كل شاشة مقصودة وسهلة الاستخدام.",
-            badges: ["لوحات تحكم", "تحليلات", "لوحات إدارة", "تقارير"],
-            imageSrc: "/first-card/second image.jpg",
-            imageAlt: "معاينة لوحة تحكم",
-          },
-          {
-            tag: "تطبيقات",
-            title: "تطبيقات ويب وموبايل مبنية للاستخدام الحقيقي",
-            description: "من الفكرة إلى الإطلاق، أركز على بناء تطبيقات عملية قابلة للتوسع وسهلة الاستخدام للمستخدم النهائي.",
-            badges: ["Web Apps", "Mobile UX", "MVPs", "Scalable Flows"],
-            imageSrc: "/projects/project%204/onqoud%201.png",
-            imageAlt: "معاينة تطبيق رقمي",
-          },
-          {
-            tag: "أنظمة",
-            title: "أنظمة مخصصة تناسب طريقة عملك",
-            description: "أحوّل الاحتياج التجاري إلى نظام واضح يربط بين العمليات والبيانات والأتمتة في مكان واحد.",
-            badges: ["Internal Tools", "Automation", "Business Systems", "Custom Workflows"],
+            tag: "نماذج اللغة والتعلم الآلي",
+            title: "نماذج مبنية ومضبوطة لحالتك الفعلية",
+            description: "أطوّر نماذج لغة وتعلم آلي، وأقوم ببنائها وضبطها ونشرها بما يناسب حالة الاستخدام الخاصة بك.",
+            badges: ["LLMs", "ML Models", "Fine-Tuning", "Deployment"],
             imageSrc: "/first-card/4th image.avif",
-            imageAlt: "معاينة نظام أعمال مخصص",
+            imageAlt: "معاينة نماذج لغة وتعلم آلي",
           },
           {
-            tag: "منتج",
-            title: "تفكير منتجي من أول خطوة إلى التوسّع",
-            description: "أشتغل بعقلية Product Builder حتى يكون كل قرار في التصميم والتطوير مرتبطاً بالقيمة الفعلية للمستخدم والعمل.",
-            badges: ["Product Strategy", "UX Thinking", "Launch Support", "Growth Ready"],
+            tag: "الأتمتة",
+            title: "مسارات عمل تعمل من تلقاء نفسها",
+            description: "أبني أتمتة تتولى سير العمل بشكل مستقل لتقليل العمل اليدوي، وتوفير الوقت، وخفض التكاليف.",
+            badges: ["Automation", "Workflows", "Time Saving", "Cost Reduction"],
+            imageSrc: "/projects/project%204/onqoud%201.png",
+            imageAlt: "معاينة أنظمة أتمتة",
+          },
+          {
+            tag: "هندسة منتجات الذكاء الاصطناعي",
+            title: "منتجات ذكاء اصطناعي كاملة من الفكرة إلى الإطلاق",
+            description: "أصمم وأطوّر منتجات ذكاء اصطناعي كاملة من الفكرة حتى الإطلاق، بشكل جاهز للتوسع مع عملك.",
+            badges: ["AI Products", "From Idea to Launch", "Scalable Systems", "Product Engineering"],
+            imageSrc: "/first-card/second image.jpg",
+            imageAlt: "معاينة هندسة منتجات الذكاء الاصطناعي",
+          },
+          {
+            tag: "تطوير المواقع والتطبيقات",
+            title: "مواقع وتطبيقات سريعة وموثوقة",
+            description: "أبني مواقع وتطبيقات سريعة وموثوقة ومصممة حول الطريقة التي يستخدمها الناس فعلاً.",
+            badges: ["Websites", "Apps", "Reliable Builds", "User-Focused UX"],
             imageSrc: "/first-card/5th image.png",
-            imageAlt: "معاينة أعمال تطوير المنتجات",
+            imageAlt: "معاينة تطوير المواقع والتطبيقات",
           },
         ]
       : [
           {
-            tag: "Website",
-            title: "Modern products, apps, and websites built with care",
-            description: "I build modern products, apps, and websites that feel polished, useful, and ready for real-world use.",
-            badges: ["Marketing Sites", "Brand Pages", "Responsive UI", "SEO Ready"],
+            tag: "AI Agents",
+            title: "Custom agents that handle real tasks",
+            description: "Custom agents that handle real tasks, connect to your tools, and work without constant supervision.",
+            badges: ["AI Agents", "Tool Integrations", "Task Execution", "Autonomous Workflows"],
             imageSrc: "/first-card/First image.png",
-            imageAlt: "Website showcase preview",
+            imageAlt: "AI agents showcase preview",
           },
           {
-            tag: "Dashboards",
-            title: "Small details, clean design, better results",
-            description: "I focus on the small details and keep the design clean so every screen feels intentional and easy to use.",
-            badges: ["Dashboards", "Analytics", "Admin Panels", "Reporting"],
-            imageSrc: "/first-card/second image.jpg",
-            imageAlt: "Dashboard showcase preview",
-          },
-          {
-            tag: "Apps",
-            title: "Modern design principles, strong UI and UX",
-            description: "I follow modern design principles and build UI and UX that feel intuitive, polished, and enjoyable to use.",
-            badges: ["Web Apps", "Mobile UX", "MVPs", "Scalable Flows"],
-            imageSrc: "/projects/project%204/onqoud%201.png",
-            imageAlt: "App showcase preview",
-          },
-          {
-            tag: "Systems",
-            title: "From zero to launch, with support after",
-            description: "From 0 to launch, I set up everything for you and stay with you after launch so things keep moving smoothly.",
-            badges: ["Internal Tools", "Automation", "Business Systems", "Custom Workflows"],
+            tag: "LLMs & ML Models",
+            title: "Models built for your specific use case",
+            description: "Language and machine learning models built, fine tuned, and deployed for your specific use case.",
+            badges: ["LLMs", "ML Models", "Fine-Tuning", "Deployment"],
             imageSrc: "/first-card/4th image.avif",
-            imageAlt: "Custom system showcase preview",
+            imageAlt: "LLMs and ML models showcase preview",
           },
           {
-            tag: "Product",
-            title: "The right tech stack for speed and stability",
-            description: "I use the best tech stack to keep your project working smoothly, fast, and with fewer bugs.",
-            badges: ["Product Strategy", "UX Thinking", "Launch Support", "Growth Ready"],
+            tag: "Automations",
+            title: "Workflows that run on their own",
+            description: "Workflows that run on their own, cutting manual work, saving time, and reducing costs.",
+            badges: ["Automation", "Workflows", "Time Saving", "Cost Reduction"],
+            imageSrc: "/projects/project%204/onqoud%201.png",
+            imageAlt: "Automation showcase preview",
+          },
+          {
+            tag: "AI Products Engineering",
+            title: "Full AI products from idea to launch",
+            description: "Full AI products built from idea to launch, ready to scale with your business.",
+            badges: ["AI Products", "From Idea to Launch", "Scalable Systems", "Product Engineering"],
+            imageSrc: "/first-card/second image.jpg",
+            imageAlt: "AI products engineering showcase preview",
+          },
+          {
+            tag: "Website & App Development",
+            title: "Fast, reliable websites and applications",
+            description: "Fast, reliable websites and applications designed around how people actually use them.",
+            badges: ["Websites", "Apps", "Reliable Builds", "User-Focused UX"],
             imageSrc: "/first-card/5th image.png",
-            imageAlt: "Product development showcase preview",
+            imageAlt: "Website and app development showcase preview",
           },
         ]
   const description =
     lang === "ar"
       ? [
-          "أنا <u>مطوّر برمجيات</u> و<u>مطور منتجات تقنية</u> أساعد <u>الشركات الناشئة</u>، <u>المستقلين</u>، <u>الأعمال</u>، و<u>روّاد الأعمال</u> على تحويل الأفكار إلى <u>منتجات رقمية حقيقية</u>. أصمم وأطوّر <u>المواقع الإلكترونية</u>، <u>تطبيقات الويب</u>، <u>تطبيقات الموبايل</u>، <u>منصات SaaS</u>، <u>لوحات التحكم</u>، و<u>الأنظمة التجارية المخصصة</u> المبنية لحل مشاكل فعلية وصناعة قيمة قابلة للقياس. من التخطيط وتصميم تجربة المستخدم إلى التطوير والإطلاق والتوسّع، أستمتع بتحويل المتطلبات المعقدة إلى حلول بسيطة وموثوقة وسهلة الاستخدام.",
-          "خلال السنوات الماضية، عملت على منتجات في مجالات <u>الذكاء الاصطناعي</u>، <u>تحليل البيانات</u>، <u>الأتمتة</u>، و<u>ذكاء الأعمال</u>. أسلوبي يجمع بين <u>الخبرة التقنية</u> و<u>التفكير المنتجّي</u>، حتى يكون كل مشروع ليس فقط مبنياً بشكل ممتاز، بل أيضاً متوافقاً مع أهداف العمل واحتياجات المستخدمين. سواء كان المشروع <u>MVP لشركة ناشئة</u>، أو <u>لوحة تحكم لشركة</u>، أو <u>حل برمجي مخصص</u>، فأنا أركز على بناء منتجات عملية، قابلة للتوسع، وجاهزة للاستخدام في العالم الحقيقي.",
+          "أنا <u>مهندس ذكاء اصطناعي ومنتجات تقنية</u> أبني تقنيات تساعد <u>الشركات الناشئة</u>، <u>الأفراد</u>، و<u>الأعمال</u> على <u>أتمتة أعمالهم</u>، <u>خفض التكاليف</u>، و<u>توفير الوقت</u>. أصمم وأطوّر <u>وكلاء ذكاء اصطناعي</u>، <u>أنظمة أتمتة</u>، و<u>منتجات ذكية</u> تتولى المهام الحقيقية حتى يركّز الناس على ما يهم فعلاً. من <u>التخطيط</u> و<u>تجربة المستخدم</u> إلى <u>التطوير</u> و<u>النشر</u> و<u>التوسّع</u>، أستمتع بتحويل المتطلبات المعقدة إلى حلول بسيطة وموثوقة تعمل بشكل مستقل.",
+          "أبني باستخدام <u>أحدث التقنيات</u>، مع الجمع بين <u>الهندسة الحقيقية</u> و<u>التفكير المنتجّي القوي</u> لصناعة منتجات ذكية وقوية. سواء كان المشروع <u>وكيل ذكاء اصطناعي</u>، أو <u>نظام أتمتة مخصص</u>، أو <u>منصة SaaS كاملة</u>، أحرص أن يكون كل منتج مبنياً بشكل جيد، مفيداً، ومتوافقاً مع أهداف العمل الحقيقية. تركيزي بسيط: بناء تقنيات <u>عملية</u>، <u>قابلة للتوسع</u>، و<u>جاهزة للعالم الحقيقي</u>.",
         ]
       : [
-          "I'm a <u>Developer</u> and <u>Product Builder</u> who helps <u>startups</u>, <u>freelancers</u>, <u>businesses</u>, and <u>entrepreneurs</u> turn ideas into <u>real digital products</u>. I design and develop <u>websites</u>, <u>web applications</u>, <u>mobile apps</u>, <u>SaaS platforms</u>, <u>dashboards</u>, and <u>custom business systems</u> that are built to solve real problems and create measurable value. From planning and user experience design to development, deployment, and scaling, I enjoy transforming complex requirements into simple, reliable, and easy-to-use solutions.",
-          "Over the years, I have worked on products across <u>AI</u>, <u>data analytics</u>, <u>automation</u>, and <u>business intelligence</u>. My approach combines <u>technical expertise</u> with <u>product thinking</u>, ensuring that every project is not only well-built but also aligned with business goals and user needs. Whether it's a <u>startup MVP</u>, a <u>company dashboard</u>, or a <u>custom software solution</u>, I focus on building products that are practical, scalable, and ready for real-world use.",
+          "I'm an <u>AI and Product Engineer</u> who builds technologies that help <u>startups</u>, <u>individuals</u>, and <u>businesses</u> <u>automate their work</u>, <u>cut costs</u>, and <u>save time</u>. I design and develop <u>AI agents</u>, <u>automation systems</u>, and <u>intelligent products</u> that handle real tasks so people can focus on what actually matters. From <u>planning</u> and <u>user experience</u> to <u>development</u>, <u>deployment</u>, and <u>scaling</u>, I enjoy turning complex requirements into simple, reliable solutions that run on their own.",
+          "I build with the <u>latest technologies</u>, combining <u>real engineering</u> with <u>strong product thinking</u> to create powerful, intelligent products. Whether it's an <u>AI agent</u>, a <u>custom automation system</u>, or a <u>full SaaS platform</u>, I make sure every product is well built, useful, and aligned with real business goals. My focus is simple: building technologies that are <u>practical</u>, <u>scalable</u>, and <u>ready for the real world</u>.",
         ]
   const projectsCard =
     lang === "ar"

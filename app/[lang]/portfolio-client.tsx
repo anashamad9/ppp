@@ -15,7 +15,6 @@ import type { Locale } from "@/i18n-config"
 import type { getDictionary } from "@/lib/dictionaries"
 import { ArticleFooter } from "@/components/article-footer"
 import { cn } from "@/lib/utils"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   ArrowUpRight,
   BadgeCheck,
@@ -41,6 +40,8 @@ import {
   CalendarDays,
   Rocket,
   Users,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 import { SiWhatsapp } from "@icons-pack/react-simple-icons"
@@ -1122,6 +1123,15 @@ function ProjectsShowcaseCard({
   projectsCard: ProjectsCard
   lang: Locale
 }) {
+  const [activeImageIndexes, setActiveImageIndexes] = useState<Record<string, number>>({})
+
+  const setProjectImageIndex = (projectTitle: string, nextIndex: number) => {
+    setActiveImageIndexes((current) => ({
+      ...current,
+      [projectTitle]: nextIndex,
+    }))
+  }
+
   return (
     <section
       id="projects"
@@ -1137,70 +1147,111 @@ function ProjectsShowcaseCard({
           </h3>
           <p className="max-w-2xl text-sm leading-relaxed text-foreground/75">
             {lang === "ar"
-              ? "كل مشروع له بطاقة واحدة خاصة به، ويمكنك التنقل بينها من أزرار التبويب الثابتة أثناء التمرير."
-              : "Each project gets its own card, and you can switch between them from the sticky tabs while scrolling."}
+              ? "كل مشروع له بطاقة مستقلة مع معرض صور يمكنك التنقل فيه يميناً ويساراً."
+              : "Each project has its own card with an image gallery you can move through left and right."}
           </p>
         </div>
 
-        <Tabs defaultValue={projectsCard.projects[0]?.title} className="space-y-4">
-          <div className="sticky top-4 z-20 overflow-x-auto" dir={lang === "ar" ? "rtl" : "ltr"}>
-            <TabsList className={cn("h-auto gap-1 rounded-2xl bg-muted p-0.5 backdrop-blur-xl supports-[backdrop-filter]:bg-muted", lang === "ar" && "font-thmanyah-serif-text")}>
-              {projectsCard.projects.map((project) => (
-                <TabsTrigger
-                  key={`${project.title}-tab`}
-                  value={project.title}
-                  className="rounded-[14px] px-2.5 py-1.5 text-xs shadow-none data-[state=active]:bg-[#165dfb] data-[state=active]:text-white data-[state=active]:shadow-none"
-                >
-                  {project.title}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </div>
+        <div className="space-y-0">
+          {projectsCard.projects.map((project, projectIndex) => {
+            const activeImageIndex = activeImageIndexes[project.title] ?? 0
+            const activeImage = project.images[activeImageIndex]
 
-          {projectsCard.projects.map((project) => (
-            <TabsContent key={`${project.title}-content`} value={project.title} className="mt-0">
-              <div className="overflow-hidden rounded-2xl bg-muted">
-                <div className="space-y-4 p-5 sm:p-7">
-                  <div className="space-y-3">
-                    <h4 className={cn("text-lg font-semibold tracking-tight text-foreground sm:text-xl", lang === "ar" && "font-thmanyah-serif-text")}>
-                      {project.title}
-                    </h4>
-                    <p className="max-w-3xl text-sm leading-relaxed text-foreground/80">{project.description}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {project.badges.map((badge) => (
-                        <span
-                          key={badge}
-                          className="cursor-default rounded-full bg-black/80 px-2.5 py-1 text-[11px] font-medium text-white transition-colors hover:bg-black"
-                        >
-                          {badge}
-                        </span>
-                      ))}
-                    </div>
+            return (
+              <div key={project.title} className="space-y-0">
+                <article className="overflow-hidden rounded-2xl bg-muted">
+                  <div className="flex flex-col">
+                    <div className="space-y-5 p-5 sm:space-y-6 sm:p-7">
+                      <div className="space-y-2.5">
+                        <h4 className={cn("text-lg font-semibold tracking-tight text-foreground sm:text-xl", lang === "ar" && "font-thmanyah-serif-text")}>
+                          {project.title}
+                        </h4>
+                        <p className="max-w-3xl text-sm leading-relaxed text-foreground/80">{project.description}</p>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {project.badges.map((badge) => (
+                          <span
+                            key={badge}
+                            className="cursor-default rounded-md bg-background px-2 py-0.5 text-xs text-foreground transition-all duration-200 hover:scale-105 hover:bg-background/80"
+                          >
+                            {badge}
+                          </span>
+                        ))}
+                      </div>
                   </div>
 
-                  <div className="space-y-4">
-                    {project.images.map((image, imageIndex) => (
-                      <figure key={`${image.src}-${imageIndex}`} className="space-y-2">
-                        <p className="max-w-3xl text-sm leading-relaxed text-foreground/70">
-                          {image.alt}
-                        </p>
-                        <div className="relative aspect-[1024/752] overflow-hidden rounded-xl bg-background/60">
+                    <div className="relative min-h-[320px] overflow-hidden sm:min-h-[420px]">
+                      {project.images.map((image, imageIndex) => (
+                        <div
+                          key={`${project.title}-${image.src}-${imageIndex}`}
+                          className={cn(
+                            "absolute inset-0 transition-all duration-700 ease-out",
+                            imageIndex === activeImageIndex ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-2 opacity-0",
+                          )}
+                        >
                           <Image
                             src={image.src}
                             alt={image.alt}
                             fill
-                            className="object-cover transition-transform duration-500 hover:scale-[1.02]"
-                            sizes="(min-width: 1024px) 42vw, 100vw"
+                            className="object-cover"
+                            sizes="100vw"
                           />
                         </div>
-                      </figure>
-                    ))}
+                      ))}
+
+                      <div className="absolute inset-x-0 top-0 flex items-start justify-between p-4">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setProjectImageIndex(
+                              project.title,
+                              (activeImageIndex - 1 + project.images.length) % project.images.length,
+                            )
+                          }
+                          aria-label={lang === "ar" ? "الصورة السابقة" : "Previous image"}
+                          className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition hover:bg-black/60"
+                        >
+                          {lang === "ar" ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setProjectImageIndex(project.title, (activeImageIndex + 1) % project.images.length)}
+                          aria-label={lang === "ar" ? "الصورة التالية" : "Next image"}
+                          className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition hover:bg-black/60"
+                        >
+                          {lang === "ar" ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                        </button>
+                      </div>
+
+                      <div className="absolute inset-x-0 bottom-0 flex justify-center bg-gradient-to-t from-black/35 via-black/10 to-transparent p-4">
+                        <div className="flex items-center gap-1.5">
+                          {project.images.map((image, imageIndex) => (
+                            <button
+                              key={`${project.title}-dot-${image.src}-${imageIndex}`}
+                              type="button"
+                              onClick={() => setProjectImageIndex(project.title, imageIndex)}
+                              aria-label={`${lang === "ar" ? "عرض الصورة" : "Show image"} ${imageIndex + 1}`}
+                              className={cn(
+                                "h-2 rounded-full bg-white/55 transition-all duration-300 hover:bg-white",
+                                imageIndex === activeImageIndex ? "w-8" : "w-2.5",
+                              )}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </article>
+
+                {projectIndex < projectsCard.projects.length - 1 ? (
+                  <div className="flex justify-center" aria-hidden="true">
+                    <div className="h-12 w-px bg-border/70" />
+                  </div>
+                ) : null}
               </div>
-            </TabsContent>
-          ))}
-        </Tabs>
+            )
+          })}
+        </div>
       </div>
     </section>
   )
