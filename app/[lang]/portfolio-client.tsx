@@ -302,7 +302,12 @@ function Header({
       style={{ transitionDelay: "100ms" }}
     >
       <div className={cn("flex items-center", !compact && "gap-2.5 sm:gap-3")}>
-        <div className={cn("group shrink-0 [perspective:800px]", compact ? "h-16 w-16 sm:h-20 sm:w-20" : "h-20 w-20")}>
+        <div
+          className={cn(
+            "group shrink-0 [perspective:800px] [view-transition-name:none]",
+            compact ? "h-16 w-16 sm:h-20 sm:w-20" : "h-20 w-20"
+          )}
+        >
           <div className="relative h-full w-full rounded-full transition-transform duration-300 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
             <Image
               src="/anas-hamad.jpeg"
