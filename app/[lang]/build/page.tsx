@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const title = isArabic ? "أنس حمد | مهندس ذكاء اصطناعي ومنتجات تقنية" : "Anas Hamad | AI and Product Engineer"
   const description = isArabic
     ? "أنس حمد مهندس ذكاء اصطناعي ومنتجات تقنية يساعد الشركات الناشئة والمستقلين والأعمال على بناء مواقع، تطبيقات، منصات SaaS، لوحات تحكم، وأنظمة مخصصة."
-    : "Anas Hamad is a product and website developer helping startups, freelancers, and businesses build websites, apps, SaaS platforms, dashboards, and custom systems."
+    : "Anas Hamad is an AI and Product Engineer helping startups, freelancers, and businesses build websites, apps, SaaS platforms, dashboards, and custom systems."
   const canonical = `/${lang}/build`
   const image = "/anas-preview.png"
 
@@ -80,7 +80,10 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
     lang === "ar"
       ? [
           "تطوير المواقع",
+          "وكلاء ذكاء اصطناعي",
           "تصميم المنتجات",
+          "الأتمتة",
+          "نماذج تعلم آلي",
           "تطوير التطبيقات",
           "تطوير المنتجات",
           "أنظمة متكاملة",
@@ -89,16 +92,27 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
         ]
       : [
           "Website Development",
+          "AI Agents",
           "Product Design",
-          "App development",
+          "Automations",
+          "ML Models",
+          "App Development",
           "Product Development",
           "Full Systems",
           "AI Chatbots",
-          "Landing pages",
+          "Landing Pages",
         ]
   const showcaseSlides =
     lang === "ar"
       ? [
+          {
+            tag: "تطوير المواقع والتطبيقات",
+            title: "مواقع وتطبيقات سريعة وموثوقة",
+            description: "أبني مواقع وتطبيقات سريعة وموثوقة ومصممة حول الطريقة التي يستخدمها الناس فعلاً.",
+            badges: ["Websites", "Apps", "Reliable Builds", "User-Focused UX"],
+            imageSrc: "/first-card/5th image.png",
+            imageAlt: "معاينة تطوير المواقع والتطبيقات",
+          },
           {
             tag: "وكلاء ذكاء اصطناعي",
             title: "وكلاء مخصصون يتولون المهام الحقيقية",
@@ -131,16 +145,16 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
             imageSrc: "/first-card/second image.jpg",
             imageAlt: "معاينة هندسة منتجات الذكاء الاصطناعي",
           },
-          {
-            tag: "تطوير المواقع والتطبيقات",
-            title: "مواقع وتطبيقات سريعة وموثوقة",
-            description: "أبني مواقع وتطبيقات سريعة وموثوقة ومصممة حول الطريقة التي يستخدمها الناس فعلاً.",
-            badges: ["Websites", "Apps", "Reliable Builds", "User-Focused UX"],
-            imageSrc: "/first-card/5th image.png",
-            imageAlt: "معاينة تطوير المواقع والتطبيقات",
-          },
         ]
       : [
+          {
+            tag: "Website & App Development",
+            title: "Fast, reliable websites and applications",
+            description: "Fast, reliable websites and applications designed around how people actually use them.",
+            badges: ["Websites", "Apps", "Reliable Builds", "User-Focused UX"],
+            imageSrc: "/first-card/5th image.png",
+            imageAlt: "Website and app development showcase preview",
+          },
           {
             tag: "AI Agents",
             title: "Custom agents that handle real tasks",
@@ -173,14 +187,6 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
             imageSrc: "/first-card/second image.jpg",
             imageAlt: "AI products engineering showcase preview",
           },
-          {
-            tag: "Website & App Development",
-            title: "Fast, reliable websites and applications",
-            description: "Fast, reliable websites and applications designed around how people actually use them.",
-            badges: ["Websites", "Apps", "Reliable Builds", "User-Focused UX"],
-            imageSrc: "/first-card/5th image.png",
-            imageAlt: "Website and app development showcase preview",
-          },
         ]
   const description =
     lang === "ar"
@@ -192,6 +198,48 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
           "I'm an <u>AI and Product Engineer</u> who builds technologies that help <u>startups</u>, <u>individuals</u>, and <u>businesses</u> <u>automate their work</u>, <u>cut costs</u>, and <u>save time</u>. I design and develop <u>AI agents</u>, <u>automation systems</u>, and <u>intelligent products</u> that handle real tasks so people can focus on what actually matters. From <u>planning</u> and <u>user experience</u> to <u>development</u>, <u>deployment</u>, and <u>scaling</u>, I enjoy turning complex requirements into simple, reliable solutions that run on their own.",
           "I build with the <u>latest technologies</u>, combining <u>real engineering</u> with <u>strong product thinking</u> to create powerful, intelligent products. Whether it's an <u>AI agent</u>, a <u>custom automation system</u>, or a <u>full SaaS platform</u>, I make sure every product is well built, useful, and aligned with real business goals. My focus is simple: building technologies that are <u>practical</u>, <u>scalable</u>, and <u>ready for the real world</u>.",
         ]
+  const impactCards =
+    lang === "ar"
+      ? [
+          {
+            metric: "95%",
+            label: "وقت أقل",
+            title: "أتمتة وفّرت أكثر من 4 ساعات يومياً",
+            description: "حوّلت مهمة يومية كانت تستغرق حوالي 5 ساعات إلى مسار آلي ينتهي خلال 15 دقيقة فقط، مع تقليل العمل اليدوي والأخطاء المتكررة.",
+          },
+          {
+            metric: "24/7",
+            label: "ردود ذكية",
+            title: "شات بوت مبني على مخزون العميل",
+            description: "بنيت نموذج شات بوت يستخدم بيانات المخزون الفعلية للمتجر للرد على العملاء بدقة، وتم ربطه بأنظمة العميل لتقديم إجابات عملية ومحدثة.",
+          },
+          {
+            metric: "End-to-end",
+            label: "وكلاء",
+            title: "منصة لبناء وكلاء أعمال مخصصين",
+            description: "طوّرت منصة وكلاء تتيح للمستخدمين بناء وكلائهم المخصصين وربطهم بالأدوات والأنظمة لأتمتة سير عمل كامل داخل البزنس.",
+          },
+        ]
+      : [
+          {
+            metric: "95%",
+            label: "less time",
+            title: "Automation that saved 4+ hours every day",
+            description: "Automated a daily client task that used to take around 5 hours and brought it down to about 15 minutes, reducing manual work and repeat errors.",
+          },
+          {
+            metric: "24/7",
+            label: "smart replies",
+            title: "Inventory-aware LLM chatbot",
+            description: "Built an LLM chatbot that answers customers using live store inventory context, then integrated it with the client's internal systems for practical, up-to-date responses.",
+          },
+          {
+            metric: "End-to-end",
+            label: "agents",
+            title: "Agent platform for full business workflows",
+            description: "Built an agent platform that lets users create custom agents, connect them to tools and systems, and automate complete business workflows from one place.",
+          },
+        ]
   const projectsCard =
     lang === "ar"
       ? {
@@ -199,7 +247,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
             {
               tag: "أتمت",
               title: "أتمت",
-              description: "وكيل أتمتة ذكاء اصطناعي يعمل كمساعد ذكي يخفف المهام المتكررة ويزيد سرعة تنفيذ العمل اليومي.",
+              description: "الكثير من فرق العمل تضيع وقتها بين أدوات متعددة ومهام متكررة تحتاج متابعة يومية. في أتمت، صممت وبنيت منصة وكيل ذكاء اصطناعي تجمع المحادثات، التطبيقات، المهارات، وسير العمل في تجربة واحدة. ركزت على تحويل الأتمتة من أوامر منفصلة إلى وكلاء قابلين لإعادة الاستخدام يمكنهم تنفيذ مهام حقيقية. النتيجة كانت منتجاً عملياً يساعد الفرق على تقليل العمل اليدوي وبناء أتمتة كاملة من مكان واحد.",
               badges: ["AI Automation", "Agent Design", "Workflow Systems", "Product Development"],
               images: [
                 { src: "/projects/Project%201/Atmet%201.png", alt: "لقطة من واجهة مشروع Atmet وتجربة المنتج." },
@@ -211,8 +259,8 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
             {
               tag: "مكونات تفصيلية",
               title: "مكونات تفصيلية",
-              description: "منصة وتطبيق لإنشاء المستندات القانونية بالذكاء الاصطناعي، مع تجربة واضحة وسريعة تساعد على إعداد العقود بشكل أسهل.",
-              badges: ["AI Legal Docs", "App Development", "Automation", "Product Development"],
+              description: "المشكلة لم تكن في بناء شاشة واحدة جميلة، بل في جعل الواجهة قابلة للتوسع بدون أن تفقد اتساقها. بنيت نظام مكونات يوضح كيف تتصرف العناصر في الحالات المختلفة، من الرسائل والأزرار إلى التدفقات الصغيرة داخل المنتج. ركزت على التباعد، التسلسل البصري، وحالات التفاعل حتى تكون المكونات جاهزة للاستخدام داخل أكثر من شاشة. النتيجة كانت مكتبة واجهات أكثر وضوحاً تقلل قرارات التصميم المتكررة وتسرّع بناء الصفحات الجديدة.",
+              badges: ["UI Components", "Product Design", "Design Systems", "Interaction Details"],
               images: [
                 { src: "/projects/project%202/com1.png", alt: "مجموعة مكونات تفصيلية توضّح شكل العناصر داخل المنتج." },
                 { src: "/projects/project%202/com2.png", alt: "لقطة لمكوّنات واجهة مستخدم مركّزة على التفاصيل الصغيرة." },
@@ -223,7 +271,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
             {
               tag: "دنتال تريك",
               title: "دنتال تريك",
-              description: "منصة تربط الأطباء مع مختبرات الأسنان بشكل أبسط وأكثر وضوحاً، وتساعد على تنظيم الطلبات والتواصل بين الطرفين.",
+              description: "التواصل بين أطباء الأسنان والمختبرات غالباً يتشتت بين الرسائل، الصور، وتحديثات الطلبات. صممت تجربة منصة تنظّم الطلبات وتسهّل التنسيق بين الطرفين من أول إرسال الحالة حتى المتابعة. بنيت التدفق حول وضوح الحالة، تفاصيل الطلب، وسهولة الرجوع للمعلومات المهمة. الهدف كان تقليل سوء الفهم وتسريع دورة الطلب بين الطبيب والمختبر.",
               badges: ["Platform Design", "Marketplace", "Healthcare UX", "Product Development"],
               images: [
                 { src: "/projects/Project%203/dental%201.png", alt: "لقطة من منصة Dental Trek وتجربة ربط الأطباء بالمختبرات." },
@@ -235,7 +283,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
             {
               tag: "عنقود",
               title: "عنقود",
-              description: "منصة ذكاء أعمال للمطاعم والمقاهي تساعد على فهم الأداء واتخاذ قرارات أفضل باستخدام بيانات واضحة ولوحات لحظية.",
+              description: "المطاعم والمقاهي تحتاج قرارات أسرع من تقارير يدوية متأخرة أو بيانات موزعة بين أنظمة مختلفة. عملت على منصة ذكاء أعمال تعرض الأداء من خلال لوحات لحظية وبيانات واضحة تساعد الفرق على فهم المبيعات، السلوك، والعمليات. شمل العمل أتمتة خطوط البيانات وبناء أكثر من 50 تقريراً ديناميكياً لدعم التحليل اليومي. ساعدت المنصة على تحسين مؤشرات الأداء بنسبة تصل إلى 30% وخفض التكاليف التشغيلية بنسبة 25%.",
               badges: ["Website Development", "Product Development", "Real-time Dashboards", "Landing Page"],
               images: [
                 { src: "/projects/project%204/onqoud%201.png", alt: "لقطة من مشروع Onqoud وتجربة منصة ذكاء الأعمال." },
@@ -247,7 +295,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
             {
               tag: "صفحات الهبوط",
               title: "صفحات الهبوط",
-              description: "منصة تربط الأطباء مع مختبرات الأسنان بشكل أبسط وأكثر وضوحاً، وتساعد على تنظيم الطلبات والتواصل بين الطرفين.",
+              description: "صفحات الهبوط تحتاج أن تشرح المنتج بسرعة وتدفع الزائر لاتخاذ خطوة واضحة بدون ازدحام بصري. بنيت مجموعة من 4 اتجاهات لصفحات هبوط تركّز على وضوح الرسالة، ترتيب الأقسام، وسرعة الوصول إلى الدعوة الأساسية. تعاملت مع كل صفحة كمسار تحويل صغير يبدأ من المشكلة وينتهي بالفعل المطلوب. النتيجة كانت صفحات أسهل في القراءة وأقوى في عرض قيمة المنتج خلال الثواني الأولى.",
               badges: ["Platform Design", "Marketplace", "Healthcare UX", "Product Development"],
               images: [
                 { src: "/projects/project%205/Landing%201.png", alt: "لقطة من صفحة هبوط تعرض بداية التجربة البصرية." },
@@ -259,7 +307,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
             {
               tag: "أخرى",
               title: "أخرى",
-              description: "منصة ذكاء أعمال للمطاعم والمقاهي تساعد على فهم الأداء واتخاذ قرارات أفضل باستخدام بيانات واضحة ولوحات لحظية.",
+              description: "هذه مجموعة من تجارب ومنتجات صغيرة بنيتها لاختبار أفكار مختلفة بسرعة. ركزت فيها على تحويل الفكرة إلى واجهة قابلة للاستخدام، ثم تحسين التدفق بناءً على ما يحتاجه المستخدم فعلاً. شملت الأعمال نماذج لواجهات منتجات، لوحات تحكم، وتجارب تفاعلية يمكن تطويرها لاحقاً إلى منتجات كاملة. القيمة هنا كانت في سرعة الاستكشاف وبناء نماذج واضحة بدلاً من ترك الأفكار في مرحلة التصور.",
               badges: ["Website Development", "Product Development", "Real-time Dashboards", "Landing Page"],
               images: [
                 { src: "/projects/project%206/other%201.png", alt: "لقطة من مشروع إضافي ضمن الأعمال المتنوعة." },
@@ -274,7 +322,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
             {
               tag: "Atmet",
               title: "Atmet",
-              description: "An AI automation coworker agent that handles repetitive work and helps teams move faster with less manual effort.",
+              description: "Teams lose time when repetitive work is spread across chats, apps, and disconnected tools. For Atmet, I designed and built an AI agent platform that brings chats, apps, skills, and workflows into one product experience. The approach was to move automation from one-off prompts into reusable agents that can perform real business tasks. The result is a practical platform for building full workflow automation from one place with far less manual follow-up.",
               badges: ["AI Automation", "Agent Design", "Workflow Systems", "Product Development"],
               images: [
                 { src: "/projects/Project%201/Atmet%201.png", alt: "A screenshot from the Atmet interface and product experience." },
@@ -286,8 +334,8 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
             {
               tag: "Detailed components",
               title: "Detailed components",
-              description: "A platform and app for generating AI-powered legal documents with a simple flow that makes contract creation faster and easier.",
-              badges: ["AI Legal Docs", "App Development", "Automation", "Product Development"],
+              description: "The challenge was not making one screen look good, but making the interface scalable and consistent across many product states. I built a detailed component system covering structure, spacing, visual hierarchy, and interaction behavior for reusable product elements. The work turned small UI decisions into repeatable patterns that can be used across multiple screens. The outcome is a clearer component library that speeds up future page building and reduces repeated design decisions.",
+              badges: ["UI Components", "Product Design", "Design Systems", "Interaction Details"],
               images: [
                 { src: "/projects/project%202/com1.png", alt: "Detailed components showing how interface elements are built inside the product." },
                 { src: "/projects/project%202/com2.png", alt: "A closer look at UI components focused on small interaction details." },
@@ -298,7 +346,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
             {
               tag: "Dental Trek",
               title: "Dental Trek",
-              description: "A platform that connects doctors with dental labs and makes requests, coordination, and communication much easier.",
+              description: "Dental lab requests often get messy when doctors, labs, files, and status updates are handled across separate channels. I designed a platform flow that organizes requests, case details, and communication between doctors and dental labs. The approach focused on status clarity, easier handoff, and keeping important information attached to each request. The result is a cleaner coordination experience that reduces confusion and helps both sides move cases forward faster.",
               badges: ["Platform Design", "Marketplace", "Healthcare UX", "Product Development"],
               images: [
                 { src: "/projects/Project%203/dental%201.png", alt: "A screenshot from Dental Trek and the doctor-to-lab platform experience." },
@@ -310,7 +358,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
             {
               tag: "Onqoud",
               title: "Onqoud",
-              description: "A business intelligence platform for restaurants and cafes that helps teams understand performance and make better decisions with clear data and live dashboards.",
+              description: "Restaurants and cafes need faster decisions than manual reports or scattered operational data can provide. I worked on a business intelligence platform that turns restaurant performance data into clear dashboards and daily insights. The build included automated data pipelines and 50+ dynamic Python reports for recurring analysis. The platform helped improve performance metrics by up to 30% and reduce operational costs by 25%.",
               badges: ["Website Development", "Product Development", "Real-time Dashboards", "Landing Page"],
               images: [
                 { src: "/projects/project%204/onqoud%201.png", alt: "A screenshot from Onqoud and the business intelligence platform experience." },
@@ -320,9 +368,9 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
               ],
             },
             {
-              tag: "Landing pages",
-              title: "Landing pages",
-              description: "A platform that connects doctors with dental labs and makes requests, coordination, and communication much easier.",
+              tag: "Landing Pages",
+              title: "Landing Pages",
+              description: "A landing page has a few seconds to explain the product, build trust, and move the visitor toward one clear action. I built a set of 4 landing page directions focused on stronger messaging, cleaner section hierarchy, and sharper calls to action. Each page was treated as a conversion path: problem, value, proof, then action. The result is a more readable and persuasive presentation of the product from the first viewport.",
               badges: ["Platform Design", "Marketplace", "Healthcare UX", "Product Development"],
               images: [
                 { src: "/projects/project%205/Landing%201.png", alt: "A landing page screenshot showing the first visual direction." },
@@ -334,7 +382,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
             {
               tag: "Other",
               title: "Other",
-              description: "A business intelligence platform for restaurants and cafes that helps teams understand performance and make better decisions with clear data and live dashboards.",
+              description: "This collection includes smaller product experiments and interface explorations built to test ideas quickly. I focused on turning rough concepts into usable flows, then refining the structure around what a real user would need next. The work includes dashboard concepts, product interfaces, and interaction patterns that can grow into full products. The value was speed: making ideas concrete enough to evaluate, improve, and continue building.",
               badges: ["Website Development", "Product Development", "Real-time Dashboards", "Landing Page"],
               images: [
                 { src: "/projects/project%206/other%201.png", alt: "A screenshot from another project in the broader portfolio." },
@@ -355,9 +403,9 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
           avatarAlt: "رندا متولي",
           ctaTitle: "إذا عندك فكرة أو مشروع، خلّينا نبنيه بشكل صح",
           primaryLabel: "تواصل معي",
-          primaryHref: "mailto:anashamad1909@gmail.com",
+          primaryHref: `mailto:${SITE_EMAIL}`,
           secondaryLabel: "واتساب",
-          secondaryHref: "https://wa.me/962790453103",
+          secondaryHref: "https://wa.me/962795874662",
         }
       : {
           quoteTag: "Client Feedback",
@@ -368,9 +416,9 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
           avatarAlt: "Randa Mitwalli",
           ctaTitle: "If you have an idea or product in mind, let's build it properly",
           primaryLabel: "Contact Me",
-          primaryHref: "mailto:anashamad1909@gmail.com",
+          primaryHref: `mailto:${SITE_EMAIL}`,
           secondaryLabel: "WhatsApp",
-          secondaryHref: "https://wa.me/962790453103",
+          secondaryHref: "https://wa.me/962795874662",
         }
 
   const personJsonLd = {
@@ -404,6 +452,8 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
         secondaryActionTargetId="#projects"
         secondaryActionIcon="eye"
         showcaseSlides={showcaseSlides}
+        impactCards={impactCards}
+        compactTechStackCard
         projectsCard={projectsCard}
         testimonialCta={testimonialCta}
       />

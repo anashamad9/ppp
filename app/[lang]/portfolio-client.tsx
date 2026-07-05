@@ -91,6 +91,12 @@ type TestimonialCtaCard = {
   secondaryLabel: string
   secondaryHref: string
 }
+type ImpactCard = {
+  metric: string
+  label: string
+  title: string
+  description: string
+}
 type DescriptionView = "summary" | "tech-stack" | "articles"
 
 export default function PortfolioClient({
@@ -110,6 +116,8 @@ export default function PortfolioClient({
   showcaseSlides,
   projectsCard,
   testimonialCta,
+  impactCards,
+  compactTechStackCard = false,
   showArticleFooter = false,
   articleFooterHomeHref,
 }: {
@@ -129,6 +137,8 @@ export default function PortfolioClient({
   showcaseSlides?: ShowcaseCard[]
   projectsCard?: ProjectsCard
   testimonialCta?: TestimonialCtaCard
+  impactCards?: ImpactCard[]
+  compactTechStackCard?: boolean
   showArticleFooter?: boolean
   articleFooterHomeHref?: string
 }) {
@@ -218,9 +228,18 @@ export default function PortfolioClient({
             />
             {!hideExperience && <Experience isLoaded={isLoaded} experiences={dict.experiences} dict={dict} lang={lang} />}
             {showcaseSlides?.length ? <BuildShowcaseCard isLoaded={isLoaded} showcaseSlides={showcaseSlides} lang={lang} /> : null}
-            {!hideTechStack && <CoreTechStack isLoaded={isLoaded} coreStack={coreStack} dict={dict} lang={lang} />}
-            {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} /> : null}
+            {impactCards?.length ? <ImpactHighlights isLoaded={isLoaded} cards={impactCards} lang={lang} /> : null}
+            {!hideTechStack && (
+              <CoreTechStack
+                isLoaded={isLoaded}
+                coreStack={coreStack}
+                dict={dict}
+                lang={lang}
+                compactCard={compactTechStackCard}
+              />
+            )}
             {!hideArticles && <Articles isLoaded={isLoaded} articles={dict.articles} lang={lang} dict={dict} />}
+            {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} /> : null}
             {testimonialCta ? <TestimonialCtaSection isLoaded={isLoaded} testimonialCta={testimonialCta} lang={lang} /> : null}
             {showArticleFooter ? <ArticleFooter lang={lang} homeHref={articleFooterHomeHref} /> : null}
           </CardContent>
@@ -945,13 +964,67 @@ function CoreTechStack({
   dict,
   lang,
   hideTitle = false,
+  compactCard = false,
 }: {
   isLoaded: boolean
   coreStack: CoreStackCategory[]
   dict: Dictionary
   lang: Locale
   hideTitle?: boolean
+  compactCard?: boolean
 }) {
+  if (compactCard) {
+    const stackItems = coreStack.flatMap((category) => category.items)
+    const midpoint = Math.ceil(stackItems.length / 2)
+    const stackRows = [stackItems.slice(0, midpoint), stackItems.slice(midpoint)]
+
+    return (
+      <section
+        className={`-mt-5 transition-all duration-500 ease-out sm:-mt-9 ${
+          isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
+        }`}
+        style={{ transitionDelay: "550ms" }}
+      >
+        <div className="relative flex min-h-[72px] flex-col justify-center gap-1.5 overflow-hidden rounded-2xl bg-muted px-4 py-2">
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-muted to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-muted to-transparent" />
+          <div className="flex flex-col gap-1.5" dir="ltr">
+            {stackRows.map((row, rowIndex) => (
+              <div
+                key={`tech-stack-row-${rowIndex}`}
+                className={cn("flex w-max items-center gap-1.5", rowIndex === 1 && "ms-12")}
+              >
+                {row.map((it) => (
+                  <a
+                    key={`${rowIndex}-${it.name}-${it.url}`}
+                    href={it.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-background/75 py-0.5 pe-2 ps-0.5 text-[11px] font-medium leading-none text-foreground transition duration-200 hover:bg-background hover:text-foreground"
+                    title={it.name}
+                    aria-label={it.name}
+                  >
+                    <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border/50 bg-background">
+                      <Image
+                        src={it.logo}
+                        alt=""
+                        width={14}
+                        height={14}
+                        className="h-3.5 w-3.5 object-contain"
+                        unoptimized
+                      />
+                    </span>
+                    <span>{it.name}</span>
+                  </a>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   return (
     <section
       className={`flex flex-col gap-4 transition-all duration-500 ease-out ${
@@ -1010,6 +1083,92 @@ function CoreTechStack({
             </div>
           ))}
         </div>
+      </div>
+    </section>
+  )
+}
+
+function ImpactHighlights({
+  isLoaded,
+  cards,
+  lang,
+}: {
+  isLoaded: boolean
+  cards: ImpactCard[]
+  lang: Locale
+}) {
+  const [openCards, setOpenCards] = useState<Record<string, boolean>>({})
+
+  const toggleCard = (title: string) => {
+    setOpenCards((current) => ({
+      ...current,
+      [title]: !current[title],
+    }))
+  }
+
+  return (
+    <section
+      className={`-mt-5 flex flex-col gap-3 transition-all duration-500 ease-out sm:-mt-8 ${
+        isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
+      }`}
+      style={{ transitionDelay: "525ms" }}
+    >
+      <div className="grid items-stretch gap-3 sm:grid-cols-3">
+        {cards.map((card) => {
+          const isOpen = Boolean(openCards[card.title])
+          const hasLongMetric = card.metric.length > 6
+
+          return (
+            <div
+              key={card.title}
+              className="flex h-full min-h-[210px] flex-col rounded-2xl bg-muted p-5 transition-all duration-300 ease-out"
+            >
+              <button
+                type="button"
+                onClick={() => toggleCard(card.title)}
+                aria-expanded={isOpen}
+                className="flex w-full flex-1 items-start justify-between gap-3 text-start"
+              >
+                <div className="space-y-2.5">
+                  <Badge
+                    variant="secondary"
+                    className="w-fit rounded-full border-0 bg-background/80 px-2.5 py-1 text-[11px] font-medium text-foreground shadow-none"
+                  >
+                    {card.label}
+                  </Badge>
+                  <div className="space-y-1.5">
+                    <span
+                      className={cn(
+                        "block font-semibold leading-none text-foreground tabular-nums",
+                        hasLongMetric ? "text-xl sm:text-[24px]" : "text-2xl sm:text-[28px]",
+                      )}
+                    >
+                      {card.metric}
+                    </span>
+                    <h2 className={cn("text-sm font-semibold leading-snug text-foreground sm:text-[15px]", lang === "ar" && "font-thmanyah-serif-text")}>
+                      {card.title}
+                    </h2>
+                  </div>
+                </div>
+                <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-background/80 text-foreground transition duration-300">
+                  <ChevronDown className={cn("h-4 w-4 transition-transform duration-300", isOpen && "rotate-180")} />
+                </span>
+              </button>
+              <div
+                className={cn(
+                  "grid transition-all duration-300 ease-out",
+                  isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
+                )}
+              >
+                <div className="overflow-hidden">
+                  <p className="mt-4 text-xs leading-5 text-foreground/75 sm:text-[13px]">
+                    {card.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )
+        })}
       </div>
     </section>
   )

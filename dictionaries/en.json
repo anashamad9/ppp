@@ -223,10 +223,10 @@
     {
       "id": 6,
       "enabled": true,
-      "topic": "Building Products with AI Will be Changed",
+      "topic": "How Building Products with AI Will Change",
       "date": "March 7, 2025",
       "readTime": "4 min read",
-      "content": "# Building Products with AI Will be Changed\n\nChat is a powerful interface, but it is not the final shape of AI products. It is the easiest way to access a model, not always the best way to use intelligence.\n\nA great AI product should know when conversation is useful and when it gets in the way. Sometimes the best interface is a highlighted suggestion inside a document. Sometimes it is an automatic draft in the background. Sometimes it is a small warning before you send the wrong thing. In those moments, the AI is not a separate destination. It is part of the workflow.\n\nThe products that win will not force users to constantly explain themselves in a text box. They will understand context from the interface, offer help where the work already happens, and make the user feel faster without making them feel managed."
+      "content": "# How Building Products with AI Will Change\n\nChat is a powerful interface, but it is not the final shape of AI products. It is the easiest way to access a model, not always the best way to use intelligence.\n\nA great AI product should know when conversation is useful and when it gets in the way. Sometimes the best interface is a highlighted suggestion inside a document. Sometimes it is an automatic draft in the background. Sometimes it is a small warning before you send the wrong thing. In those moments, the AI is not a separate destination. It is part of the workflow.\n\nThe products that win will not force users to constantly explain themselves in a text box. They will understand context from the interface, offer help where the work already happens, and make the user feel faster without making them feel managed."
     }
   ],
   "socialLinks": [
