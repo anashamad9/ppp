@@ -1004,7 +1004,7 @@ function CoreTechStack({
                     title={it.name}
                     aria-label={it.name}
                   >
-                    <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border/50 bg-background">
+                    <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border/50 bg-muted">
                       <Image
                         src={it.logo}
                         alt=""
@@ -1640,7 +1640,11 @@ function Articles({
       }`}
       style={{ transitionDelay: "750ms" }}
     >
-      {!hideTitle && <h2 className={`text-sm text-muted-foreground ${lang === "ar" ? "" : "uppercase"}`}>{dict.sections.articles}</h2>}
+      {!hideTitle && (
+        <h2 className={cn("text-xl font-semibold tracking-tight text-foreground sm:text-2xl", lang === "ar" && "font-thmanyah-serif-text")}>
+          {dict.sections.articles}
+        </h2>
+      )}
       <div className="flex flex-col gap-0">
         {enabledArticles.slice(0, 5).map((article) => {
           const isHovered = hoveredId === article.id
