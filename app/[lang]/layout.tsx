@@ -70,9 +70,9 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       follow: true,
     },
     icons: {
-      icon: "/anas-logo.png",
-      shortcut: "/anas-logo.png",
-      apple: "/anas-logo.png",
+      icon: "/Anas%20Hamad.png",
+      shortcut: "/Anas%20Hamad.png",
+      apple: "/Anas%20Hamad.png",
     },
   }
 }

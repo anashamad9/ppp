@@ -103,6 +103,7 @@ export default function PortfolioClient({
   dict,
   lang,
   headerRole,
+  avatarSrc = "/anas-hamad.jpeg",
   hideExperience = false,
   hideTechStack = false,
   hideArticles = false,
@@ -117,6 +118,7 @@ export default function PortfolioClient({
   projectsCard,
   testimonialCta,
   impactCards,
+  techStack,
   compactTechStackCard = false,
   showArticleFooter = false,
   articleFooterHomeHref,
@@ -124,6 +126,7 @@ export default function PortfolioClient({
   dict: Dictionary
   lang: Locale
   headerRole?: string
+  avatarSrc?: string
   hideExperience?: boolean
   hideTechStack?: boolean
   hideArticles?: boolean
@@ -138,12 +141,14 @@ export default function PortfolioClient({
   projectsCard?: ProjectsCard
   testimonialCta?: TestimonialCtaCard
   impactCards?: ImpactCard[]
+  techStack?: CoreStackCategory[]
   compactTechStackCard?: boolean
   showArticleFooter?: boolean
   articleFooterHomeHref?: string
 }) {
   const [isLoaded, setIsLoaded] = useState(false)
   const [descriptionView, setDescriptionView] = useState<DescriptionView>("summary")
+  const activeCoreStack = techStack ?? coreStack
 
   useEffect(() => {
     setIsLoaded(true)
@@ -205,7 +210,7 @@ export default function PortfolioClient({
               compactHome ? "gap-3 sm:gap-4" : showArticleFooter ? "gap-6" : "gap-8 sm:gap-12",
             )}
           >
-            <Header isLoaded={isLoaded} dict={dict} lang={lang} headerRole={headerRole} topTags={topTags} compact={compactHome} />
+            <Header isLoaded={isLoaded} dict={dict} lang={lang} headerRole={headerRole} avatarSrc={avatarSrc} topTags={topTags} compact={compactHome} />
             <Description
               isLoaded={isLoaded}
               dict={dict}
@@ -232,7 +237,7 @@ export default function PortfolioClient({
             {!hideTechStack && (
               <CoreTechStack
                 isLoaded={isLoaded}
-                coreStack={coreStack}
+                coreStack={activeCoreStack}
                 dict={dict}
                 lang={lang}
                 compactCard={compactTechStackCard}
@@ -301,6 +306,7 @@ function Header({
   dict,
   lang,
   headerRole,
+  avatarSrc,
   topTags,
   compact = false,
 }: {
@@ -308,6 +314,7 @@ function Header({
   dict: Dictionary
   lang: Locale
   headerRole?: string
+  avatarSrc: string
   topTags?: string[]
   compact?: boolean
 }) {
@@ -329,7 +336,7 @@ function Header({
         >
           <div className="relative h-full w-full rounded-full transition-transform duration-300 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
             <Image
-              src="/anas-hamad.jpeg"
+              src={avatarSrc}
               alt={dict.header.name}
               width={80}
               height={80}
@@ -992,7 +999,7 @@ function CoreTechStack({
             {stackRows.map((row, rowIndex) => (
               <div
                 key={`tech-stack-row-${rowIndex}`}
-                className={cn("flex w-max items-center gap-1.5", rowIndex === 1 && "ms-12")}
+                className={cn("flex w-max items-center gap-1.5", rowIndex === 1 && "-ms-10")}
               >
                 {row.map((it) => (
                   <a
