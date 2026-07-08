@@ -15,7 +15,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
   const { lang: langParam } = await params
   return (
     <DashboardShell lang={langParam as Locale} activePage="dashboard">
-      <div className="min-h-svh" />
+      <div />
     </DashboardShell>
   )
 }

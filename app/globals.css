@@ -82,6 +82,8 @@
   }
   body {
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
@@ -89,6 +91,14 @@
   .text-balance {
     text-wrap: balance;
   }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
+
+.app-workspace button,
+.app-workspace a {
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Force load Arabic fonts */

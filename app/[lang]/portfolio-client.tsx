@@ -1351,7 +1351,7 @@ function ProjectsShowcaseCard({
                       </div>
                   </div>
 
-                    <div className="relative min-h-[320px] overflow-hidden sm:min-h-[420px]">
+                    <div className="relative aspect-[4/3] w-full overflow-hidden">
                       {project.images.map((image, imageIndex) => (
                         <div
                           key={`${project.title}-${image.src}-${imageIndex}`}
