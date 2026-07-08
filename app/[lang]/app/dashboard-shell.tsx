@@ -58,20 +58,20 @@ export function DashboardShell({
   const loginHref = isLocalRoute ? `/${lang}/app` : "/"
 
   return (
-    <main className="grid min-h-svh grid-cols-[180px_minmax(0,1fr)] bg-background text-foreground">
-      <aside className="flex min-h-svh flex-col border-r border-border px-2.5 py-3">
-        <Link href={hrefFor("/dashboard")} aria-label="Dashboard home" className="mb-4 flex w-fit items-center">
+    <main className="grid min-h-svh grid-cols-[60px_minmax(0,1fr)] bg-background text-foreground">
+      <aside className="flex min-h-svh flex-col items-center border-r border-border px-2 py-3">
+        <Link href={hrefFor("/dashboard")} aria-label="Dashboard home" className="mb-5 flex items-center">
           <Image
             src="/Anas%20Hamad.png"
             alt="Anas Hamad"
-            width={36}
-            height={36}
+            width={44}
+            height={44}
             priority
-            className="h-9 w-9 rounded-md border border-border object-cover"
+            className="h-11 w-11 rounded-md border border-border object-cover"
           />
         </Link>
 
-        <nav className="flex min-w-0 flex-1 flex-col gap-1">
+        <nav className="flex flex-1 flex-col items-center gap-1">
           {navItems.map((item) => {
             const Icon = item.icon
             const isActive = item.key === activePage
@@ -83,13 +83,12 @@ export function DashboardShell({
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  "h-8 w-full justify-start gap-2 rounded-md px-2 text-xs text-muted-foreground/70 hover:bg-muted hover:text-foreground",
+                  "h-9 w-9 rounded-md p-0 text-muted-foreground/70 hover:bg-muted hover:text-foreground",
                   isActive && "bg-muted text-foreground"
                 )}
               >
                 <Link href={hrefFor(item.path)} aria-label={item.label} title={item.label}>
-                  <Icon className="h-3.5 w-3.5" />
-                  <span>{item.label}</span>
+                  <Icon className="h-4 w-4" />
                 </Link>
               </Button>
             )
@@ -100,17 +99,43 @@ export function DashboardShell({
           asChild
           variant="ghost"
           size="sm"
-          className="mt-4 h-8 w-full justify-start gap-2 rounded-md px-2 text-xs text-muted-foreground/70 hover:bg-red-500/10 hover:text-red-500"
+          className="mt-4 h-9 w-9 rounded-md p-0 text-muted-foreground/70 hover:bg-red-500/10 hover:text-red-500"
         >
           <Link href={loginHref} aria-label="Logout" title="Logout">
-            <LogOut className="h-3.5 w-3.5" />
-            <span>Logout</span>
+            <LogOut className="h-4 w-4" />
           </Link>
         </Button>
       </aside>
 
-      <div className="min-w-0">
-        {children}
+      <div className="flex min-w-0 flex-col">
+        <header className="flex min-h-14 items-center border-b border-border px-3">
+          <nav className="flex min-w-0 items-center gap-1 overflow-x-auto">
+            {navItems.map((item) => {
+              const Icon = item.icon
+              const isActive = item.key === activePage
+
+              return (
+                <Button
+                  key={item.key}
+                  asChild
+                  variant="ghost"
+                  size="sm"
+                  className={cn(
+                    "h-8 shrink-0 gap-1.5 rounded-md px-2.5 text-xs text-muted-foreground/70 hover:bg-muted hover:text-foreground",
+                    isActive && "bg-muted text-foreground"
+                  )}
+                >
+                  <Link href={hrefFor(item.path)}>
+                    <Icon className="h-3.5 w-3.5" />
+                    <span>{item.label}</span>
+                  </Link>
+                </Button>
+              )
+            })}
+          </nav>
+        </header>
+
+        <div className="min-w-0 flex-1">{children}</div>
       </div>
     </main>
   )
