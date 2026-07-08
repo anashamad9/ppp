@@ -20,7 +20,8 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     ? "أنس حمد مهندس ذكاء اصطناعي ومنتجات تقنية يساعد الشركات الناشئة والمستقلين والأعمال على بناء مواقع، تطبيقات، منصات SaaS، لوحات تحكم، وأنظمة مخصصة."
     : "Anas Hamad is an AI and Product Engineer helping startups, freelancers, and businesses build websites, apps, SaaS platforms, dashboards, and custom systems."
   const canonical = `/${lang}/build`
-  const image = "/anas-preview.png"
+  const image = isArabic ? "/Arabic%20Anas%20Hamad.png" : "/English%20Anas%20Hamad.png"
+  const avatarImage = "/Anas%20Hamad.png"
 
   return {
     title,
@@ -37,7 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       languages: {
         en: "/en/build",
         ar: "/ar/build",
-        "x-default": "/en/build",
+        "x-default": "/ar/build",
       },
     },
     openGraph: {
@@ -63,9 +64,9 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       images: [image],
     },
     icons: {
-      icon: "/Anas%20Hamad.png",
-      shortcut: "/Anas%20Hamad.png",
-      apple: "/Anas%20Hamad.png",
+      icon: avatarImage,
+      shortcut: avatarImage,
+      apple: avatarImage,
     },
   }
 }
@@ -475,10 +476,9 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
     image: `${siteUrl}/Anas%20Hamad.png`,
     jobTitle: role,
     sameAs: [
+      "https://x.com/buildanas?s=11&t=xHJPYPOInZK-SWRzKy7yWA",
+      "https://www.instagram.com/buildanas?igsh=MW9lc2ltaWI3dTc0ZQ%3D%3D&utm_source=qr",
       "https://www.linkedin.com/in/anas-hamad1909",
-      "https://github.com/anashamad9",
-      "https://x.com/its_anas9",
-      "https://huggingface.co/anashamad",
     ],
     email: SITE_EMAIL,
   }

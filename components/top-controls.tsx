@@ -52,6 +52,12 @@ export function TopControls({ lang }: TopControlsProps) {
     { label: "GitHub", href: "https://github.com/anashamad9" },
     { label: "Hugging Face", href: "https://huggingface.co/anashamad" },
   ]
+  const buildSocialLinks = [
+    { label: "X", href: "https://x.com/buildanas?s=11&t=xHJPYPOInZK-SWRzKy7yWA" },
+    { label: "Instagram", href: "https://www.instagram.com/buildanas?igsh=MW9lc2ltaWI3dTc0ZQ%3D%3D&utm_source=qr" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/anas-hamad1909" },
+  ]
+  const activeSocialLinks = isBuildHost ? buildSocialLinks : socialLinks
 
   const activeTheme = mounted ? resolvedTheme ?? theme : undefined
   const isDark = activeTheme === "dark"
@@ -127,7 +133,7 @@ export function TopControls({ lang }: TopControlsProps) {
       <div className="mx-auto w-full max-w-[720px] bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/40">
         <div className="flex flex-wrap items-center justify-between gap-2 pb-3">
           <div className="flex flex-wrap items-center gap-2">
-            {socialLinks.map((link) => (
+            {activeSocialLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}

@@ -31,7 +31,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Subdomain: build.anashamad.com → rewrite to /en/build
+  // Subdomain: build.anashamad.com → rewrite to the build page.
   if (hostname === "build.anashamad.com") {
     const pathSegments = pathname.split("/").filter(Boolean)
     const requestedLocale = i18n.locales.find((locale) => pathSegments[0] === locale)
@@ -44,7 +44,7 @@ export function middleware(request: NextRequest) {
       return NextResponse.next()
     }
 
-    const locale = getLocale(request)
+    const locale = "ar"
 
     if (pathname === "/") {
       return NextResponse.rewrite(new URL(`/${locale}/build`, request.url))
