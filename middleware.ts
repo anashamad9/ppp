@@ -20,7 +20,7 @@ function getLocale(request: NextRequest): string {
 }
 
 export function middleware(request: NextRequest) {
-  const hostname = request.nextUrl.hostname
+  const hostname = request.headers.get("host")?.split(":")[0] ?? request.nextUrl.hostname
   const pathname = request.nextUrl.pathname
 
   if (isStaticAsset(pathname)) {
@@ -51,6 +51,26 @@ export function middleware(request: NextRequest) {
     }
 
     return NextResponse.rewrite(new URL(`/${locale}${pathname}`, request.url))
+  }
+
+  if (hostname === "app.anashamad.com") {
+    const pathSegments = pathname.split("/").filter(Boolean)
+    const requestedLocale = i18n.locales.find((locale) => pathSegments[0] === locale)
+
+    if (requestedLocale) {
+      const restSegments = pathSegments.slice(1)
+
+      if (restSegments[0] === "app") {
+        return NextResponse.next()
+      }
+
+      const appPath = restSegments.length ? `/${restSegments.join("/")}` : ""
+      return NextResponse.rewrite(new URL(`/${requestedLocale}/app${appPath}`, request.url))
+    }
+
+    const locale = "en"
+    const appPath = pathname === "/" ? "" : pathname
+    return NextResponse.rewrite(new URL(`/${locale}/app${appPath}`, request.url))
   }
 
   // If it's the root path, redirect to /en
