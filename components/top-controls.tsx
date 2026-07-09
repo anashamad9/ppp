@@ -27,13 +27,11 @@ export function TopControls({ lang }: TopControlsProps) {
   const { resolvedTheme, setTheme, theme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [isBuildHost, setIsBuildHost] = useState(false)
-  const [isAppHost, setIsAppHost] = useState(false)
   const { startTransition } = useThemeTransition()
 
   useEffect(() => {
     setMounted(true)
     setIsBuildHost(window.location.hostname === "build.anashamad.com")
-    setIsAppHost(window.location.hostname === "app.anashamad.com")
   }, [])
 
   const isRTL = lang === "ar"
@@ -65,10 +63,9 @@ export function TopControls({ lang }: TopControlsProps) {
   const isDark = activeTheme === "dark"
   const currentTheme = isDark ? "dark" : "light"
   const isMainHomepage = pathname === `/${lang}`
-  const isAppRoute = pathname?.startsWith(`/${lang}/app`)
   const shouldUseCompactHomeControls = isMainHomepage && !isBuildHost
 
-  if (!mounted || isAppHost || isAppRoute) {
+  if (!mounted) {
     return null
   }
 
