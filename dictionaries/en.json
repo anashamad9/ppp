@@ -181,6 +181,14 @@
   ],
   "articles": [
     {
+      "id": 7,
+      "enabled": true,
+      "topic": "Building Products and Software with Craft",
+      "date": "July 18, 2026",
+      "readTime": "12 min read",
+      "content": ""
+    },
+    {
       "id": 1,
       "enabled": true,
       "topic": "Automate Your Instagram Comment Replies with AI — A Complete Guide",

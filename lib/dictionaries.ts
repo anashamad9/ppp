@@ -18,6 +18,7 @@ const markdownArticleFiles: Record<Locale, Record<number, string>> = {
   en: {
     1: "article-en.md",
     3: "memory-in-llm-agents.md",
+    7: "Article 3/building-products-with-craft.md",
   },
 }
 
