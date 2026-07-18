@@ -47,7 +47,7 @@ export function TopControls({ lang }: TopControlsProps) {
     [isRTL]
   )
   const socialLinks = [
-    { label: "X", href: "https://x.com/its_anas9" },
+    { label: "X", href: "https://x.com/buildanas?s=11&t=xHJPYPOInZK-SWRzKy7yWA" },
     { label: "LinkedIn", href: "https://www.linkedin.com/in/anas-hamad1909" },
     { label: "GitHub", href: "https://github.com/anashamad9" },
     { label: "Hugging Face", href: "https://huggingface.co/anashamad" },
@@ -90,12 +90,12 @@ export function TopControls({ lang }: TopControlsProps) {
 
   if (shouldUseCompactHomeControls) {
     return (
-      <div className="fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2">
+      <div className="pointer-events-none fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              className="inline-flex h-7 items-center gap-1 rounded-full border-0 bg-muted px-2.5 text-[11px] font-medium text-foreground transition-colors hover:bg-muted/80"
+              className="pointer-events-auto inline-flex h-7 items-center gap-1 rounded-full border-0 bg-muted px-2.5 text-[11px] font-medium text-foreground transition-colors hover:bg-muted/80"
               aria-label={labels.switchLang}
               title={labels.switchLang}
             >
@@ -123,6 +123,7 @@ export function TopControls({ lang }: TopControlsProps) {
           onClick={handleToggleTheme}
           className={cn(
             "h-7 w-7 rounded-full border-0 bg-muted text-foreground hover:bg-muted/80 hover:text-foreground",
+            "pointer-events-auto",
             !mounted && "opacity-0"
           )}
           aria-label={labels.toggle}

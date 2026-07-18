@@ -124,6 +124,20 @@ export default function ArticleDetailClient({
         ul: ({ children }) => <ul className="mb-4 list-disc space-y-2 ps-6 text-sm text-muted-foreground">{children}</ul>,
         ol: ({ children }) => <ol className="mb-4 list-decimal space-y-2 ps-6 text-sm text-muted-foreground">{children}</ol>,
         li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+        table: ({ children }) => (
+          <div className="not-prose my-6 overflow-x-auto rounded-2xl border border-border/70 bg-background">
+            <table className="w-full min-w-[620px] border-collapse text-sm">{children}</table>
+          </div>
+        ),
+        thead: ({ children }) => <thead className="bg-muted/60 text-foreground">{children}</thead>,
+        tbody: ({ children }) => <tbody className="divide-y divide-border/60">{children}</tbody>,
+        tr: ({ children }) => <tr className="divide-x divide-x-reverse divide-border/60">{children}</tr>,
+        th: ({ children }) => (
+          <th className="px-4 py-3 text-start align-top text-sm font-semibold leading-relaxed text-foreground">{children}</th>
+        ),
+        td: ({ children }) => (
+          <td className="px-4 py-3 align-top text-sm leading-relaxed text-muted-foreground">{children}</td>
+        ),
         a: ({ href, children }) => (
           <a
             href={href}
@@ -133,6 +147,11 @@ export default function ArticleDetailClient({
           >
             {children}
           </a>
+        ),
+        img: ({ src, alt }) => (
+          <span className="not-prose my-6 block overflow-hidden rounded-2xl border border-border/60 bg-muted/20">
+            <img src={src ?? ""} alt={alt ?? ""} className="h-auto w-full object-contain" loading="lazy" />
+          </span>
         ),
         pre: ({ children }) => {
           const firstChild = Array.isArray(children) ? children[0] : children

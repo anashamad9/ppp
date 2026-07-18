@@ -36,7 +36,7 @@ export default async function OldHomepagePage() {
     sameAs: [
       "https://www.linkedin.com/in/anas-hamad1909",
       "https://github.com/anashamad9",
-      "https://x.com/its_anas9",
+      "https://x.com/buildanas?s=11&t=xHJPYPOInZK-SWRzKy7yWA",
       "https://huggingface.co/anashamad",
     ],
     email: SITE_EMAIL,

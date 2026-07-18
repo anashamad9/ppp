@@ -331,7 +331,7 @@ function Header({
         <div
           className={cn(
             "group shrink-0 [perspective:800px] [view-transition-name:none]",
-            compact ? "h-16 w-16 sm:h-20 sm:w-20" : "h-20 w-20"
+            compact ? "h-14 w-14 sm:h-[72px] sm:w-[72px]" : "h-[72px] w-[72px]"
           )}
         >
           <div className="relative h-full w-full rounded-full transition-transform duration-300 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
@@ -340,14 +340,14 @@ function Header({
               alt={dict.header.name}
               width={80}
               height={80}
-              className="absolute inset-0 rounded-full border-2 border-border [backface-visibility:hidden]"
+              className="absolute inset-0 h-full w-full rounded-full object-cover [backface-visibility:hidden]"
             />
             <Image
               src="/anas-logo.png"
               alt="Anas logo"
               width={80}
               height={80}
-              className="absolute inset-0 rounded-full border-2 border-border [backface-visibility:hidden] [transform:rotateY(180deg)]"
+              className="absolute inset-0 h-full w-full rounded-full object-cover [backface-visibility:hidden] [transform:rotateY(180deg)]"
             />
           </div>
         </div>

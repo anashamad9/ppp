@@ -5,7 +5,7 @@ import { PERSON_NAME_AR, PERSON_NAME_AR_STYLED, PERSON_NAME_EN, SITE_DESCRIPTION
 import { getRequestSiteUrl } from "@/lib/site-url.server"
 import PortfolioClient from "./portfolio-client"
 
-const featuredArticleIds = new Set([1, 3, 4, 5])
+const featuredArticleIds = new Set([7, 1, 3, 4, 5])
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang: langParam } = await params
@@ -64,7 +64,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
     sameAs: [
       "https://www.linkedin.com/in/anas-hamad1909",
       "https://github.com/anashamad9",
-      "https://x.com/its_anas9",
+      "https://x.com/buildanas?s=11&t=xHJPYPOInZK-SWRzKy7yWA",
       "https://huggingface.co/anashamad",
     ],
     email: SITE_EMAIL,
