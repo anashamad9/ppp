@@ -4,7 +4,7 @@
 // =============================================
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -40,11 +40,29 @@ import {
   CalendarDays,
   Rocket,
   Users,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
-import { SiWhatsapp } from "@icons-pack/react-simple-icons"
+import {
+  SiDocker,
+  SiFastapi,
+  SiFigma,
+  SiFlask,
+  SiGithub,
+  SiGitlab,
+  SiHuggingface,
+  SiLangchain,
+  SiNextdotjs,
+  SiNodedotjs,
+  SiOpenai,
+  SiPostgresql,
+  SiPytorch,
+  SiPython,
+  SiReact,
+  SiSupabase,
+  SiTailwindcss,
+  SiTypescript,
+  SiWhatsapp,
+} from "@icons-pack/react-simple-icons"
 
 // Types
 type Dictionary = Awaited<ReturnType<typeof getDictionary>>
@@ -98,6 +116,11 @@ type ImpactCard = {
   description: string
 }
 type DescriptionView = "summary" | "tech-stack" | "articles"
+type SimpleIconComponent = React.ComponentType<{
+  color?: string
+  size?: number
+  title?: string
+}>
 
 export default function PortfolioClient({
   dict,
@@ -198,7 +221,7 @@ export default function PortfolioClient({
   return (
     <main
       className={cn(
-        "flex flex-col items-center bg-background font-sans",
+        "flex flex-col items-center overflow-x-hidden bg-background font-sans",
         compactHome ? "min-h-svh justify-start px-4 pb-10 pt-6 sm:justify-center sm:px-6 sm:py-10" : "pb-8",
       )}
     >
@@ -965,6 +988,52 @@ function Education({
 -------------------------------------------------------------- */
 /* ------------------- Redesigned Tech Stack (FIXED RTL dividers + min width) ------------------- */
 /* ------------------- Redesigned Tech Stack (Hover black bg for text) ------------------- */
+const techLogoIcons: Record<string, { Icon: SimpleIconComponent; color: "default" | "currentColor" }> = {
+  Docker: { Icon: SiDocker, color: "default" },
+  FastAPI: { Icon: SiFastapi, color: "default" },
+  Figma: { Icon: SiFigma, color: "default" },
+  Flask: { Icon: SiFlask, color: "currentColor" },
+  GitHub: { Icon: SiGithub, color: "currentColor" },
+  GitLab: { Icon: SiGitlab, color: "default" },
+  "Hugging Face": { Icon: SiHuggingface, color: "default" },
+  LangChain: { Icon: SiLangchain, color: "default" },
+  "Next.js": { Icon: SiNextdotjs, color: "currentColor" },
+  "Node.js": { Icon: SiNodedotjs, color: "default" },
+  OpenAI: { Icon: SiOpenai, color: "currentColor" },
+  PostgreSQL: { Icon: SiPostgresql, color: "default" },
+  PyTorch: { Icon: SiPytorch, color: "default" },
+  Python: { Icon: SiPython, color: "default" },
+  React: { Icon: SiReact, color: "default" },
+  Supabase: { Icon: SiSupabase, color: "default" },
+  Tailwind: { Icon: SiTailwindcss, color: "default" },
+  TypeScript: { Icon: SiTypescript, color: "default" },
+}
+
+function TechLogo({ item, size = 14, className }: { item: CoreStackCategory["items"][number]; size?: number; className?: string }) {
+  const icon = techLogoIcons[item.name]
+
+  if (icon) {
+    const { Icon, color } = icon
+
+    return (
+      <span className={cn("inline-flex items-center justify-center", color === "currentColor" && "text-foreground", className)}>
+        <Icon color={color === "default" ? "default" : "currentColor"} size={size} title={item.name} />
+      </span>
+    )
+  }
+
+  return (
+    <Image
+      src={item.logo}
+      alt={item.name}
+      width={size}
+      height={size}
+      className={cn("object-contain", className)}
+      unoptimized
+    />
+  )
+}
+
 function CoreTechStack({
   isLoaded,
   coreStack,
@@ -1012,14 +1081,7 @@ function CoreTechStack({
                     aria-label={it.name}
                   >
                     <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border/50 bg-muted">
-                      <Image
-                        src={it.logo}
-                        alt=""
-                        width={14}
-                        height={14}
-                        className="h-3.5 w-3.5 object-contain"
-                        unoptimized
-                      />
+                      <TechLogo item={it} size={14} className="h-3.5 w-3.5" />
                     </span>
                     <span>{it.name}</span>
                   </a>
@@ -1070,14 +1132,7 @@ function CoreTechStack({
                       className="group flex items-center gap-1.5 text-[11px] text-foreground/90 sm:text-[12px]"
                       title={it.name}
                     >
-                      <Image
-                        src={it.logo}
-                        alt={it.name}
-                        width={16}
-                        height={16}
-                        className="h-4 w-4 object-contain"
-                        unoptimized
-                      />
+                      <TechLogo item={it} size={16} className="h-4 w-4" />
                       <span
                         className="px-0 transition-all duration-300 group-hover:bg-black group-hover:text-white group-hover:rounded-none dark:group-hover:bg-white dark:group-hover:text-black"
                       >
@@ -1294,13 +1349,155 @@ function ProjectsShowcaseCard({
   projectsCard: ProjectsCard
   lang: Locale
 }) {
-  const [activeImageIndexes, setActiveImageIndexes] = useState<Record<string, number>>({})
+  const galleryRef = useRef<HTMLDivElement>(null)
+  const isDraggingRef = useRef(false)
+  const dragStartXRef = useRef(0)
+  const targetScrollLeftRef = useRef(0)
+  const lastDragXRef = useRef(0)
+  const lastDragTimeRef = useRef(0)
+  const animationFrameRef = useRef<number | null>(null)
+  const scrollStartLeftRef = useRef(0)
+  const velocityRef = useRef(0)
 
-  const setProjectImageIndex = (projectTitle: string, nextIndex: number) => {
-    setActiveImageIndexes((current) => ({
-      ...current,
-      [projectTitle]: nextIndex,
-    }))
+  useEffect(() => {
+    return () => {
+      if (animationFrameRef.current !== null) {
+        window.cancelAnimationFrame(animationFrameRef.current)
+      }
+    }
+  }, [])
+
+  const projectImages = projectsCard.projects.flatMap((project) =>
+    project.images.map((image) => ({
+      ...image,
+      projectTitle: project.title,
+    })),
+  )
+
+  useEffect(() => {
+    const gallery = galleryRef.current
+    if (!gallery) return
+
+    setLogicalScrollLeft(gallery, 0)
+    targetScrollLeftRef.current = 0
+  }, [lang, projectsCard])
+
+  const stopAnimation = () => {
+    if (animationFrameRef.current === null) return
+
+    window.cancelAnimationFrame(animationFrameRef.current)
+    animationFrameRef.current = null
+  }
+
+  const animateGallery = () => {
+    const gallery = galleryRef.current
+    if (!gallery) {
+      animationFrameRef.current = null
+      return
+    }
+
+    if (!isDraggingRef.current) {
+      velocityRef.current *= 0.95
+      targetScrollLeftRef.current -= velocityRef.current
+    }
+
+    targetScrollLeftRef.current = clampScrollLeft(targetScrollLeftRef.current)
+
+    const currentScrollLeft = getLogicalScrollLeft(gallery)
+    const distance = targetScrollLeftRef.current - currentScrollLeft
+    setLogicalScrollLeft(gallery, currentScrollLeft + distance * 0.18)
+
+    if (isDraggingRef.current || Math.abs(distance) > 0.5 || Math.abs(velocityRef.current) > 0.25) {
+      animationFrameRef.current = window.requestAnimationFrame(animateGallery)
+    } else {
+      setLogicalScrollLeft(gallery, targetScrollLeftRef.current)
+      animationFrameRef.current = null
+    }
+  }
+
+  const startAnimation = () => {
+    if (animationFrameRef.current === null) {
+      animationFrameRef.current = window.requestAnimationFrame(animateGallery)
+    }
+  }
+
+  const clampScrollLeft = (value: number) => {
+    const gallery = galleryRef.current
+    if (!gallery) return value
+
+    return Math.max(0, Math.min(value, gallery.scrollWidth - gallery.clientWidth))
+  }
+
+  const getLogicalScrollLeft = (gallery: HTMLDivElement) => {
+    return gallery.scrollLeft
+  }
+
+  const setLogicalScrollLeft = (gallery: HTMLDivElement, value: number) => {
+    gallery.scrollLeft = value
+  }
+
+  const stopDragging = () => {
+    if (!isDraggingRef.current) return
+
+    isDraggingRef.current = false
+    targetScrollLeftRef.current = clampScrollLeft(targetScrollLeftRef.current)
+    startAnimation()
+  }
+
+  useEffect(() => {
+    const gallery = galleryRef.current
+    if (!gallery) return
+
+    const syncTargetScroll = () => {
+      if (isDraggingRef.current || animationFrameRef.current !== null) return
+
+      targetScrollLeftRef.current = getLogicalScrollLeft(gallery)
+    }
+
+    gallery.addEventListener("scroll", syncTargetScroll, { passive: true })
+    return () => gallery.removeEventListener("scroll", syncTargetScroll)
+  }, [])
+
+  useEffect(() => {
+    const stopWindowDrag = () => {
+      if (!isDraggingRef.current) return
+
+      isDraggingRef.current = false
+      targetScrollLeftRef.current = clampScrollLeft(targetScrollLeftRef.current)
+      startAnimation()
+    }
+
+    window.addEventListener("pointerup", stopWindowDrag)
+    window.addEventListener("blur", stopWindowDrag)
+    return () => {
+      window.removeEventListener("pointerup", stopWindowDrag)
+      window.removeEventListener("blur", stopWindowDrag)
+    }
+  }, [])
+
+  const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
+    if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return
+
+    const gallery = event.currentTarget
+    const nextScrollLeft = clampScrollLeft(targetScrollLeftRef.current + event.deltaY)
+
+    if (nextScrollLeft === targetScrollLeftRef.current) return
+
+    event.preventDefault()
+    targetScrollLeftRef.current = nextScrollLeft
+    if (animationFrameRef.current === null) {
+      targetScrollLeftRef.current = getLogicalScrollLeft(gallery) + event.deltaY
+      targetScrollLeftRef.current = clampScrollLeft(targetScrollLeftRef.current)
+      startAnimation()
+    }
+  }
+
+  const releasePointerCapture = (event: React.PointerEvent<HTMLDivElement>) => {
+    try {
+      event.currentTarget.releasePointerCapture(event.pointerId)
+    } catch {
+      // The pointer may already be released by the browser.
+    }
   }
 
   return (
@@ -1316,112 +1513,64 @@ function ProjectsShowcaseCard({
           <h3 className={cn("text-xl font-semibold tracking-tight text-foreground sm:text-2xl", lang === "ar" && "font-thmanyah-serif-text")}>
             {lang === "ar" ? "المشاريع" : "Projects"}
           </h3>
-          <p className="max-w-2xl text-sm leading-relaxed text-foreground/75">
-            {lang === "ar"
-              ? "كل مشروع له بطاقة مستقلة مع معرض صور يمكنك التنقل فيه يميناً ويساراً."
-              : "Each project has its own card with an image gallery you can move through left and right."}
-          </p>
         </div>
 
-        <div className="space-y-0">
-          {projectsCard.projects.map((project, projectIndex) => {
-            const activeImageIndex = activeImageIndexes[project.title] ?? 0
-            const activeImage = project.images[activeImageIndex]
+        <div
+          ref={galleryRef}
+          className="relative left-1/2 flex w-screen -translate-x-1/2 cursor-grab gap-3 overflow-x-auto overscroll-x-contain [scrollbar-width:none] active:cursor-grabbing [&::-webkit-scrollbar]:hidden"
+          dir="ltr"
+          aria-label={lang === "ar" ? "صور المشاريع" : "Project images"}
+          onWheel={handleWheel}
+          onPointerDown={(event) => {
+            if (event.button !== 0) return
 
-            return (
-              <div key={project.title} className="space-y-0">
-                <article className="overflow-hidden rounded-2xl bg-muted">
-                  <div className="flex flex-col">
-                    <div className="space-y-5 p-5 sm:space-y-6 sm:p-7">
-                      <div className="space-y-2.5">
-                        <h4 className={cn("text-lg font-semibold tracking-tight text-foreground sm:text-xl", lang === "ar" && "font-thmanyah-serif-text")}>
-                          {project.title}
-                        </h4>
-                        <p className="max-w-3xl text-sm leading-relaxed text-foreground/80">{project.description}</p>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {project.badges.map((badge) => (
-                          <span
-                            key={badge}
-                            className="cursor-default rounded-md bg-background px-2 py-0.5 text-xs text-foreground transition-all duration-200 hover:scale-105 hover:bg-background/80"
-                          >
-                            {badge}
-                          </span>
-                        ))}
-                      </div>
-                  </div>
+            stopAnimation()
+            isDraggingRef.current = true
+            dragStartXRef.current = event.clientX
+            lastDragXRef.current = event.clientX
+            lastDragTimeRef.current = performance.now()
+            scrollStartLeftRef.current = getLogicalScrollLeft(event.currentTarget)
+            targetScrollLeftRef.current = scrollStartLeftRef.current
+            velocityRef.current = 0
+            event.currentTarget.setPointerCapture(event.pointerId)
+          }}
+          onPointerMove={(event) => {
+            if (!isDraggingRef.current) return
 
-                    <div className="relative aspect-[4/3] w-full overflow-hidden">
-                      {project.images.map((image, imageIndex) => (
-                        <div
-                          key={`${project.title}-${image.src}-${imageIndex}`}
-                          className={cn(
-                            "absolute inset-0 transition-all duration-700 ease-out",
-                            imageIndex === activeImageIndex ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-2 opacity-0",
-                          )}
-                        >
-                          <Image
-                            src={image.src}
-                            alt={image.alt}
-                            fill
-                            className="object-cover"
-                            sizes="100vw"
-                          />
-                        </div>
-                      ))}
+            const now = performance.now()
+            const elapsed = Math.max(now - lastDragTimeRef.current, 16)
+            velocityRef.current = ((event.clientX - lastDragXRef.current) / elapsed) * 16
+            lastDragXRef.current = event.clientX
+            lastDragTimeRef.current = now
 
-                      <div className="absolute inset-x-0 top-0 flex items-start justify-between p-4">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setProjectImageIndex(
-                              project.title,
-                              (activeImageIndex - 1 + project.images.length) % project.images.length,
-                            )
-                          }
-                          aria-label={lang === "ar" ? "الصورة السابقة" : "Previous image"}
-                          className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition hover:bg-black/60"
-                        >
-                          {lang === "ar" ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setProjectImageIndex(project.title, (activeImageIndex + 1) % project.images.length)}
-                          aria-label={lang === "ar" ? "الصورة التالية" : "Next image"}
-                          className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition hover:bg-black/60"
-                        >
-                          {lang === "ar" ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                        </button>
-                      </div>
-
-                      <div className="absolute inset-x-0 bottom-0 flex justify-center bg-gradient-to-t from-black/35 via-black/10 to-transparent p-4">
-                        <div className="flex items-center gap-1.5">
-                          {project.images.map((image, imageIndex) => (
-                            <button
-                              key={`${project.title}-dot-${image.src}-${imageIndex}`}
-                              type="button"
-                              onClick={() => setProjectImageIndex(project.title, imageIndex)}
-                              aria-label={`${lang === "ar" ? "عرض الصورة" : "Show image"} ${imageIndex + 1}`}
-                              className={cn(
-                                "h-2 rounded-full bg-white/55 transition-all duration-300 hover:bg-white",
-                                imageIndex === activeImageIndex ? "w-8" : "w-2.5",
-                              )}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-
-                {projectIndex < projectsCard.projects.length - 1 ? (
-                  <div className="flex justify-center" aria-hidden="true">
-                    <div className="h-12 w-px bg-border/70" />
-                  </div>
-                ) : null}
-              </div>
-            )
-          })}
+            event.preventDefault()
+            targetScrollLeftRef.current = clampScrollLeft(scrollStartLeftRef.current - (event.clientX - dragStartXRef.current))
+            startAnimation()
+          }}
+          onPointerUp={(event) => {
+            stopDragging()
+            releasePointerCapture(event)
+          }}
+          onPointerCancel={() => {
+            isDraggingRef.current = false
+            velocityRef.current = 0
+          }}
+        >
+          {projectImages.map((image, imageIndex) => (
+            <div
+              key={`${image.projectTitle}-${image.src}-${imageIndex}`}
+              className="relative aspect-[4/3] w-[82vw] max-w-[560px] shrink-0 overflow-hidden rounded-xl bg-muted sm:w-[560px]"
+            >
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                draggable={false}
+                className="object-cover"
+                sizes="(min-width: 640px) 560px, 82vw"
+              />
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -1444,49 +1593,49 @@ function TestimonialCtaSection({
       }`}
       style={{ transitionDelay: "700ms" }}
     >
-      <div className="overflow-hidden rounded-2xl bg-[#1063ff]">
-        <div className="flex flex-col gap-6 p-5 sm:p-7">
-          <div className="space-y-4">
-            <Badge
-              variant="secondary"
-              className="w-fit rounded-full border-0 bg-black/15 px-2.5 py-1 text-[11px] font-normal text-white shadow-none"
-            >
-              {testimonialCta.quoteTag}
-            </Badge>
-            <p className={cn("max-w-2xl text-xl font-normal leading-relaxed text-white sm:text-2xl", lang === "ar" && "font-thmanyah-serif-text")}>
-              “{testimonialCta.quote}”
-            </p>
-            <div className="flex items-center gap-3">
-              <Image
-                src={testimonialCta.avatarSrc}
-                alt={testimonialCta.avatarAlt}
-                width={40}
-                height={40}
-                className="h-10 w-10 rounded-full object-cover ring-1 ring-white/25"
-              />
-              <div className="space-y-0.5">
-                <p className="text-sm font-normal text-white">{testimonialCta.author}</p>
-                <p className="text-sm text-white/75">{testimonialCta.role}</p>
+      <div className="space-y-10 text-center sm:space-y-12">
+        <div className="overflow-hidden rounded-2xl bg-[#1063ff] text-start">
+          <div className="flex flex-col gap-6 p-5 sm:p-7">
+            <div>
+              <Badge
+                variant="secondary"
+                className="w-fit rounded-full border-0 bg-black/15 px-2.5 py-1 text-[11px] font-normal text-white shadow-none"
+              >
+                {testimonialCta.quoteTag}
+              </Badge>
+              <p className={cn("mt-4 max-w-2xl text-xl font-normal leading-relaxed text-white sm:text-2xl", lang === "ar" && "font-thmanyah-serif-text")}>
+                “{testimonialCta.quote}”
+              </p>
+              <div className="mt-8 flex items-center gap-3 sm:mt-10">
+                <Image
+                  src={testimonialCta.avatarSrc}
+                  alt={testimonialCta.avatarAlt}
+                  width={40}
+                  height={40}
+                  className="h-10 w-10 rounded-full object-cover ring-1 ring-white/25"
+                />
+                <div className="space-y-0.5">
+                  <p className="text-sm font-normal text-white">{testimonialCta.author}</p>
+                  <p className="text-sm text-white/75">{testimonialCta.role}</p>
+                </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="pt-14 sm:pt-20">
-            <div className="flex flex-col gap-3 xl:flex-row xl:flex-wrap xl:items-end xl:justify-start xl:gap-3">
-              <h3 className={cn("order-1 max-w-2xl text-xl font-normal tracking-tight text-white sm:text-2xl", lang === "ar" && "font-thmanyah-serif-text")}>
-                {testimonialCta.ctaTitle}
-              </h3>
-              <div className="order-2 flex shrink-0 flex-row gap-2.5">
-                <Button asChild className="h-[32px] rounded-[99px] px-3 py-1 text-[13px] font-medium">
-                  <a href={testimonialCta.primaryHref}>{testimonialCta.primaryLabel}</a>
-                </Button>
-              <Button asChild variant="outline" className="h-[32px] rounded-[99px] border-0 bg-white px-3 py-1 text-[13px] font-medium text-black hover:bg-white/90 hover:text-black">
-                  <a href={testimonialCta.secondaryHref} className="text-black">
-                    {testimonialCta.secondaryLabel}
-                  </a>
-                </Button>
-              </div>
-            </div>
+        <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 px-4">
+          <h3 className={cn("text-2xl font-normal leading-tight tracking-tight text-foreground sm:text-4xl", lang === "ar" && "font-thmanyah-serif-text")}>
+            {testimonialCta.ctaTitle}
+          </h3>
+          <div className="flex flex-row flex-wrap justify-center gap-3">
+            <Button asChild className="h-[32px] rounded-[99px] px-3 py-1 text-[13px] font-medium">
+              <a href={testimonialCta.primaryHref}>{testimonialCta.primaryLabel}</a>
+            </Button>
+            <Button asChild variant="outline" className="h-[32px] rounded-[99px] border-0 bg-white px-3 py-1 text-[13px] font-medium text-black hover:bg-white/90 hover:text-black">
+              <a href={testimonialCta.secondaryHref} className="text-black">
+                {testimonialCta.secondaryLabel}
+              </a>
+            </Button>
           </div>
         </div>
       </div>

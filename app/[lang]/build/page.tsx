@@ -447,7 +447,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
           role: "أكاديمية رندا",
           avatarSrc: "/484632640_978221624285463_7620032291749332988_n.jpg",
           avatarAlt: "رندا متولي",
-          ctaTitle: "إذا عندك فكرة أو مشروع، خلّينا نبنيه بشكل صح",
+          ctaTitle: "إذا عندك فكرة أو مشروع، خلّينا نبنيه مع بعض",
           primaryLabel: "تواصل معي",
           primaryHref: `mailto:${SITE_EMAIL}`,
           secondaryLabel: "واتساب",
