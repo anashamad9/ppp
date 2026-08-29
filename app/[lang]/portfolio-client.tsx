@@ -1373,13 +1373,15 @@ function ProjectsShowcaseCard({
       projectTitle: project.title,
     })),
   )
+  const displayedProjectImages = lang === "ar" ? [...projectImages].reverse() : projectImages
 
   useEffect(() => {
     const gallery = galleryRef.current
     if (!gallery) return
 
-    setLogicalScrollLeft(gallery, 0)
-    targetScrollLeftRef.current = 0
+    const initialScrollLeft = getInitialScrollLeft(gallery)
+    setLogicalScrollLeft(gallery, initialScrollLeft)
+    targetScrollLeftRef.current = initialScrollLeft
   }, [lang, projectsCard])
 
   const stopAnimation = () => {
@@ -1425,7 +1427,15 @@ function ProjectsShowcaseCard({
     const gallery = galleryRef.current
     if (!gallery) return value
 
-    return Math.max(0, Math.min(value, gallery.scrollWidth - gallery.clientWidth))
+    return Math.max(0, Math.min(value, getMaxScrollLeft(gallery)))
+  }
+
+  const getMaxScrollLeft = (gallery: HTMLDivElement) => {
+    return Math.max(0, gallery.scrollWidth - gallery.clientWidth)
+  }
+
+  const getInitialScrollLeft = (gallery: HTMLDivElement) => {
+    return lang === "ar" ? getMaxScrollLeft(gallery) : 0
   }
 
   const getLogicalScrollLeft = (gallery: HTMLDivElement) => {
@@ -1517,7 +1527,7 @@ function ProjectsShowcaseCard({
 
         <div
           ref={galleryRef}
-          className="relative left-1/2 flex w-screen -translate-x-1/2 cursor-grab gap-3 overflow-x-auto overscroll-x-contain [scrollbar-width:none] active:cursor-grabbing [&::-webkit-scrollbar]:hidden"
+          className="relative mx-[calc(50%_-_50vw)] flex w-screen max-w-[100vw] cursor-grab gap-3 overflow-x-auto overscroll-x-contain [scrollbar-width:none] active:cursor-grabbing [&::-webkit-scrollbar]:hidden"
           dir="ltr"
           aria-label={lang === "ar" ? "صور المشاريع" : "Project images"}
           onWheel={handleWheel}
@@ -1556,7 +1566,7 @@ function ProjectsShowcaseCard({
             velocityRef.current = 0
           }}
         >
-          {projectImages.map((image, imageIndex) => (
+          {displayedProjectImages.map((image, imageIndex) => (
             <div
               key={`${image.projectTitle}-${image.src}-${imageIndex}`}
               className="relative aspect-[4/3] w-[82vw] max-w-[560px] shrink-0 overflow-hidden rounded-xl bg-muted sm:w-[560px]"
