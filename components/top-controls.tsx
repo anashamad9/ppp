@@ -19,9 +19,10 @@ import {
 
 interface TopControlsProps {
   lang: Locale
+  embedded?: boolean
 }
 
-export function TopControls({ lang }: TopControlsProps) {
+export function TopControls({ lang, embedded = false }: TopControlsProps) {
   const router = useRouter()
   const pathname = usePathname()
   const { resolvedTheme, setTheme, theme } = useTheme()
@@ -63,9 +64,14 @@ export function TopControls({ lang }: TopControlsProps) {
   const isDark = activeTheme === "dark"
   const currentTheme = isDark ? "dark" : "light"
   const isMainHomepage = pathname === `/${lang}`
+  const isBuildPage = pathname === `/${lang}/build`
   const shouldUseCompactHomeControls = isMainHomepage && !isBuildHost
 
   if (!mounted) {
+    return null
+  }
+
+  if (isBuildPage && !embedded) {
     return null
   }
 
@@ -134,8 +140,13 @@ export function TopControls({ lang }: TopControlsProps) {
   }
 
   return (
-    <div className="px-4 pb-4 sm:px-6">
-      <div className="mx-auto w-full max-w-[720px] bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/40">
+    <div className={cn("pb-4", isBuildPage && !embedded ? "px-3 sm:px-5 md:px-6" : "px-0")}>
+      <div
+        className={cn(
+          "bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/40",
+          isBuildPage && !embedded ? "w-full lg:me-auto lg:w-[42%]" : embedded ? "w-full" : "mx-auto w-full max-w-[720px]",
+        )}
+      >
         <div className="flex flex-wrap items-center justify-between gap-2 pb-3">
           <div className="flex flex-wrap items-center gap-2">
             {activeSocialLinks.map((link) => (

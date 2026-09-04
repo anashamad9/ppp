@@ -503,6 +503,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
         compactTechStackCard
         projectsCard={projectsCard}
         testimonialCta={testimonialCta}
+        splitBuildLayout
       />
     </>
   )

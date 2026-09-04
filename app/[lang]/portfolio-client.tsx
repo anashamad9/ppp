@@ -14,6 +14,7 @@ import Link from "next/link"
 import type { Locale } from "@/i18n-config"
 import type { getDictionary } from "@/lib/dictionaries"
 import { ArticleFooter } from "@/components/article-footer"
+import { TopControls } from "@/components/top-controls"
 import { cn } from "@/lib/utils"
 import {
   ArrowUpRight,
@@ -145,6 +146,7 @@ export default function PortfolioClient({
   compactTechStackCard = false,
   showArticleFooter = false,
   articleFooterHomeHref,
+  splitBuildLayout = false,
 }: {
   dict: Dictionary
   lang: Locale
@@ -168,6 +170,7 @@ export default function PortfolioClient({
   compactTechStackCard?: boolean
   showArticleFooter?: boolean
   articleFooterHomeHref?: string
+  splitBuildLayout?: boolean
 }) {
   const [isLoaded, setIsLoaded] = useState(false)
   const [descriptionView, setDescriptionView] = useState<DescriptionView>("summary")
@@ -221,55 +224,70 @@ export default function PortfolioClient({
   return (
     <main
       className={cn(
-        "flex flex-col items-center overflow-x-hidden bg-background font-sans",
+        "flex flex-col items-center bg-background font-sans",
+        !splitBuildLayout && "overflow-x-hidden",
         compactHome ? "min-h-svh justify-start px-4 pb-10 pt-6 sm:justify-center sm:px-6 sm:py-10" : "pb-8",
       )}
     >
-      <div className={cn("w-full bg-background", compactHome ? "" : "px-4 pt-8 sm:px-6 sm:pt-10 md:px-8 md:pt-12")}>
-        <Card className="mx-auto w-full max-w-[720px] border-none bg-transparent shadow-none">
+      <div className={cn("w-full bg-background", compactHome ? "" : splitBuildLayout ? "px-3 pt-4 sm:px-5 sm:pt-6 md:px-6 md:pt-8" : "px-4 pt-8 sm:px-6 sm:pt-10 md:px-8 md:pt-12")}>
+        <Card className={cn("mx-auto w-full border-none bg-transparent shadow-none", splitBuildLayout ? "max-w-none" : "max-w-[720px]")}>
           <CardContent
             className={cn(
-              "flex flex-col p-0 sm:p-4",
-              compactHome ? "gap-3 sm:gap-4" : showArticleFooter ? "gap-6" : "gap-8 sm:gap-12",
+              "flex flex-col",
+              splitBuildLayout ? "p-0" : "p-0 sm:p-4",
+              compactHome ? "gap-3 sm:gap-4" : showArticleFooter ? "gap-6" : splitBuildLayout ? "gap-7 sm:gap-10" : "gap-8 sm:gap-12",
             )}
           >
-            <Header isLoaded={isLoaded} dict={dict} lang={lang} headerRole={headerRole} avatarSrc={avatarSrc} topTags={topTags} compact={compactHome} />
-            <Description
-              isLoaded={isLoaded}
-              dict={dict}
-              lang={lang}
-              topTags={topTags}
-              description={description}
-              activeView={descriptionView}
-              setActiveView={navigateDescriptionView}
-              interactive={compactHome}
-            />
-            <CTAButtons
-              isLoaded={isLoaded}
-              dict={dict}
-              lang={lang}
-              secondaryActionLabel={secondaryActionLabel}
-              secondaryActionTargetId={secondaryActionTargetId}
-              secondaryActionIcon={secondaryActionIcon}
-              directContactHref={directContactHref}
-              onShowArticles={compactHome && !secondaryActionTargetId ? () => navigateDescriptionView("articles") : undefined}
-            />
-            {!hideExperience && <Experience isLoaded={isLoaded} experiences={dict.experiences} dict={dict} lang={lang} />}
-            {showcaseSlides?.length ? <BuildShowcaseCard isLoaded={isLoaded} showcaseSlides={showcaseSlides} lang={lang} /> : null}
-            {impactCards?.length ? <ImpactHighlights isLoaded={isLoaded} cards={impactCards} lang={lang} /> : null}
-            {!hideTechStack && (
-              <CoreTechStack
-                isLoaded={isLoaded}
-                coreStack={activeCoreStack}
-                dict={dict}
-                lang={lang}
-                compactCard={compactTechStackCard}
-              />
+            {splitBuildLayout ? (
+              <div className="grid items-start gap-8 xl:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)] xl:gap-12 2xl:gap-16">
+                <div
+                  className={cn(
+                    "build-content-column w-full overflow-visible xl:w-[76%] xl:sticky xl:top-6 xl:self-start",
+                    lang === "ar" ? "xl:ml-auto" : "xl:mr-auto",
+                  )}
+                >
+                  <div className="build-content-inner flex flex-col gap-7">
+                    <Header isLoaded={isLoaded} dict={dict} lang={lang} headerRole={headerRole} avatarSrc={avatarSrc} topTags={topTags} compact={compactHome} />
+                    <Description isLoaded={isLoaded} dict={dict} lang={lang} topTags={topTags} description={description} activeView={descriptionView} setActiveView={navigateDescriptionView} interactive={compactHome} />
+                    <CTAButtons isLoaded={isLoaded} dict={dict} lang={lang} secondaryActionLabel={secondaryActionLabel} secondaryActionTargetId={secondaryActionTargetId} secondaryActionIcon={secondaryActionIcon} directContactHref={directContactHref} onShowArticles={compactHome && !secondaryActionTargetId ? () => navigateDescriptionView("articles") : undefined} />
+                    {!hideArticles && <Articles isLoaded={isLoaded} articles={dict.articles.filter((article) => article.enabled && article.id !== 4).slice(0, 3)} lang={lang} dict={dict} />}
+                    <div className="mt-auto hidden xl:block">
+                      <TopControls lang={lang} embedded />
+                      {showArticleFooter ? <ArticleFooter lang={lang} homeHref={articleFooterHomeHref} /> : null}
+                    </div>
+                  </div>
+                </div>
+                <div className="min-w-0 space-y-10">
+                {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} imageStart={0} imageEnd={2} /> : null}
+                {showcaseSlides?.length ? <BuildShowcaseCard isLoaded={isLoaded} showcaseSlides={showcaseSlides} lang={lang} /> : null}
+                {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} imageStart={2} imageEnd={4} /> : null}
+                {!hideTechStack && <CoreTechStack isLoaded={isLoaded} coreStack={activeCoreStack} dict={dict} lang={lang} compactCard={compactTechStackCard} />}
+                {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} imageStart={4} imageEnd={8} /> : null}
+                {impactCards?.length ? <ImpactHighlights isLoaded={isLoaded} cards={impactCards} lang={lang} bento /> : null}
+                {!hideExperience && <Experience isLoaded={isLoaded} experiences={dict.experiences} dict={dict} lang={lang} />}
+                {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} imageStart={8} imageEnd={12} /> : null}
+                {testimonialCta ? <TestimonialCtaSection isLoaded={isLoaded} testimonialCta={testimonialCta} lang={lang} /> : null}
+                </div>
+                <div className="xl:hidden">
+                  <TopControls lang={lang} embedded />
+                  {showArticleFooter ? <ArticleFooter lang={lang} homeHref={articleFooterHomeHref} /> : null}
+                </div>
+              </div>
+            ) : (
+              <>
+                <Header isLoaded={isLoaded} dict={dict} lang={lang} headerRole={headerRole} avatarSrc={avatarSrc} topTags={topTags} compact={compactHome} />
+                <Description isLoaded={isLoaded} dict={dict} lang={lang} topTags={topTags} description={description} activeView={descriptionView} setActiveView={navigateDescriptionView} interactive={compactHome} />
+                <CTAButtons isLoaded={isLoaded} dict={dict} lang={lang} secondaryActionLabel={secondaryActionLabel} secondaryActionTargetId={secondaryActionTargetId} secondaryActionIcon={secondaryActionIcon} directContactHref={directContactHref} onShowArticles={compactHome && !secondaryActionTargetId ? () => navigateDescriptionView("articles") : undefined} />
+                {!hideExperience && <Experience isLoaded={isLoaded} experiences={dict.experiences} dict={dict} lang={lang} />}
+                {showcaseSlides?.length ? <BuildShowcaseCard isLoaded={isLoaded} showcaseSlides={showcaseSlides} lang={lang} /> : null}
+                {impactCards?.length ? <ImpactHighlights isLoaded={isLoaded} cards={impactCards} lang={lang} /> : null}
+                {!hideTechStack && <CoreTechStack isLoaded={isLoaded} coreStack={activeCoreStack} dict={dict} lang={lang} compactCard={compactTechStackCard} />}
+                {!hideArticles && <Articles isLoaded={isLoaded} articles={dict.articles} lang={lang} dict={dict} />}
+                {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} /> : null}
+              </>
             )}
-            {!hideArticles && <Articles isLoaded={isLoaded} articles={dict.articles} lang={lang} dict={dict} />}
-            {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} /> : null}
-            {testimonialCta ? <TestimonialCtaSection isLoaded={isLoaded} testimonialCta={testimonialCta} lang={lang} /> : null}
-            {showArticleFooter ? <ArticleFooter lang={lang} homeHref={articleFooterHomeHref} /> : null}
+            {!splitBuildLayout && testimonialCta ? <TestimonialCtaSection isLoaded={isLoaded} testimonialCta={testimonialCta} lang={lang} /> : null}
+            {!splitBuildLayout && showArticleFooter ? <ArticleFooter lang={lang} homeHref={articleFooterHomeHref} /> : null}
           </CardContent>
         </Card>
       </div>
@@ -1061,14 +1079,14 @@ function CoreTechStack({
         }`}
         style={{ transitionDelay: "550ms" }}
       >
-        <div className="relative flex min-h-[72px] flex-col justify-center gap-1.5 overflow-hidden rounded-2xl bg-muted px-4 py-2">
+        <div className="relative flex min-h-[72px] flex-col justify-center gap-1.5 overflow-hidden rounded-lg bg-muted px-4 py-2">
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-muted to-transparent" />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-muted to-transparent" />
-          <div className="flex flex-col gap-1.5" dir="ltr">
+          <div className="flex flex-col items-center gap-1.5" dir="ltr">
             {stackRows.map((row, rowIndex) => (
               <div
                 key={`tech-stack-row-${rowIndex}`}
-                className={cn("flex w-max items-center gap-1.5", rowIndex === 1 && "-ms-10")}
+                className="mx-auto flex w-max items-center gap-1.5"
               >
                 {row.map((it) => (
                   <a
@@ -1154,10 +1172,12 @@ function ImpactHighlights({
   isLoaded,
   cards,
   lang,
+  bento = false,
 }: {
   isLoaded: boolean
   cards: ImpactCard[]
   lang: Locale
+  bento?: boolean
 }) {
   const [openCards, setOpenCards] = useState<Record<string, boolean>>({})
 
@@ -1175,7 +1195,7 @@ function ImpactHighlights({
       }`}
       style={{ transitionDelay: "525ms" }}
     >
-      <div className="grid items-stretch gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-3 items-stretch gap-3">
         {cards.map((card) => {
           const isOpen = Boolean(openCards[card.title])
           const hasLongMetric = card.metric.length > 6
@@ -1183,7 +1203,7 @@ function ImpactHighlights({
           return (
             <div
               key={card.title}
-              className="flex h-full min-h-[210px] flex-col rounded-2xl bg-muted p-5 transition-all duration-300 ease-out"
+              className="flex h-full min-h-[165px] flex-col rounded-lg bg-muted p-4 transition-all duration-300 ease-out"
             >
               <button
                 type="button"
@@ -1266,9 +1286,9 @@ function BuildShowcaseCard({
       }`}
       style={{ transitionDelay: "600ms" }}
     >
-      <div className="overflow-hidden rounded-2xl bg-muted">
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_1.3fr]">
-          <div className="flex min-h-[340px] flex-col p-5 sm:min-h-[390px] sm:p-7">
+      <div className="overflow-hidden rounded-lg bg-muted">
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="flex min-h-[340px] flex-col p-4 sm:min-h-[390px] sm:p-5">
             <Badge
               variant="secondary"
               className="mb-4 w-fit rounded-full border-0 bg-background/80 px-2.5 py-1 text-[11px] font-medium text-foreground shadow-none"
@@ -1296,7 +1316,7 @@ function BuildShowcaseCard({
               ))}
             </div>
           </div>
-          <div className="relative min-h-[260px] overflow-hidden border-t border-background/60 md:min-h-full md:border-s">
+          <div className="relative min-h-[280px] overflow-hidden border-t border-background/60 md:min-h-full md:border-s">
             {showcaseSlides.map((slide, index) => (
               <div
                 key={`${slide.imageSrc}-${index}`}
@@ -1344,10 +1364,14 @@ function ProjectsShowcaseCard({
   isLoaded,
   projectsCard,
   lang,
+  imageStart = 0,
+  imageEnd,
 }: {
   isLoaded: boolean
   projectsCard: ProjectsCard
   lang: Locale
+  imageStart?: number
+  imageEnd?: number
 }) {
   const galleryRef = useRef<HTMLDivElement>(null)
   const isDraggingRef = useRef(false)
@@ -1367,13 +1391,10 @@ function ProjectsShowcaseCard({
     }
   }, [])
 
-  const projectImages = projectsCard.projects.flatMap((project) =>
-    project.images.map((image) => ({
-      ...image,
-      projectTitle: project.title,
-    })),
+  const projectImages = (lang === "ar" ? [...projectsCard.projects].reverse() : projectsCard.projects).flatMap((project) =>
+    project.images.map((image) => ({ ...image, projectTitle: project.title })),
   )
-  const displayedProjectImages = lang === "ar" ? [...projectImages].reverse() : projectImages
+  const displayedProjectImages = projectImages.slice(imageStart, imageEnd)
 
   useEffect(() => {
     const gallery = galleryRef.current
@@ -1510,6 +1531,8 @@ function ProjectsShowcaseCard({
     }
   }
 
+  if (!displayedProjectImages.length) return null
+
   return (
     <section
       id="projects"
@@ -1518,69 +1541,24 @@ function ProjectsShowcaseCard({
       }`}
       style={{ transitionDelay: "650ms" }}
     >
-      <div className="space-y-4">
-        <div className="space-y-2 px-1 sm:px-2">
-          <h3 className={cn("text-xl font-semibold tracking-tight text-foreground sm:text-2xl", lang === "ar" && "font-thmanyah-serif-text")}>
-            {lang === "ar" ? "المشاريع" : "Projects"}
-          </h3>
-        </div>
-
+      <div className="space-y-2">
         <div
           ref={galleryRef}
-          className="relative mx-[calc(50%_-_50vw)] flex w-screen max-w-[100vw] cursor-grab gap-3 overflow-x-auto overscroll-x-contain [scrollbar-width:none] active:cursor-grabbing [&::-webkit-scrollbar]:hidden"
+          className="grid grid-flow-dense grid-cols-2 auto-rows-[70px] gap-3 sm:auto-rows-[82px] sm:gap-4"
           dir="ltr"
           aria-label={lang === "ar" ? "صور المشاريع" : "Project images"}
-          onWheel={handleWheel}
-          onPointerDown={(event) => {
-            if (event.button !== 0) return
-
-            stopAnimation()
-            isDraggingRef.current = true
-            dragStartXRef.current = event.clientX
-            lastDragXRef.current = event.clientX
-            lastDragTimeRef.current = performance.now()
-            scrollStartLeftRef.current = getLogicalScrollLeft(event.currentTarget)
-            targetScrollLeftRef.current = scrollStartLeftRef.current
-            velocityRef.current = 0
-            event.currentTarget.setPointerCapture(event.pointerId)
-          }}
-          onPointerMove={(event) => {
-            if (!isDraggingRef.current) return
-
-            const now = performance.now()
-            const elapsed = Math.max(now - lastDragTimeRef.current, 16)
-            velocityRef.current = ((event.clientX - lastDragXRef.current) / elapsed) * 16
-            lastDragXRef.current = event.clientX
-            lastDragTimeRef.current = now
-
-            event.preventDefault()
-            targetScrollLeftRef.current = clampScrollLeft(scrollStartLeftRef.current - (event.clientX - dragStartXRef.current))
-            startAnimation()
-          }}
-          onPointerUp={(event) => {
-            stopDragging()
-            releasePointerCapture(event)
-          }}
-          onPointerCancel={() => {
-            isDraggingRef.current = false
-            velocityRef.current = 0
-          }}
         >
           {displayedProjectImages.map((image, imageIndex) => (
-            <div
-              key={`${image.projectTitle}-${image.src}-${imageIndex}`}
-              className="relative aspect-[4/3] w-[82vw] max-w-[560px] shrink-0 overflow-hidden rounded-xl bg-muted sm:w-[560px]"
-            >
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                draggable={false}
-                className="object-cover"
-                sizes="(min-width: 640px) 560px, 82vw"
-              />
-            </div>
-          ))}
+                <div
+                  key={`${image.projectTitle}-${image.src}-${imageIndex}`}
+                  className={cn(
+                    "group relative row-span-4 min-h-[150px] overflow-hidden rounded-lg bg-muted sm:min-h-[210px]",
+                    imageIndex % 6 === 0 ? "row-span-6" : imageIndex % 4 === 0 ? "row-span-5" : imageIndex % 3 === 0 ? "row-span-3" : "row-span-4",
+                  )}
+                >
+                  <Image src={image.src} alt={image.alt} fill draggable={false} className="object-cover" sizes="(min-width: 1024px) 38vw, 50vw" />
+                </div>
+              ))}
         </div>
       </div>
     </section>
@@ -1604,7 +1582,7 @@ function TestimonialCtaSection({
       style={{ transitionDelay: "700ms" }}
     >
       <div className="space-y-10 text-center sm:space-y-12">
-        <div className="overflow-hidden rounded-2xl bg-[#1063ff] text-start">
+        <div className="overflow-hidden rounded-lg bg-[#1063ff] text-start">
           <div className="flex flex-col gap-6 p-5 sm:p-7">
             <div>
               <Badge
@@ -1633,7 +1611,7 @@ function TestimonialCtaSection({
           </div>
         </div>
 
-        <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 px-4">
+        <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 px-0">
           <h3 className={cn("text-2xl font-normal leading-tight tracking-tight text-foreground sm:text-4xl", lang === "ar" && "font-thmanyah-serif-text")}>
             {testimonialCta.ctaTitle}
           </h3>

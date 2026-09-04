@@ -4,7 +4,7 @@
 
 @font-face {
   font-family: "Thmanyah Serif Text";
-  src: url("/Thmanyah-Font-Family-2/thmanyah%20typeface/thmanyahseriftext/woff2/thmanyahseriftext-Regular.woff2")
+  src: url("/Thmanyah-Font-Family-2/thmanyah%20typeface/thmanyahseriftext/woff2/thmanyahseriftext-Regular.woff2%206.05.46%E2%80%AFPM")
     format("woff2");
   font-style: normal;
   font-weight: 400;
@@ -13,7 +13,7 @@
 
 @font-face {
   font-family: "Thmanyah Serif Text";
-  src: url("/Thmanyah-Font-Family-2/thmanyah%20typeface/thmanyahseriftext/woff2/thmanyahseriftext-Medium.woff2")
+  src: url("/Thmanyah-Font-Family-2/thmanyah%20typeface/thmanyahseriftext/woff2/thmanyahseriftext-Medium.woff2%206.05.41%E2%80%AFPM")
     format("woff2");
   font-style: normal;
   font-weight: 500;
@@ -22,7 +22,7 @@
 
 @font-face {
   font-family: "Thmanyah Serif Text";
-  src: url("/Thmanyah-Font-Family-2/thmanyah%20typeface/thmanyahseriftext/woff2/thmanyahseriftext-Bold.woff2")
+  src: url("/Thmanyah-Font-Family-2/thmanyah%20typeface/thmanyahseriftext/woff2/thmanyahseriftext-Bold.woff2%206.05.35%E2%80%AFPM%206.05.35%E2%80%AFPM")
     format("woff2");
   font-style: normal;
   font-weight: 700;
@@ -132,10 +132,57 @@
 
 .font-thmanyah-serif-text {
   font-family: "Thmanyah Serif Text", serif !important;
+  font-weight: 500 !important;
 }
 
 [dir="rtl"] .font-thmanyah-serif-text {
   font-family: "Thmanyah Serif Text", serif !important;
+}
+
+/* Keep the local Thmanyah face from being overridden by the broad Arabic
+   fallback selector below. */
+body [dir="rtl"] .font-thmanyah-serif-text,
+body [dir="rtl"] .font-thmanyah-serif-text * {
+  font-family: "Thmanyah Serif Text", serif !important;
+  font-weight: 500 !important;
+}
+
+/* Keep the build content column present for the full viewport beside the
+   independently scrolling gallery. The footer's mt-auto then sits at the
+   bottom of this frame instead of leaving empty space underneath it. */
+@media (min-width: 1280px) {
+  .build-content-column {
+    height: calc(100svh - 3rem);
+    min-height: calc(100svh - 3rem);
+  }
+
+  .build-content-inner {
+    min-height: calc(100svh - 3rem);
+  }
+
+  /* The shared CTA normally pulls upward to close a larger page gap. In the
+     height-fitted build column that offset overlaps the preceding link. */
+  .build-content-inner > [dir="ltr"] {
+    margin-top: 0 !important;
+  }
+}
+
+/* A short desktop viewport still keeps the entire fixed column in view. This
+   only tightens vertical spacing; it does not scale, animate, or scroll the
+   content column. */
+@media (min-width: 1280px) and (max-height: 1300px) {
+  .build-content-inner {
+    gap: 0.75rem;
+  }
+
+  .build-content-inner header {
+    gap: 0.5rem;
+  }
+
+  .build-content-inner #articles {
+    gap: 0.75rem;
+  }
+
 }
 
 /* Ensure Arabic text displays correctly */
