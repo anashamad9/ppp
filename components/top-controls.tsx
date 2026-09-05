@@ -64,7 +64,10 @@ export function TopControls({ lang, embedded = false }: TopControlsProps) {
   const isDark = activeTheme === "dark"
   const currentTheme = isDark ? "dark" : "light"
   const isMainHomepage = pathname === `/${lang}`
-  const isBuildPage = pathname === `/${lang}/build`
+  // The build subdomain is internally rewritten to /{lang}/build by
+  // middleware, while usePathname() still reports the public URL (/).
+  // Treat the host as the build page too so both entry points render alike.
+  const isBuildPage = pathname === `/${lang}/build` || isBuildHost
   const shouldUseCompactHomeControls = isMainHomepage && !isBuildHost
 
   if (!mounted) {
