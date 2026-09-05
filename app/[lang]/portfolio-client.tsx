@@ -174,11 +174,23 @@ export default function PortfolioClient({
 }) {
   const [isLoaded, setIsLoaded] = useState(false)
   const [descriptionView, setDescriptionView] = useState<DescriptionView>("summary")
+  const [isStackedBuildLayout, setIsStackedBuildLayout] = useState(false)
   const activeCoreStack = techStack ?? coreStack
 
   useEffect(() => {
     setIsLoaded(true)
   }, [])
+
+  useEffect(() => {
+    if (!splitBuildLayout) return
+
+    const splitLayoutQuery = window.matchMedia("(min-width: 1280px)")
+    const updateLayout = () => setIsStackedBuildLayout(!splitLayoutQuery.matches)
+
+    updateLayout()
+    splitLayoutQuery.addEventListener("change", updateLayout)
+    return () => splitLayoutQuery.removeEventListener("change", updateLayout)
+  }, [splitBuildLayout])
 
   useEffect(() => {
     if (!compactHome) return
@@ -251,10 +263,12 @@ export default function PortfolioClient({
                     <Description isLoaded={isLoaded} dict={dict} lang={lang} topTags={topTags} description={description} activeView={descriptionView} setActiveView={navigateDescriptionView} interactive={compactHome} />
                     <CTAButtons isLoaded={isLoaded} dict={dict} lang={lang} secondaryActionLabel={secondaryActionLabel} secondaryActionTargetId={secondaryActionTargetId} secondaryActionIcon={secondaryActionIcon} directContactHref={directContactHref} onShowArticles={compactHome && !secondaryActionTargetId ? () => navigateDescriptionView("articles") : undefined} />
                     {!hideArticles && <Articles isLoaded={isLoaded} articles={dict.articles.filter((article) => article.enabled && article.id !== 4).slice(0, 3)} lang={lang} dict={dict} />}
-                    <div className="mt-auto hidden xl:block">
-                      <TopControls lang={lang} embedded />
-                      {showArticleFooter ? <ArticleFooter lang={lang} homeHref={articleFooterHomeHref} /> : null}
-                    </div>
+                    {!isStackedBuildLayout && (
+                      <div className="mt-auto">
+                        <TopControls lang={lang} embedded />
+                        {showArticleFooter ? <ArticleFooter lang={lang} homeHref={articleFooterHomeHref} /> : null}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="min-w-0 space-y-10">
@@ -268,10 +282,12 @@ export default function PortfolioClient({
                 {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} imageStart={8} imageEnd={12} /> : null}
                 {testimonialCta ? <TestimonialCtaSection isLoaded={isLoaded} testimonialCta={testimonialCta} lang={lang} /> : null}
                 </div>
-                <div className="xl:hidden">
-                  <TopControls lang={lang} embedded />
-                  {showArticleFooter ? <ArticleFooter lang={lang} homeHref={articleFooterHomeHref} /> : null}
-                </div>
+                {isStackedBuildLayout && (
+                  <div>
+                    <TopControls lang={lang} embedded />
+                    {showArticleFooter ? <ArticleFooter lang={lang} homeHref={articleFooterHomeHref} /> : null}
+                  </div>
+                )}
               </div>
             ) : (
               <>
