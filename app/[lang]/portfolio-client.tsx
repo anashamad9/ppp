@@ -236,8 +236,10 @@ export default function PortfolioClient({
   return (
     <main
       className={cn(
-        "flex flex-col items-center bg-background font-sans",
-        !splitBuildLayout && "overflow-x-hidden",
+        // Every page variant is vertically scrollable on a phone, but must
+        // never make the document itself horizontally scrollable. In
+        // particular, the build layout used to skip this safeguard.
+        "flex flex-col items-center overflow-x-hidden bg-background font-sans",
         compactHome ? "min-h-svh justify-start px-4 pb-10 pt-6 sm:justify-center sm:px-6 sm:py-10" : "pb-8",
       )}
     >
