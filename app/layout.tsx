@@ -1,5 +1,5 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import "./globals.css"
 import { SITE_DESCRIPTION_EN, SITE_TITLE_EN, SITE_URL } from "@/lib/site"
 
@@ -17,6 +17,14 @@ export const metadata: Metadata = {
     shortcut: "/Anas%20Hamad.png",
     apple: "/Anas%20Hamad.png",
   },
+}
+
+// Keep Safari and other mobile browsers on the device-width layout viewport.
+// Without this, they can use a desktop-width viewport and activate the
+// two-column build layout, leaving the visitor to pan sideways.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 }
 
 export default function RootLayout({

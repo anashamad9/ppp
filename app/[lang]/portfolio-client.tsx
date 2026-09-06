@@ -184,7 +184,10 @@ export default function PortfolioClient({
   useEffect(() => {
     if (!splitBuildLayout) return
 
-    const splitLayoutQuery = window.matchMedia("(min-width: 1280px)")
+    // A mobile browser can temporarily report a wide layout viewport (for
+    // example after browser zoom or when opened from an in-app browser).
+    // The split design is desktop-only, so width alone must not enable it.
+    const splitLayoutQuery = window.matchMedia("(min-width: 1280px) and (hover: hover) and (pointer: fine)")
     const updateLayout = () => setIsStackedBuildLayout(!splitLayoutQuery.matches)
 
     updateLayout()
@@ -253,7 +256,7 @@ export default function PortfolioClient({
             )}
           >
             {splitBuildLayout ? (
-              <div className="grid items-start gap-8 xl:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)] xl:gap-12 2xl:gap-16">
+              <div className="build-layout-grid grid items-start gap-8 xl:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)] xl:gap-12 2xl:gap-16">
                 <div
                   className={cn(
                     "build-content-column w-full overflow-visible xl:w-[76%] xl:sticky xl:top-6 xl:self-start",

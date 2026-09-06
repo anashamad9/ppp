@@ -150,7 +150,7 @@ body [dir="rtl"] .font-thmanyah-serif-text * {
 /* Keep the build content column present for the full viewport beside the
    independently scrolling gallery. The footer's mt-auto then sits at the
    bottom of this frame instead of leaving empty space underneath it. */
-@media (min-width: 1280px) {
+@media (min-width: 1280px) and (hover: hover) and (pointer: fine) {
   .build-content-column {
     height: calc(100svh - 3rem);
     min-height: calc(100svh - 3rem);
@@ -170,7 +170,7 @@ body [dir="rtl"] .font-thmanyah-serif-text * {
 /* A short desktop viewport still keeps the entire fixed column in view. This
    only tightens vertical spacing; it does not scale, animate, or scroll the
    content column. */
-@media (min-width: 1280px) and (max-height: 1300px) {
+@media (min-width: 1280px) and (hover: hover) and (pointer: fine) and (max-height: 1300px) {
   .build-content-inner {
     gap: 0.75rem;
   }
@@ -183,6 +183,20 @@ body [dir="rtl"] .font-thmanyah-serif-text * {
     gap: 0.75rem;
   }
 
+}
+
+/* Never use the desktop split canvas on touch devices. Some mobile and
+   in-app browsers expose a desktop-sized CSS viewport, which would otherwise
+   put the project gallery beside the content and require horizontal panning. */
+@media (hover: none) and (pointer: coarse) {
+  .build-layout-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .build-content-column {
+    width: 100% !important;
+    position: static !important;
+  }
 }
 
 /* Ensure Arabic text displays correctly */
