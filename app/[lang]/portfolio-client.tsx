@@ -176,6 +176,7 @@ export default function PortfolioClient({
   const [descriptionView, setDescriptionView] = useState<DescriptionView>("summary")
   const [isStackedBuildLayout, setIsStackedBuildLayout] = useState(false)
   const activeCoreStack = techStack ?? coreStack
+  const isCompactArticlesView = compactHome && descriptionView === "articles"
 
   useEffect(() => {
     setIsLoaded(true)
@@ -187,7 +188,7 @@ export default function PortfolioClient({
     // A mobile browser can temporarily report a wide layout viewport (for
     // example after browser zoom or when opened from an in-app browser).
     // The split design is desktop-only, so width alone must not enable it.
-    const splitLayoutQuery = window.matchMedia("(min-width: 1280px) and (hover: hover) and (pointer: fine)")
+    const splitLayoutQuery = window.matchMedia("(min-width: 1024px) and (hover: hover) and (pointer: fine)")
     const updateLayout = () => setIsStackedBuildLayout(!splitLayoutQuery.matches)
 
     updateLayout()
@@ -242,7 +243,8 @@ export default function PortfolioClient({
         // Every page variant is vertically scrollable on a phone, but must
         // never make the document itself horizontally scrollable. In
         // particular, the build layout used to skip this safeguard.
-        "flex flex-col items-center overflow-x-hidden bg-background font-sans",
+        "flex flex-col items-center bg-background font-sans",
+        splitBuildLayout ? "overflow-x-clip" : "overflow-x-hidden",
         compactHome ? "min-h-svh justify-start px-4 pb-10 pt-6 sm:justify-center sm:px-6 sm:py-10" : "pb-8",
       )}
     >
@@ -256,17 +258,17 @@ export default function PortfolioClient({
             )}
           >
             {splitBuildLayout ? (
-              <div className="build-layout-grid grid items-start gap-8 xl:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)] xl:gap-12 2xl:gap-16">
+              <div className="build-layout-grid grid items-start gap-8 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)] lg:gap-10 xl:gap-12 2xl:gap-16">
                 <div
                   className={cn(
-                    "build-content-column w-full overflow-visible xl:w-[76%] xl:sticky xl:top-6 xl:self-start",
-                    lang === "ar" ? "xl:ml-auto" : "xl:mr-auto",
+                    "build-content-column w-full overflow-visible lg:w-[76%]",
+                    lang === "ar" ? "lg:ml-auto" : "lg:mr-auto",
                   )}
                 >
                   <div className="build-content-inner flex flex-col gap-7">
-                    <Header isLoaded={isLoaded} dict={dict} lang={lang} headerRole={headerRole} avatarSrc={avatarSrc} topTags={topTags} compact={compactHome} />
+                    {!isCompactArticlesView && <Header isLoaded={isLoaded} dict={dict} lang={lang} headerRole={headerRole} avatarSrc={avatarSrc} topTags={topTags} compact={compactHome} />}
                     <Description isLoaded={isLoaded} dict={dict} lang={lang} topTags={topTags} description={description} activeView={descriptionView} setActiveView={navigateDescriptionView} interactive={compactHome} />
-                    <CTAButtons isLoaded={isLoaded} dict={dict} lang={lang} secondaryActionLabel={secondaryActionLabel} secondaryActionTargetId={secondaryActionTargetId} secondaryActionIcon={secondaryActionIcon} directContactHref={directContactHref} onShowArticles={compactHome && !secondaryActionTargetId ? () => navigateDescriptionView("articles") : undefined} />
+                    {!isCompactArticlesView && <CTAButtons isLoaded={isLoaded} dict={dict} lang={lang} secondaryActionLabel={secondaryActionLabel} secondaryActionTargetId={secondaryActionTargetId} secondaryActionIcon={secondaryActionIcon} directContactHref={directContactHref} onShowArticles={compactHome && !secondaryActionTargetId ? () => navigateDescriptionView("articles") : undefined} />}
                     {!hideArticles && <Articles isLoaded={isLoaded} articles={dict.articles.filter((article) => article.enabled && article.id !== 4).slice(0, 3)} lang={lang} dict={dict} />}
                     {!isStackedBuildLayout && (
                       <div className="mt-auto">
@@ -296,9 +298,9 @@ export default function PortfolioClient({
               </div>
             ) : (
               <>
-                <Header isLoaded={isLoaded} dict={dict} lang={lang} headerRole={headerRole} avatarSrc={avatarSrc} topTags={topTags} compact={compactHome} />
+                {!isCompactArticlesView && <Header isLoaded={isLoaded} dict={dict} lang={lang} headerRole={headerRole} avatarSrc={avatarSrc} topTags={topTags} compact={compactHome} />}
                 <Description isLoaded={isLoaded} dict={dict} lang={lang} topTags={topTags} description={description} activeView={descriptionView} setActiveView={navigateDescriptionView} interactive={compactHome} />
-                <CTAButtons isLoaded={isLoaded} dict={dict} lang={lang} secondaryActionLabel={secondaryActionLabel} secondaryActionTargetId={secondaryActionTargetId} secondaryActionIcon={secondaryActionIcon} directContactHref={directContactHref} onShowArticles={compactHome && !secondaryActionTargetId ? () => navigateDescriptionView("articles") : undefined} />
+                {!isCompactArticlesView && <CTAButtons isLoaded={isLoaded} dict={dict} lang={lang} secondaryActionLabel={secondaryActionLabel} secondaryActionTargetId={secondaryActionTargetId} secondaryActionIcon={secondaryActionIcon} directContactHref={directContactHref} onShowArticles={compactHome && !secondaryActionTargetId ? () => navigateDescriptionView("articles") : undefined} />}
                 {!hideExperience && <Experience isLoaded={isLoaded} experiences={dict.experiences} dict={dict} lang={lang} />}
                 {showcaseSlides?.length ? <BuildShowcaseCard isLoaded={isLoaded} showcaseSlides={showcaseSlides} lang={lang} /> : null}
                 {impactCards?.length ? <ImpactHighlights isLoaded={isLoaded} cards={impactCards} lang={lang} /> : null}
@@ -396,7 +398,7 @@ function Header({
             compact ? "h-14 w-14 sm:h-[72px] sm:w-[72px]" : "h-[72px] w-[72px]"
           )}
         >
-          <div className="relative h-full w-full rounded-full transition-transform duration-300 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
+          <div className="avatar-flip-card relative h-full w-full rounded-full transition-transform duration-300 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
             <Image
               src={avatarSrc}
               alt={dict.header.name}
@@ -602,14 +604,15 @@ function Description({
         }`}
         style={{ transitionDelay: "200ms" }}
       >
-        <button
-          type="button"
-          onClick={() => setActiveView("summary")}
-          className="w-fit rounded-sm text-sm font-medium text-foreground no-underline transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          {lang === "ar" ? "العودة للنبذة" : "Back to summary"}
-        </button>
         <Articles isLoaded={isLoaded} articles={dict.articles} lang={lang ?? "en"} dict={dict} hideTitle />
+        <Button
+          type="button"
+          variant="default"
+          onClick={() => setActiveView("summary")}
+          className="mt-2 inline-flex h-[32px] w-fit items-center justify-center rounded-[99px] bg-primary px-3 py-1 text-[13px] font-medium leading-5 text-primary-foreground hover:bg-primary/90"
+        >
+          {lang === "ar" ? "العودة للرئيسية" : "Back to home"}
+        </Button>
       </div>
     )
   }

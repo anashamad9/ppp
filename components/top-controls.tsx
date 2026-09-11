@@ -55,10 +55,9 @@ export function TopControls({ lang, embedded = false }: TopControlsProps) {
   ]
   const buildSocialLinks = [
     { label: "X", href: "https://x.com/buildanas?s=11&t=xHJPYPOInZK-SWRzKy7yWA" },
-    { label: "Instagram", href: "https://www.instagram.com/buildanas?igsh=MW9lc2ltaWI3dTc0ZQ%3D%3D&utm_source=qr" },
+    { label: "Instagram", href: "https://www.instagram.com/buildanas/" },
     { label: "LinkedIn", href: "https://www.linkedin.com/in/anas-hamad1909" },
   ]
-  const activeSocialLinks = isBuildHost ? buildSocialLinks : socialLinks
 
   const activeTheme = mounted ? resolvedTheme ?? theme : undefined
   const isDark = activeTheme === "dark"
@@ -68,6 +67,7 @@ export function TopControls({ lang, embedded = false }: TopControlsProps) {
   // middleware, while usePathname() still reports the public URL (/).
   // Treat the host as the build page too so both entry points render alike.
   const isBuildPage = pathname === `/${lang}/build` || isBuildHost
+  const activeSocialLinks = isBuildPage ? buildSocialLinks : socialLinks
   const shouldUseCompactHomeControls = isMainHomepage && !isBuildHost
 
   if (!mounted) {
@@ -143,34 +143,40 @@ export function TopControls({ lang, embedded = false }: TopControlsProps) {
   }
 
   return (
-    <div className={cn("pb-4", isBuildPage && !embedded ? "px-3 sm:px-5 md:px-6" : "px-0")}>
+    <div className={cn(embedded ? "pb-1" : "pb-4", isBuildPage && !embedded ? "px-3 sm:px-5 md:px-6" : "px-0")}>
       <div
         className={cn(
           "bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/40",
           isBuildPage && !embedded ? "w-full lg:me-auto lg:w-[42%]" : embedded ? "w-full" : "mx-auto w-full max-w-[720px]",
         )}
       >
-        <div className="flex flex-wrap items-center justify-between gap-2 pb-3">
-          <div className="flex flex-wrap items-center gap-2">
+        <div className={cn("flex flex-wrap items-center justify-between gap-2", embedded ? "pb-2" : "pb-3")}>
+          <div className={cn("flex flex-wrap items-center", embedded ? "gap-1.5" : "gap-2")}>
             {activeSocialLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex h-7 items-center gap-1 rounded-full bg-muted px-2.5 text-[11px] font-medium text-foreground transition-colors hover:bg-muted/80"
+                className={cn(
+                  "group inline-flex items-center gap-1 rounded-full bg-muted text-[11px] font-medium text-foreground transition-colors hover:bg-muted/80",
+                  embedded ? "h-6 px-2" : "h-7 px-2.5",
+                )}
               >
                 <span>{link.label}</span>
                 <ArrowUpRight className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </a>
             ))}
           </div>
-          <div className="flex items-center gap-2">
+          <div className={cn("flex items-center", embedded ? "gap-1.5" : "gap-2")}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="inline-flex h-7 items-center gap-1 rounded-full border-0 bg-muted px-2.5 text-[11px] font-medium text-foreground transition-colors hover:bg-muted/80"
+                  className={cn(
+                    "inline-flex items-center gap-1 rounded-full border-0 bg-muted text-[11px] font-medium text-foreground transition-colors hover:bg-muted/80",
+                    embedded ? "h-6 px-2" : "h-7 px-2.5",
+                  )}
                   aria-label={labels.switchLang}
                   title={labels.switchLang}
                 >
@@ -197,7 +203,8 @@ export function TopControls({ lang, embedded = false }: TopControlsProps) {
               start="center"
               onClick={handleToggleTheme}
               className={cn(
-                "h-7 w-7 rounded-full border-0 bg-muted text-foreground hover:bg-muted/80 hover:text-foreground",
+                "rounded-full border-0 bg-muted text-foreground hover:bg-muted/80 hover:text-foreground",
+                embedded ? "h-6 w-6" : "h-7 w-7",
                 !mounted && "opacity-0"
               )}
               aria-label={labels.toggle}
@@ -205,7 +212,7 @@ export function TopControls({ lang, embedded = false }: TopControlsProps) {
             />
           </div>
         </div>
-        <div className="border-t border-border/60 pt-3 sm:pt-4">
+        <div className={cn("border-t border-border/60", embedded ? "pt-2" : "pt-3 sm:pt-4")}>
           <div className="flex min-w-0 items-center gap-2">
             <span className="shrink-0 text-sm text-muted-foreground">{labels.contact}</span>
             <a

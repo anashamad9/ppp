@@ -147,13 +147,24 @@ body [dir="rtl"] .font-thmanyah-serif-text * {
   font-weight: 500 !important;
 }
 
+html[data-theme-switching="true"] .avatar-flip-card {
+  transform: rotateY(0deg) !important;
+}
+
 /* Keep the build content column present for the full viewport beside the
    independently scrolling gallery. The footer's mt-auto then sits at the
    bottom of this frame instead of leaving empty space underneath it. */
-@media (min-width: 1280px) and (hover: hover) and (pointer: fine) {
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
+  .build-layout-grid {
+    align-items: start;
+  }
+
   .build-content-column {
     height: calc(100svh - 3rem);
     min-height: calc(100svh - 3rem);
+    position: sticky;
+    top: 1.5rem;
+    align-self: start;
   }
 
   .build-content-inner {
@@ -170,7 +181,7 @@ body [dir="rtl"] .font-thmanyah-serif-text * {
 /* A short desktop viewport still keeps the entire fixed column in view. This
    only tightens vertical spacing; it does not scale, animate, or scroll the
    content column. */
-@media (min-width: 1280px) and (hover: hover) and (pointer: fine) and (max-height: 1300px) {
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) and (max-height: 1300px) {
   .build-content-inner {
     gap: 0.75rem;
   }

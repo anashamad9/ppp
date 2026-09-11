@@ -39,6 +39,11 @@ export const ThemeToggleButton = ({
 }: ThemeToggleButtonProps) => {
   
   const handleClick = useCallback(() => {
+    document.documentElement.dataset.themeSwitching = 'true';
+    window.setTimeout(() => {
+      delete document.documentElement.dataset.themeSwitching;
+    }, 700);
+
     // Inject animation styles for this specific transition
     const styleId = `theme-transition-${Date.now()}`;
     const style = document.createElement('style');
