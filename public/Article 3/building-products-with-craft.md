@@ -1,6 +1,6 @@
 ---
-coverImage: /Article%203/article%203.png
-ogImage: /Article%203/article%203.png
+coverImage: /Article%203/thumb3.png
+ogImage: /Article%203/thumb3.png
 coverAlt: Building Products and Software with Craft
 ---
 
