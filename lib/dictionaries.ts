@@ -10,12 +10,14 @@ const dictionaries = {
 
 const markdownArticleFiles: Record<Locale, Record<number, string>> = {
   ar: {
+    8: "Article 3/knowledge-over-scripts-ar.md",
     1: "article-ar.md",
     2: "article-product-future.md",
     3: "memory-in-llm-agents-ar.md",
     7: "Article 3/building-products-with-craft-ar.md",
   },
   en: {
+    8: "Article 3/knowledge-over-scripts.md",
     1: "article-en.md",
     3: "memory-in-llm-agents.md",
     7: "Article 3/building-products-with-craft.md",

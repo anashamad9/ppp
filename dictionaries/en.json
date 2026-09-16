@@ -181,6 +181,14 @@
   ],
   "articles": [
     {
+      "id": 8,
+      "enabled": true,
+      "topic": "I No Longer Use What I Built a Year Ago. I Replaced It with Knowledge Bases",
+      "date": "September 16, 2026",
+      "readTime": "12 min read",
+      "content": ""
+    },
+    {
       "id": 7,
       "enabled": true,
       "topic": "Building Products and Software with Craft",
