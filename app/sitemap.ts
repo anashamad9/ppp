@@ -3,7 +3,7 @@ import { SITE_URL } from "@/lib/site"
 import enDictionary from "@/dictionaries/en.json"
 import arDictionary from "@/dictionaries/ar.json"
 
-const featuredArticleIds = new Set([1, 3, 4, 5])
+const featuredArticleIds = new Set([1, 3])
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date()

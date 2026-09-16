@@ -503,7 +503,9 @@ function Description({
       const companyMatch = part.match(/^\[company:([^\]]+)\]$/)
       if (companyMatch && interactive) {
         const company = companyByName.get(companyMatch[1].toLowerCase())
-        return company ? <CompanyHoverLink key={`company-${company.company}-${index}`} experience={company} /> : null
+        return company ? (
+          <CompanyHoverLink key={`company-${company.company}-${index}`} experience={company} lang={lang ?? "en"} />
+        ) : null
       }
 
       const techStackMatch = part.match(/^\[tech-stack:([^\]]+)\]$/)
@@ -636,7 +638,13 @@ function Description({
   )
 }
 
-function CompanyHoverLink({ experience }: { experience: Dictionary["experiences"][number] }) {
+function CompanyHoverLink({
+  experience,
+  lang,
+}: {
+  experience: Dictionary["experiences"][number]
+  lang: Locale
+}) {
   const companySummary = (experience as { companySummary?: string }).companySummary ?? experience.description
 
   return (
@@ -657,22 +665,33 @@ function CompanyHoverLink({ experience }: { experience: Dictionary["experiences"
           <span className="text-sm font-medium text-foreground">{experience.company}</span>
         </button>
       </HoverCardTrigger>
-      <HoverCardContent className="z-[9999] w-72 space-y-3">
-        <div className="flex items-center gap-3">
+      <HoverCardContent
+        className={cn(
+          "z-[9999] w-56 space-y-1.5 p-2",
+          lang === "ar" ? "text-right" : "text-left",
+        )}
+        style={{
+          fontFamily:
+            lang === "ar"
+              ? '"IBM Plex Sans Arabic", "Noto Sans Arabic", Tahoma, Arial, sans-serif'
+              : 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+        }}
+      >
+        <div className="flex items-center gap-1.5">
           <Image
             src={experience.logo}
             alt={experience.company}
-            width={40}
-            height={40}
-            className="h-10 w-10 rounded-md object-contain"
+            width={28}
+            height={28}
+            className="h-7 w-7 rounded object-contain"
             unoptimized={experience.logo.startsWith("http")}
           />
           <div className="flex flex-col">
-            <span className="text-sm font-semibold text-foreground">{experience.company}</span>
-            <span className="text-xs text-muted-foreground">{experience.period}</span>
+            <span className="text-xs font-semibold text-foreground">{experience.company}</span>
+            <span className="text-[10px] text-muted-foreground">{experience.period}</span>
           </div>
         </div>
-        <p className="text-xs leading-relaxed text-muted-foreground">{companySummary}</p>
+        <p className="text-[10px] leading-relaxed text-muted-foreground">{companySummary}</p>
       </HoverCardContent>
     </HoverCard>
   )
@@ -946,21 +965,32 @@ function Experience({
                         <span className="text-sm font-medium text-foreground">{exp.company}</span>
                       </button>
                     </HoverCardTrigger>
-                    <HoverCardContent className="z-[9999] w-72 space-y-3">
-                      <div className="flex items-center gap-3">
+                    <HoverCardContent
+                      className={cn(
+                        "z-[9999] w-56 space-y-1.5 p-2",
+                        lang === "ar" ? "text-right" : "text-left",
+                      )}
+                      style={{
+                        fontFamily:
+                          lang === "ar"
+                            ? '"IBM Plex Sans Arabic", "Noto Sans Arabic", Tahoma, Arial, sans-serif'
+                            : 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+                      }}
+                    >
+                      <div className="flex items-center gap-1.5">
                         <Image
                           src={exp.logo}
                           alt={exp.company}
-                          width={40}
-                          height={40}
-                          className="h-10 w-10 rounded-md object-contain"
+                          width={28}
+                          height={28}
+                          className="h-7 w-7 rounded object-contain"
                         />
                         <div className="flex flex-col">
-                          <span className="text-sm font-semibold text-foreground">{exp.company}</span>
-                          <span className="text-xs text-muted-foreground">{exp.period}</span>
+                          <span className="text-xs font-semibold text-foreground">{exp.company}</span>
+                          <span className="text-[10px] text-muted-foreground">{exp.period}</span>
                         </div>
                       </div>
-                      <p className="text-xs leading-relaxed text-muted-foreground">{companySummary}</p>
+                      <p className="text-[10px] leading-relaxed text-muted-foreground">{companySummary}</p>
                     </HoverCardContent>
                   </HoverCard>
 

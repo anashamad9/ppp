@@ -120,8 +120,8 @@
 
 /* Arabic font loading and rendering improvements */
 .font-arabic {
-  font-family: "IBM Plex Sans Arabic", "Noto Sans Arabic", "Cairo", "Amiri", "Arial Unicode MS", "Tahoma", "DejaVu Sans",
-    sans-serif !important;
+  font-family: var(--font-ibm-plex-sans-arabic), "IBM Plex Sans Arabic", "Noto Sans Arabic", "Cairo", "Amiri",
+    "Arial Unicode MS", "Tahoma", "DejaVu Sans", sans-serif !important;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

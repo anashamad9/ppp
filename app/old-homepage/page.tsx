@@ -4,7 +4,7 @@ import { PERSON_NAME_AR, PERSON_NAME_AR_STYLED, PERSON_NAME_EN, SITE_EMAIL, SITE
 import { getRequestSiteUrl } from "@/lib/site-url.server"
 import PortfolioClient from "../[lang]/portfolio-client"
 
-const featuredArticleIds = new Set([1, 3, 4, 5])
+const featuredArticleIds = new Set([1, 3])
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

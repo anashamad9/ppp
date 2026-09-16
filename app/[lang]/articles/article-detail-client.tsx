@@ -45,7 +45,7 @@ export default function ArticleDetailClient({
 }) {
   const [isLoaded, setIsLoaded] = useState(false)
   const [navigatingArticleId, setNavigatingArticleId] = useState<number | null>(null)
-  const isProtectedArticle = [4, 5, 6].includes(article.id)
+  const isProtectedArticle = article.id === 6
   const headerImage = article.coverImage || "/anas-logo.png"
   const headerAlt = article.coverAlt || article.topic
   const forceSnippetLtr = lang === "ar"

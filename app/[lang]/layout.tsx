@@ -91,8 +91,8 @@ export default async function RootLayout({
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
       <div
         lang={lang}
-      dir={lang === "ar" ? "rtl" : "ltr"}
-      className={`${inter.variable} ${ibmPlexSansArabic.variable}`}
+        dir={lang === "ar" ? "rtl" : "ltr"}
+        className={`${inter.variable} ${ibmPlexSansArabic.variable}`}
       >
         <div className={lang === "ar" ? "font-arabic" : "font-sans"}>
           {children}

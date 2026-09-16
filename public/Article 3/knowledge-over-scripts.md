@@ -56,9 +56,32 @@ Beneath this conversation are what I call sub-agents. To simplify the idea, you 
 
 You can picture this as a pyramid or a tree. General knowledge sits at the top, and the knowledge becomes more specialized as you move downward. **Most importantly, I do not need to repeat the same rule everywhere.**
 
+![Sub-agent knowledge hierarchy showing how each level inherits the rules above it](/Article%203/Sub-Agent-Knowledge-Hierarchy.svg)
+
 If a rule applies to every source, I write it once at the top. If 18 sources handle currency in the same way, I put that rule at the level that groups them together. If only three of those sources need an additional mapping, I place it at the level shared by those three. If only one source has an exception in a particular column, I put that exception at the final level.
 
 When a file reaches the agent for that source, the agent knows not only its own small exception, but also the mapping in the level above, the currency rules above that, and the general data-processing rules at the root of the tree.
+
+In code, building the context for a source could look like this:
+
+```python:knowledge_context.py
+def build_context(source):
+    rules = []
+
+    rules += knowledge["general"]
+
+    if source.currency == "SAR":
+        rules += knowledge["currency"]["SAR"]
+
+    if source.mapping_group:
+        rules += knowledge["mapping"][source.mapping_group]
+
+    rules += knowledge["sources"][source.id]
+
+    return rules
+```
+
+Instead of every script containing every rule, each source receives the general rules, the rules of the groups it belongs to, and then its own exceptions.
 
 **At that point, this became more than a way to organize conversations. The knowledge itself began to take the shape of the real problem.**
 
@@ -72,6 +95,16 @@ The part that made me appreciate this approach most, however, was how it handles
 
 Suppose a group of sources uses Saudi riyals and shares a particular currency-conversion rule, and then that rule changes. In the old system, I might have to search for every script that performs the operation and make sure I update each one correctly. In the new system, I go to the conversation or knowledge base that groups those sources and change the rule once. Everything below it reads the new rule.
 
+```python:update_shared_rule.py
+knowledge.update(
+    path="currency.SAR.conversion",
+    value={
+        "target": "JOD",
+        "rate": 0.189,
+    },
+)
+```
+
 The same idea can be applied to a mapping, a validation rule, the construction of a particular number, the location of a reference dataset, or any other business logic shared by multiple sources.
 
 There is also a primary conversation that can access all these conversations and understand their structure. Even the process of updating knowledge can therefore be performed from one place. If I tell it that a rule for a particular group has changed, it can reach the correct location and update it instead of making me visit every branch manually.
@@ -83,6 +116,21 @@ None of this means Python disappeared from the system. Quite the opposite: only 
 In the system I built in 2025, the script was the system. The business rules and execution both lived inside it, so a change in the business usually required a change in the code. Now, I am trying to separate the rules and knowledge from the method of execution. The agent reads the rules, understands the shape of the data, and then writes the Python required for the task, runs it, and tests it.
 
 If the resulting script is useful for reuse, it can be kept. If the rules change a week later, the agent can modify the script or rebuild it from the updated knowledge. **The code remains extremely important, but it is no longer the place where the business knowledge lives.**
+
+```python:temporary_execution.py
+context = knowledge.for_source("source_32")
+
+script = agent.generate_python(
+    input_file="source_32.xlsx",
+    rules=context,
+    output_schema=STANDARD_TEMPLATE,
+)
+
+result = run(script)
+validate(result)
+```
+
+Python still exists, but it is generated from the knowledge for the task instead of being the place where that knowledge is permanently stored.
 
 This also does not mean I will give an LLM a file containing half a million rows, tell it to process them, and trust the result. In many cases, the model does not need to read the complete dataset at all. Its role is to understand the schema, inspect enough samples, determine which rules apply, and then write or choose a tool that processes the entire file deterministically.
 
