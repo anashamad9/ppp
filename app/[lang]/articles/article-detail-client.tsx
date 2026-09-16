@@ -3,7 +3,7 @@
 import { isValidElement, useEffect, useState } from "react"
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeft, ArrowRight, Calendar, Clock, LockKeyhole } from "lucide-react"
+import { ArrowLeft, ArrowRight, Calendar, Clock, LoaderCircle, LockKeyhole } from "lucide-react"
 import type { Locale } from "@/i18n-config"
 import { ArticleFooter } from "@/components/article-footer"
 import { ArticleChartBlock } from "./article-charts"
@@ -44,6 +44,7 @@ export default function ArticleDetailClient({
   relatedArticles: Article[]
 }) {
   const [isLoaded, setIsLoaded] = useState(false)
+  const [navigatingArticleId, setNavigatingArticleId] = useState<number | null>(null)
   const isProtectedArticle = [4, 5, 6].includes(article.id)
   const headerImage = article.coverImage || "/anas-logo.png"
   const headerAlt = article.coverAlt || article.topic
@@ -174,7 +175,7 @@ export default function ArticleDetailClient({
   )
 
   const renderArticleContent = () => {
-    const content = article.content ?? ""
+    const content = (article.content ?? "").replace(/^\s*#\s+.*(?:\r?\n|$)/, "").trimStart()
     const chartRegex = /(\[chart:[a-z0-9-]+\])/gi
     const segments = content.split(chartRegex)
 
@@ -188,19 +189,6 @@ export default function ArticleDetailClient({
       }
       return <div key={`md-${index}`}>{renderMarkdown(segment)}</div>
     })
-  }
-
-  const extractPreviewText = (content?: string) => {
-    if (!content) return ""
-    const cleaned = content
-      .replace(/```[\s\S]*?```/g, " ")
-      .replace(/!\[[^\]]*]\([^)]+\)/g, " ")
-      .replace(/\[[^\]]+]\([^)]+\)/g, " ")
-      .replace(/^#+\s+/gm, "")
-      .replace(/[*_`>|-]/g, " ")
-      .replace(/\s+/g, " ")
-      .trim()
-    return cleaned.slice(0, 180)
   }
 
   if (isProtectedArticle) {
@@ -292,30 +280,36 @@ export default function ArticleDetailClient({
                 <h2 className="text-xl font-bold text-foreground">
                   {lang === "ar" ? "اقرأ المزيد من المقالات" : "Read more articles"}
                 </h2>
-                <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3">
                   {relatedArticles.map((related) => {
                     const relatedImage = related.coverImage || "/anas-logo.png"
                     const relatedAlt = related.coverAlt || related.topic
-                    const preview = extractPreviewText(related.content)
+                    const isNavigating = navigatingArticleId === related.id
 
                     return (
                       <Link
                         key={related.id}
                         href={`/${lang}/articles/${related.id}`}
-                        className="group block rounded-3xl border border-border/60 bg-background/80 p-3 transition-colors hover:bg-muted/30"
+                        onClick={(event) => {
+                          if (event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+                            setNavigatingArticleId(related.id)
+                          }
+                        }}
+                        aria-busy={isNavigating}
+                        className="group block min-w-0"
                       >
-                        <div className={`flex items-center gap-4 ${lang === "ar" ? "flex-row-reverse" : ""}`}>
-                          <div className="min-w-0 flex-1 space-y-2">
-                            <h3 className="text-lg font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">
-                              {related.topic}
-                            </h3>
-                            {preview ? <p className="line-clamp-2 text-sm text-muted-foreground">{preview}...</p> : null}
-                            <p className="text-sm text-muted-foreground">{related.date}</p>
-                          </div>
-                          <div className="h-28 w-36 shrink-0 overflow-hidden rounded-2xl border border-border/50 bg-muted/20 sm:h-32 sm:w-44">
-                            <img src={relatedImage} alt={relatedAlt} className="h-full w-full object-cover" loading="lazy" />
-                          </div>
+                        <div className="aspect-[16/10] w-full overflow-hidden rounded-2xl bg-muted/20">
+                          <img
+                            src={relatedImage}
+                            alt={relatedAlt}
+                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                            loading="lazy"
+                          />
                         </div>
+                        <h3 className="mt-2 flex items-start gap-2 text-sm font-semibold leading-snug text-foreground transition-colors group-hover:text-primary sm:text-base">
+                          <span className="line-clamp-2">{related.topic}</span>
+                          {isNavigating ? <LoaderCircle className="mt-0.5 h-4 w-4 shrink-0 animate-spin" aria-hidden="true" /> : null}
+                        </h3>
                       </Link>
                     )
                   })}

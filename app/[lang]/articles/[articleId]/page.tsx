@@ -123,7 +123,6 @@ export default async function ArticlePage({ params }: ArticleParams) {
 
   const relatedArticles = dict.articles
     .filter((item) => item.enabled && item.id !== article.id)
-    .slice(0, 3)
   const articlePreview = article as typeof article & ArticlePreviewFields
   const previewImage = articlePreview.ogImage || articlePreview.coverImage || "/anas-preview.png"
   const publishedDate = toIsoDate(article.date)

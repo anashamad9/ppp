@@ -41,6 +41,7 @@ import {
   CalendarDays,
   Rocket,
   Users,
+  LoaderCircle,
 } from "lucide-react"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 import {
@@ -1799,6 +1800,7 @@ function Articles({
 }) {
   const enabledArticles = articles.filter((article) => article.enabled)
   const [hoveredId, setHoveredId] = useState<number | null>(null)
+  const [navigatingArticleId, setNavigatingArticleId] = useState<number | null>(null)
 
   return (
     <div
@@ -1814,14 +1816,21 @@ function Articles({
         </h2>
       )}
       <div className="flex flex-col gap-0">
-        {enabledArticles.slice(0, 5).map((article) => {
+        {enabledArticles.map((article) => {
           const isHovered = hoveredId === article.id
           const isDimmed = hoveredId !== null && !isHovered
+          const isNavigating = navigatingArticleId === article.id
 
           return (
             <Link
               key={article.id}
               href={`/${lang}/articles/${article.id}`}
+              onClick={(event) => {
+                if (event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+                  setNavigatingArticleId(article.id)
+                }
+              }}
+              aria-busy={isNavigating}
               className={cn(
                 "group flex items-center justify-between px-1.5 py-1 text-sm transition-colors",
                 "text-muted-foreground",
@@ -1835,8 +1844,9 @@ function Articles({
               <span className="flex-1 truncate font-medium transition-colors group-hover:text-primary">
                 {article.topic}
               </span>
-              <span className="ml-4 shrink-0 text-xs font-medium text-muted-foreground transition-colors group-hover:text-primary">
-                {article.date}
+              <span className="ms-4 flex shrink-0 items-center gap-2 text-xs font-medium text-muted-foreground transition-colors group-hover:text-primary">
+                {isNavigating ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> : null}
+                <span>{article.date}</span>
               </span>
             </Link>
           )
