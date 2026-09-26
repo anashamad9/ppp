@@ -2,6 +2,7 @@
 
 import { isValidElement, useEffect, useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { ArrowLeft, ArrowRight, Calendar, Clock, LoaderCircle, LockKeyhole } from "lucide-react"
 import type { Locale } from "@/i18n-config"
@@ -43,6 +44,7 @@ export default function ArticleDetailClient({
   article: Article
   relatedArticles: Article[]
 }) {
+  const router = useRouter()
   const [isLoaded, setIsLoaded] = useState(false)
   const [navigatingArticleId, setNavigatingArticleId] = useState<number | null>(null)
   const isProtectedArticle = article.id === 6
@@ -53,6 +55,15 @@ export default function ArticleDetailClient({
   useEffect(() => {
     setIsLoaded(true)
   }, [])
+
+  const goBack = () => {
+    if (window.history.length > 1) {
+      router.back()
+      return
+    }
+
+    router.push(`/${lang}`)
+  }
 
   const renderCodeSnippet = (codeValue: string, rawLanguage?: string) => {
     const languageMeta = rawLanguage ?? "text"
@@ -262,14 +273,15 @@ export default function ArticleDetailClient({
                   <Clock className="h-4 w-4" />
                   {article.readTime}
                 </span>
-                <Link
-                  href={`/${lang}`}
+                <button
+                  type="button"
+                  onClick={goBack}
                   className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground sm:text-sm"
                 >
                   <span className="border-b border-border pb-[2px]">
-                    {lang === "ar" ? "العودة للرئيسية" : "Back to home"}
+                    {lang === "ar" ? "العودة للصفحة السابقة" : "Back to previous page"}
                   </span>
-                </Link>
+                </button>
               </div>
             </div>
 

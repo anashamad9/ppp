@@ -20,8 +20,6 @@ export const metadata: Metadata = {
 }
 
 // Keep Safari and other mobile browsers on the device-width layout viewport.
-// Without this, they can use a desktop-width viewport and activate the
-// two-column build layout, leaving the visitor to pan sideways.
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,

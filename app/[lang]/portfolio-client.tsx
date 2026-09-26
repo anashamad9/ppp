@@ -4,7 +4,7 @@
 // =============================================
 "use client"
 
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -175,27 +175,12 @@ export default function PortfolioClient({
 }) {
   const [isLoaded, setIsLoaded] = useState(false)
   const [descriptionView, setDescriptionView] = useState<DescriptionView>("summary")
-  const [isStackedBuildLayout, setIsStackedBuildLayout] = useState(false)
   const activeCoreStack = techStack ?? coreStack
   const isCompactArticlesView = compactHome && descriptionView === "articles"
 
   useEffect(() => {
     setIsLoaded(true)
   }, [])
-
-  useEffect(() => {
-    if (!splitBuildLayout) return
-
-    // A mobile browser can temporarily report a wide layout viewport (for
-    // example after browser zoom or when opened from an in-app browser).
-    // The split design is desktop-only, so width alone must not enable it.
-    const splitLayoutQuery = window.matchMedia("(min-width: 1024px) and (hover: hover) and (pointer: fine)")
-    const updateLayout = () => setIsStackedBuildLayout(!splitLayoutQuery.matches)
-
-    updateLayout()
-    splitLayoutQuery.addEventListener("change", updateLayout)
-    return () => splitLayoutQuery.removeEventListener("change", updateLayout)
-  }, [splitBuildLayout])
 
   useEffect(() => {
     if (!compactHome) return
@@ -241,62 +226,46 @@ export default function PortfolioClient({
   return (
     <main
       className={cn(
-        // Every page variant is vertically scrollable on a phone, but must
-        // never make the document itself horizontally scrollable. In
-        // particular, the build layout used to skip this safeguard.
         "flex flex-col items-center bg-background font-sans",
-        splitBuildLayout ? "overflow-x-clip" : "overflow-x-hidden",
+        "overflow-x-hidden",
         compactHome ? "min-h-svh justify-start px-4 pb-10 pt-6 sm:justify-center sm:px-6 sm:py-10" : "pb-8",
       )}
     >
-      <div className={cn("w-full bg-background", compactHome ? "" : splitBuildLayout ? "px-3 pt-4 sm:px-5 sm:pt-6 md:px-6 md:pt-8" : "px-4 pt-8 sm:px-6 sm:pt-10 md:px-8 md:pt-12")}>
-        <Card className={cn("mx-auto w-full border-none bg-transparent shadow-none", splitBuildLayout ? "max-w-none" : "max-w-[720px]")}>
+      <div className={cn("w-full bg-background", compactHome ? "" : "px-4 pt-8 sm:px-6 sm:pt-10 md:px-8 md:pt-12")}>
+        <Card className={cn("mx-auto w-full border-none bg-transparent shadow-none", splitBuildLayout ? "max-w-[1100px]" : "max-w-[720px]")}>
           <CardContent
             className={cn(
               "flex flex-col",
-              splitBuildLayout ? "p-0" : "p-0 sm:p-4",
-              compactHome ? "gap-3 sm:gap-4" : showArticleFooter ? "gap-6" : splitBuildLayout ? "gap-7 sm:gap-10" : "gap-8 sm:gap-12",
+              "p-0 sm:p-4",
+              compactHome ? "gap-3 sm:gap-4" : showArticleFooter ? "gap-6" : "gap-8 sm:gap-12",
             )}
           >
             {splitBuildLayout ? (
-              <div className="build-layout-grid grid items-start gap-8 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)] lg:gap-10 xl:gap-12 2xl:gap-16">
-                <div
-                  className={cn(
-                    "build-content-column w-full overflow-visible lg:w-[76%]",
-                    lang === "ar" ? "lg:ml-auto" : "lg:mr-auto",
-                  )}
-                >
-                  <div className="build-content-inner flex flex-col gap-7">
-                    {!isCompactArticlesView && <Header isLoaded={isLoaded} dict={dict} lang={lang} headerRole={headerRole} avatarSrc={avatarSrc} topTags={topTags} compact={compactHome} />}
-                    <Description isLoaded={isLoaded} dict={dict} lang={lang} topTags={topTags} description={description} activeView={descriptionView} setActiveView={navigateDescriptionView} interactive={compactHome} />
-                    {!isCompactArticlesView && <CTAButtons isLoaded={isLoaded} dict={dict} lang={lang} secondaryActionLabel={secondaryActionLabel} secondaryActionTargetId={secondaryActionTargetId} secondaryActionIcon={secondaryActionIcon} directContactHref={directContactHref} onShowArticles={compactHome && !secondaryActionTargetId ? () => navigateDescriptionView("articles") : undefined} />}
-                    {!hideArticles && <Articles isLoaded={isLoaded} articles={dict.articles.filter((article) => article.enabled && article.id !== 4).slice(0, 3)} lang={lang} dict={dict} />}
-                    {!isStackedBuildLayout && (
-                      <div className="mt-auto">
-                        <TopControls lang={lang} embedded />
-                        {showArticleFooter ? <ArticleFooter lang={lang} homeHref={articleFooterHomeHref} /> : null}
+              <>
+                {!isCompactArticlesView && <Header isLoaded={isLoaded} dict={dict} lang={lang} headerRole={headerRole} avatarSrc={avatarSrc} topTags={topTags} compact={compactHome} />}
+                <Description isLoaded={isLoaded} dict={dict} lang={lang} topTags={topTags} description={description} activeView={descriptionView} setActiveView={navigateDescriptionView} interactive={compactHome} />
+                {!isCompactArticlesView && <CTAButtons isLoaded={isLoaded} dict={dict} lang={lang} secondaryActionLabel={secondaryActionLabel} secondaryActionTargetId={secondaryActionTargetId} secondaryActionIcon={secondaryActionIcon} directContactHref={directContactHref} onShowArticles={compactHome && !secondaryActionTargetId ? () => navigateDescriptionView("articles") : undefined} />}
+                {showcaseSlides?.length ? <BuildShowcaseCard isLoaded={isLoaded} showcaseSlides={showcaseSlides} lang={lang} /> : null}
+                {impactCards?.length ? <ImpactHighlights isLoaded={isLoaded} cards={impactCards} lang={lang} bento /> : null}
+                {!hideTechStack && <CoreTechStack isLoaded={isLoaded} coreStack={activeCoreStack} dict={dict} lang={lang} compactCard={compactTechStackCard} />}
+                {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} uniformGrid /> : null}
+                {!hideExperience && <Experience isLoaded={isLoaded} experiences={dict.experiences} dict={dict} lang={lang} />}
+                {testimonialCta ? (
+                  <TestimonialCtaSection isLoaded={isLoaded} testimonialCta={testimonialCta} lang={lang}>
+                    {!hideArticles && (
+                      <div className={cn("w-full", lang === "ar" ? "text-right" : "text-left")}>
+                        <Articles isLoaded={isLoaded} articles={dict.articles.filter((article) => article.enabled && article.id !== 4).slice(0, 3)} lang={lang} dict={dict} />
                       </div>
                     )}
-                  </div>
+                  </TestimonialCtaSection>
+                ) : !hideArticles ? (
+                  <Articles isLoaded={isLoaded} articles={dict.articles.filter((article) => article.enabled && article.id !== 4).slice(0, 3)} lang={lang} dict={dict} />
+                ) : null}
+                <div>
+                  <TopControls lang={lang} embedded />
+                  {showArticleFooter ? <ArticleFooter lang={lang} homeHref={articleFooterHomeHref} /> : null}
                 </div>
-                <div className="min-w-0 space-y-10">
-                {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} imageStart={0} imageEnd={2} /> : null}
-                {showcaseSlides?.length ? <BuildShowcaseCard isLoaded={isLoaded} showcaseSlides={showcaseSlides} lang={lang} /> : null}
-                {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} imageStart={2} imageEnd={4} /> : null}
-                {!hideTechStack && <CoreTechStack isLoaded={isLoaded} coreStack={activeCoreStack} dict={dict} lang={lang} compactCard={compactTechStackCard} />}
-                {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} imageStart={4} imageEnd={8} /> : null}
-                {impactCards?.length ? <ImpactHighlights isLoaded={isLoaded} cards={impactCards} lang={lang} bento /> : null}
-                {!hideExperience && <Experience isLoaded={isLoaded} experiences={dict.experiences} dict={dict} lang={lang} />}
-                {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} imageStart={8} imageEnd={12} /> : null}
-                {testimonialCta ? <TestimonialCtaSection isLoaded={isLoaded} testimonialCta={testimonialCta} lang={lang} /> : null}
-                </div>
-                {isStackedBuildLayout && (
-                  <div>
-                    <TopControls lang={lang} embedded />
-                    {showArticleFooter ? <ArticleFooter lang={lang} homeHref={articleFooterHomeHref} /> : null}
-                  </div>
-                )}
-              </div>
+              </>
             ) : (
               <>
                 {!isCompactArticlesView && <Header isLoaded={isLoaded} dict={dict} lang={lang} headerRole={headerRole} avatarSrc={avatarSrc} topTags={topTags} compact={compactHome} />}
@@ -1343,7 +1312,7 @@ function BuildShowcaseCard({
     >
       <div className="overflow-hidden rounded-lg bg-muted">
         <div className="grid grid-cols-1 md:grid-cols-2">
-          <div className="flex min-h-[340px] flex-col p-4 sm:min-h-[390px] sm:p-5">
+          <div className="flex min-h-[380px] flex-col p-4 sm:min-h-[460px] sm:p-5 md:min-h-[520px]">
             <Badge
               variant="secondary"
               className="mb-4 w-fit rounded-full border-0 bg-background/80 px-2.5 py-1 text-[11px] font-medium text-foreground shadow-none"
@@ -1419,174 +1388,17 @@ function ProjectsShowcaseCard({
   isLoaded,
   projectsCard,
   lang,
-  imageStart = 0,
-  imageEnd,
+  uniformGrid = false,
 }: {
   isLoaded: boolean
   projectsCard: ProjectsCard
   lang: Locale
-  imageStart?: number
-  imageEnd?: number
+  uniformGrid?: boolean
 }) {
-  const galleryRef = useRef<HTMLDivElement>(null)
-  const isDraggingRef = useRef(false)
-  const dragStartXRef = useRef(0)
-  const targetScrollLeftRef = useRef(0)
-  const lastDragXRef = useRef(0)
-  const lastDragTimeRef = useRef(0)
-  const animationFrameRef = useRef<number | null>(null)
-  const scrollStartLeftRef = useRef(0)
-  const velocityRef = useRef(0)
-
-  useEffect(() => {
-    return () => {
-      if (animationFrameRef.current !== null) {
-        window.cancelAnimationFrame(animationFrameRef.current)
-      }
-    }
-  }, [])
-
   const projectImages = (lang === "ar" ? [...projectsCard.projects].reverse() : projectsCard.projects).flatMap((project) =>
     project.images.map((image) => ({ ...image, projectTitle: project.title })),
   )
-  const displayedProjectImages = projectImages.slice(imageStart, imageEnd)
-
-  useEffect(() => {
-    const gallery = galleryRef.current
-    if (!gallery) return
-
-    const initialScrollLeft = getInitialScrollLeft(gallery)
-    setLogicalScrollLeft(gallery, initialScrollLeft)
-    targetScrollLeftRef.current = initialScrollLeft
-  }, [lang, projectsCard])
-
-  const stopAnimation = () => {
-    if (animationFrameRef.current === null) return
-
-    window.cancelAnimationFrame(animationFrameRef.current)
-    animationFrameRef.current = null
-  }
-
-  const animateGallery = () => {
-    const gallery = galleryRef.current
-    if (!gallery) {
-      animationFrameRef.current = null
-      return
-    }
-
-    if (!isDraggingRef.current) {
-      velocityRef.current *= 0.95
-      targetScrollLeftRef.current -= velocityRef.current
-    }
-
-    targetScrollLeftRef.current = clampScrollLeft(targetScrollLeftRef.current)
-
-    const currentScrollLeft = getLogicalScrollLeft(gallery)
-    const distance = targetScrollLeftRef.current - currentScrollLeft
-    setLogicalScrollLeft(gallery, currentScrollLeft + distance * 0.18)
-
-    if (isDraggingRef.current || Math.abs(distance) > 0.5 || Math.abs(velocityRef.current) > 0.25) {
-      animationFrameRef.current = window.requestAnimationFrame(animateGallery)
-    } else {
-      setLogicalScrollLeft(gallery, targetScrollLeftRef.current)
-      animationFrameRef.current = null
-    }
-  }
-
-  const startAnimation = () => {
-    if (animationFrameRef.current === null) {
-      animationFrameRef.current = window.requestAnimationFrame(animateGallery)
-    }
-  }
-
-  const clampScrollLeft = (value: number) => {
-    const gallery = galleryRef.current
-    if (!gallery) return value
-
-    return Math.max(0, Math.min(value, getMaxScrollLeft(gallery)))
-  }
-
-  const getMaxScrollLeft = (gallery: HTMLDivElement) => {
-    return Math.max(0, gallery.scrollWidth - gallery.clientWidth)
-  }
-
-  const getInitialScrollLeft = (gallery: HTMLDivElement) => {
-    return lang === "ar" ? getMaxScrollLeft(gallery) : 0
-  }
-
-  const getLogicalScrollLeft = (gallery: HTMLDivElement) => {
-    return gallery.scrollLeft
-  }
-
-  const setLogicalScrollLeft = (gallery: HTMLDivElement, value: number) => {
-    gallery.scrollLeft = value
-  }
-
-  const stopDragging = () => {
-    if (!isDraggingRef.current) return
-
-    isDraggingRef.current = false
-    targetScrollLeftRef.current = clampScrollLeft(targetScrollLeftRef.current)
-    startAnimation()
-  }
-
-  useEffect(() => {
-    const gallery = galleryRef.current
-    if (!gallery) return
-
-    const syncTargetScroll = () => {
-      if (isDraggingRef.current || animationFrameRef.current !== null) return
-
-      targetScrollLeftRef.current = getLogicalScrollLeft(gallery)
-    }
-
-    gallery.addEventListener("scroll", syncTargetScroll, { passive: true })
-    return () => gallery.removeEventListener("scroll", syncTargetScroll)
-  }, [])
-
-  useEffect(() => {
-    const stopWindowDrag = () => {
-      if (!isDraggingRef.current) return
-
-      isDraggingRef.current = false
-      targetScrollLeftRef.current = clampScrollLeft(targetScrollLeftRef.current)
-      startAnimation()
-    }
-
-    window.addEventListener("pointerup", stopWindowDrag)
-    window.addEventListener("blur", stopWindowDrag)
-    return () => {
-      window.removeEventListener("pointerup", stopWindowDrag)
-      window.removeEventListener("blur", stopWindowDrag)
-    }
-  }, [])
-
-  const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
-    if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return
-
-    const gallery = event.currentTarget
-    const nextScrollLeft = clampScrollLeft(targetScrollLeftRef.current + event.deltaY)
-
-    if (nextScrollLeft === targetScrollLeftRef.current) return
-
-    event.preventDefault()
-    targetScrollLeftRef.current = nextScrollLeft
-    if (animationFrameRef.current === null) {
-      targetScrollLeftRef.current = getLogicalScrollLeft(gallery) + event.deltaY
-      targetScrollLeftRef.current = clampScrollLeft(targetScrollLeftRef.current)
-      startAnimation()
-    }
-  }
-
-  const releasePointerCapture = (event: React.PointerEvent<HTMLDivElement>) => {
-    try {
-      event.currentTarget.releasePointerCapture(event.pointerId)
-    } catch {
-      // The pointer may already be released by the browser.
-    }
-  }
-
-  if (!displayedProjectImages.length) return null
+  if (!projectImages.length) return null
 
   return (
     <section
@@ -1598,20 +1410,24 @@ function ProjectsShowcaseCard({
     >
       <div className="space-y-2">
         <div
-          ref={galleryRef}
-          className="grid grid-flow-dense grid-cols-2 auto-rows-[70px] gap-3 sm:auto-rows-[82px] sm:gap-4"
+          className={cn(
+            "grid gap-3 sm:gap-4",
+            uniformGrid ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-flow-dense grid-cols-2 auto-rows-[70px] sm:auto-rows-[82px]",
+          )}
           dir="ltr"
           aria-label={lang === "ar" ? "صور المشاريع" : "Project images"}
         >
-          {displayedProjectImages.map((image, imageIndex) => (
+          {projectImages.map((image, imageIndex) => (
                 <div
                   key={`${image.projectTitle}-${image.src}-${imageIndex}`}
                   className={cn(
-                    "group relative row-span-4 min-h-[150px] overflow-hidden rounded-lg bg-muted sm:min-h-[210px]",
-                    imageIndex % 6 === 0 ? "row-span-6" : imageIndex % 4 === 0 ? "row-span-5" : imageIndex % 3 === 0 ? "row-span-3" : "row-span-4",
+                    "group relative overflow-hidden rounded-lg bg-muted",
+                    uniformGrid
+                      ? "aspect-[4/3]"
+                      : cn("row-span-4 min-h-[150px] sm:min-h-[210px]", imageIndex % 6 === 0 ? "row-span-6" : imageIndex % 4 === 0 ? "row-span-5" : imageIndex % 3 === 0 ? "row-span-3" : "row-span-4"),
                   )}
                 >
-                  <Image src={image.src} alt={image.alt} fill draggable={false} className="object-cover" sizes="(min-width: 1024px) 38vw, 50vw" />
+                  <Image src={image.src} alt={image.alt} fill draggable={false} className="object-cover" sizes={uniformGrid ? "(min-width: 1024px) 350px, (min-width: 640px) 50vw, 100vw" : "(min-width: 1024px) 38vw, 50vw"} />
                 </div>
               ))}
         </div>
@@ -1624,10 +1440,12 @@ function TestimonialCtaSection({
   isLoaded,
   testimonialCta,
   lang,
+  children,
 }: {
   isLoaded: boolean
   testimonialCta: TestimonialCtaCard
   lang: Locale
+  children?: React.ReactNode
 }) {
   return (
     <section
@@ -1637,19 +1455,19 @@ function TestimonialCtaSection({
       style={{ transitionDelay: "700ms" }}
     >
       <div className="space-y-10 text-center sm:space-y-12">
-        <div className="overflow-hidden rounded-lg bg-[#1063ff] text-start">
-          <div className="flex flex-col gap-6 p-5 sm:p-7">
+        <div className="overflow-hidden rounded-lg bg-[#1063ff] text-center">
+          <div className="flex flex-col items-center gap-6 p-5 sm:p-7">
             <div>
               <Badge
                 variant="secondary"
-                className="w-fit rounded-full border-0 bg-black/15 px-2.5 py-1 text-[11px] font-normal text-white shadow-none"
+                className="mx-auto w-fit rounded-full border-0 bg-black/15 px-2.5 py-1 text-[11px] font-normal text-white shadow-none"
               >
                 {testimonialCta.quoteTag}
               </Badge>
               <p className={cn("mt-4 max-w-2xl text-xl font-normal leading-relaxed text-white sm:text-2xl", lang === "ar" && "font-thmanyah-serif-text")}>
                 “{testimonialCta.quote}”
               </p>
-              <div className="mt-8 flex items-center gap-3 sm:mt-10">
+              <div className="mt-8 flex items-center justify-center gap-3 sm:mt-10">
                 <Image
                   src={testimonialCta.avatarSrc}
                   alt={testimonialCta.avatarAlt}
@@ -1666,19 +1484,23 @@ function TestimonialCtaSection({
           </div>
         </div>
 
-        <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 px-0">
-          <h3 className={cn("text-2xl font-normal leading-tight tracking-tight text-foreground sm:text-4xl", lang === "ar" && "font-thmanyah-serif-text")}>
-            {testimonialCta.ctaTitle}
-          </h3>
-          <div className="flex flex-row flex-wrap justify-center gap-3">
-            <Button asChild className="h-[32px] rounded-[99px] px-3 py-1 text-[13px] font-medium">
-              <a href={testimonialCta.primaryHref}>{testimonialCta.primaryLabel}</a>
-            </Button>
-            <Button asChild variant="outline" className="h-[32px] rounded-[99px] border-0 bg-white px-3 py-1 text-[13px] font-medium text-black hover:bg-white/90 hover:text-black">
-              <a href={testimonialCta.secondaryHref} className="text-black">
-                {testimonialCta.secondaryLabel}
-              </a>
-            </Button>
+        {children}
+
+        <div className="cta-grid-surface relative isolate flex min-h-[220px] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-muted p-7 text-center sm:min-h-[260px] sm:p-10">
+          <div className="relative z-10 flex flex-col items-center gap-4">
+            <h3 className={cn("text-xl font-normal leading-relaxed tracking-tight text-foreground sm:text-2xl", lang === "ar" && "font-thmanyah-serif-text")}>
+              {testimonialCta.ctaTitle}
+            </h3>
+            <div className="flex flex-row flex-wrap justify-center gap-3">
+              <Button asChild className="h-[32px] rounded-[99px] px-3 py-1 text-[13px] font-medium">
+                <a href={testimonialCta.primaryHref}>{testimonialCta.primaryLabel}</a>
+              </Button>
+              <Button asChild variant="outline" className="h-[32px] rounded-[99px] border-0 bg-white px-3 py-1 text-[13px] font-medium text-black hover:bg-white/90 hover:text-black">
+                <a href={testimonialCta.secondaryHref} className="text-black">
+                  {testimonialCta.secondaryLabel}
+                </a>
+              </Button>
+            </div>
           </div>
         </div>
       </div>

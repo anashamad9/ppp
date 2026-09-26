@@ -442,7 +442,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
     lang === "ar"
       ? {
           quoteTag: "رأي عميل",
-          quote: "الحق يقال، أكتر اشي لفت نظري بالعمل معهم هو انهم سمعوا بالزبط شو بحتاج، وأعطوني نصائح لمصلحتي وتسليم المشروع كان بالموعد المحدد. شكراً كتيييير لطولة باله وصبره لأنس علي، والأجمل من ذلك خدمة الرد السريع وحل المشكلات والمتابعة مع العميل بعد تسليم المشروع.",
+          quote: "الحق يقال، أكتر اشي لفت نظري بالعمل معهم هو انهم سمعوا بالزبط شو بحتاج، وأعطوني نصائح لمصلحتي وتسليم المشروع كان بالموعد المحدد. شكراً كتيييير لأنس والأجمل من ذلك الرد السريع وحل المشكلات والمتابعة مع العميل بعد تسليم المشروع.",
           author: "رندا متولي",
           role: "أكاديمية رندا",
           avatarSrc: "/484632640_978221624285463_7620032291749332988_n.jpg",
@@ -503,7 +503,6 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
         compactTechStackCard
         projectsCard={projectsCard}
         testimonialCta={testimonialCta}
-        hideArticles
         splitBuildLayout
       />
     </>
