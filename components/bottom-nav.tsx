@@ -14,7 +14,7 @@ import {
   X,
 } from "lucide-react"
 import React, { useEffect, useMemo, useState } from "react"
-import { useTheme } from "next-themes"
+import { useTheme } from "@/components/theme-provider"
 
 const cls = (...s: (string | false | null | undefined)[]) =>
   s.filter(Boolean).join(" ")

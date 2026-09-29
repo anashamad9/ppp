@@ -25,19 +25,20 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
-// Runs before next-themes so the first paint uses Amman's daytime when
-// the visitor has not chosen a theme. An automatic choice is refreshed on reload.
+// Set the first paint from Amman time. Theme changes stay in memory until reload.
 const ammanThemeScript = `
   try {
-    var savedTheme = localStorage.getItem('theme');
-    var automatic = localStorage.getItem('amman-theme-auto') === 'true';
-    if (!savedTheme || automatic) {
-      var hour = Number(new Intl.DateTimeFormat('en-GB', {
-        timeZone: 'Asia/Amman', hour: 'numeric', hourCycle: 'h23'
-      }).format(new Date()));
-      localStorage.setItem('theme', hour >= 6 && hour < 18 ? 'light' : 'dark');
-      localStorage.setItem('amman-theme-auto', 'true');
-    }
+    var hour = Number(new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Amman', hour: 'numeric', hourCycle: 'h23'
+    }).format(new Date()));
+    var isDark = hour < 6 || hour >= 18;
+    document.documentElement.classList.toggle('dark', isDark);
+    document.documentElement.classList.toggle('light', !isDark);
+    document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+  } catch (_) {}
+  try {
+    localStorage.removeItem('theme');
+    localStorage.removeItem('amman-theme-auto');
   } catch (_) {}
 `
 

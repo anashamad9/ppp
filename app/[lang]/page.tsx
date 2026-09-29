@@ -5,7 +5,7 @@ import { PERSON_NAME_AR, PERSON_NAME_AR_STYLED, PERSON_NAME_EN, SITE_DESCRIPTION
 import { getRequestSiteUrl } from "@/lib/site-url.server"
 import PortfolioClient from "./portfolio-client"
 
-const featuredArticleIds = new Set([8, 7, 1])
+const featuredArticleIds = new Set([9, 8, 7, 1])
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang: langParam } = await params

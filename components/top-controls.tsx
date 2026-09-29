@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowUpRight, ChevronDown } from "lucide-react"
-import { useTheme } from "next-themes"
+import { useTheme } from "@/components/theme-provider"
 
 import type { Locale } from "@/i18n-config"
 import { PERSON_NAME_AR_DISPLAY, PERSON_NAME_EN, SITE_EMAIL } from "@/lib/site"
@@ -93,7 +93,6 @@ export function TopControls({ lang, embedded = false }: TopControlsProps) {
 
   const handleToggleTheme = () => {
     const next = isDark ? "light" : "dark"
-    window.localStorage.removeItem("amman-theme-auto")
     startTransition(() => setTheme(next))
   }
 
