@@ -2,11 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
+import Link from "next/link"
+import Image from "next/image"
 import { ArrowUpRight, ChevronDown } from "lucide-react"
 import { useTheme } from "next-themes"
 
 import type { Locale } from "@/i18n-config"
-import { SITE_EMAIL } from "@/lib/site"
+import { PERSON_NAME_AR_DISPLAY, PERSON_NAME_EN, SITE_EMAIL } from "@/lib/site"
 import { cn } from "@/lib/utils"
 import { ThemeToggleButton, useThemeTransition } from "@/components/ui/shadcn-io/theme-toggle-button"
 import { CopyButton } from "@/components/ui/copy-button"
@@ -28,11 +30,16 @@ export function TopControls({ lang, embedded = false }: TopControlsProps) {
   const { resolvedTheme, setTheme, theme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [isBuildHost, setIsBuildHost] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
   const { startTransition } = useThemeTransition()
 
   useEffect(() => {
     setMounted(true)
     setIsBuildHost(window.location.hostname === "build.anashamad.com")
+    const updateScroll = () => setIsScrolled(window.scrollY > 80)
+    updateScroll()
+    window.addEventListener("scroll", updateScroll, { passive: true })
+    return () => window.removeEventListener("scroll", updateScroll)
   }, [])
 
   const isRTL = lang === "ar"
@@ -70,14 +77,6 @@ export function TopControls({ lang, embedded = false }: TopControlsProps) {
   const activeSocialLinks = isBuildPage ? buildSocialLinks : socialLinks
   const shouldUseCompactHomeControls = isMainHomepage && !isBuildHost
 
-  if (!mounted) {
-    return null
-  }
-
-  if (isBuildPage && !embedded) {
-    return null
-  }
-
   const handleSwitchLang = (nextLang: Locale) => {
     if (!pathname) {
       router.push(`/${nextLang}`)
@@ -94,17 +93,84 @@ export function TopControls({ lang, embedded = false }: TopControlsProps) {
 
   const handleToggleTheme = () => {
     const next = isDark ? "light" : "dark"
+    window.localStorage.removeItem("amman-theme-auto")
     startTransition(() => setTheme(next))
+  }
+
+  const floatingNav = isBuildPage && !embedded && (
+    <nav
+      aria-label={isRTL ? "التنقل العلوي" : "Top navigation"}
+      aria-hidden={!isScrolled}
+      className={cn(
+        "fixed left-1/2 top-3 z-50 flex max-w-[calc(100vw-1.5rem)] -translate-x-1/2 items-center gap-1 rounded-full border border-border/60 bg-background/70 p-1 shadow-sm backdrop-blur-xl transition-[opacity,transform] duration-300 sm:top-4",
+        isScrolled ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-3 opacity-0",
+      )}
+    >
+      <Link
+        href={isBuildHost ? `/${lang}` : `/${lang}/build`}
+        tabIndex={isScrolled ? 0 : -1}
+        className="flex h-7 min-w-0 items-center gap-1.5 rounded-full px-1.5 text-foreground transition-colors hover:bg-muted"
+      >
+        <Image src="/Anas%20Hamad.png" alt="" width={24} height={24} className="size-6 shrink-0 rounded-full object-cover" />
+        <span className={cn("max-w-[32vw] truncate whitespace-nowrap text-[11px] font-semibold tracking-tight sm:max-w-none", isRTL && "font-thmanyah-serif-text")}>
+          {isRTL ? PERSON_NAME_AR_DISPLAY : PERSON_NAME_EN}
+        </span>
+      </Link>
+      <span className="mx-0.5 h-5 w-px shrink-0 bg-border" aria-hidden="true" />
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            type="button"
+            tabIndex={isScrolled ? 0 : -1}
+            className={cn("inline-flex h-7 items-center gap-1 rounded-full bg-muted px-2.5 text-[11px] font-medium text-foreground transition-colors hover:bg-muted/80", isRTL && "font-thmanyah-serif-text")}
+            aria-label={labels.switchLang}
+            title={labels.switchLang}
+          >
+            {lang === "ar" ? labels.arabic : labels.english}
+            <ChevronDown className="h-3 w-3" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="center" className="min-w-[9rem]">
+          <DropdownMenuItem onClick={() => handleSwitchLang("en")} className="font-sans text-left" dir="ltr">
+            {labels.english}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleSwitchLang("ar")} className="font-arabic text-right" dir="rtl">
+            {labels.arabic}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <ThemeToggleButton
+        theme={currentTheme}
+        variant="circle-blur"
+        start="center"
+        onClick={handleToggleTheme}
+        tabIndex={isScrolled ? 0 : -1}
+        className="h-7 w-7 rounded-full border-0 bg-muted text-foreground hover:bg-muted/80 hover:text-foreground"
+        aria-label={labels.toggle}
+        title={labels.toggle}
+      />
+    </nav>
+  )
+
+  if (!mounted) {
+    return null
+  }
+
+  if (isBuildPage && !embedded) {
+    return floatingNav
   }
 
   if (shouldUseCompactHomeControls) {
     return (
-      <div className="pointer-events-none fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2">
+      <>
+        {floatingNav}
+        <div className={cn("pointer-events-none fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 transition-opacity duration-300", isScrolled && "opacity-0 [&_*]:pointer-events-none")} aria-hidden={isScrolled}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
               type="button"
               className="pointer-events-auto inline-flex h-7 items-center gap-1 rounded-full border-0 bg-muted px-2.5 text-[11px] font-medium text-foreground transition-colors hover:bg-muted/80"
+              tabIndex={isScrolled ? -1 : 0}
               aria-label={labels.switchLang}
               title={labels.switchLang}
             >
@@ -130,6 +196,7 @@ export function TopControls({ lang, embedded = false }: TopControlsProps) {
           variant="circle-blur"
           start="center"
           onClick={handleToggleTheme}
+          tabIndex={isScrolled ? -1 : 0}
           className={cn(
             "h-7 w-7 rounded-full border-0 bg-muted text-foreground hover:bg-muted/80 hover:text-foreground",
             "pointer-events-auto",
@@ -138,12 +205,15 @@ export function TopControls({ lang, embedded = false }: TopControlsProps) {
           aria-label={labels.toggle}
           title={labels.toggle}
         />
-      </div>
+        </div>
+      </>
     )
   }
 
   return (
-    <div className={cn(embedded ? "pb-1" : "pb-4", isBuildPage && !embedded ? "px-3 sm:px-5 md:px-6" : "px-0")}>
+    <>
+      {floatingNav}
+      <div className={cn(embedded ? "pb-1" : "pb-4", isBuildPage && !embedded ? "px-3 sm:px-5 md:px-6" : "px-0")}>
       <div
         className={cn(
           "bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/40",
@@ -229,7 +299,8 @@ export function TopControls({ lang, embedded = false }: TopControlsProps) {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   )
 }
 

@@ -29,5 +29,6 @@ export const SITE_DESCRIPTION_AR =
 export const PERSON_NAME_EN = "Anas Hamad"
 export const PERSON_NAME_AR = "أنس حمد"
 export const PERSON_NAME_AR_STYLED = "انــــــس حمد"
+export const PERSON_NAME_AR_DISPLAY = "أنـــس حمـــد"
 
 export const absUrl = (path = "") => `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`

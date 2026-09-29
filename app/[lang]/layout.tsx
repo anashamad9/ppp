@@ -88,7 +88,7 @@ export default async function RootLayout({
   const lang = langParam as Locale
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+    <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
       <div
         lang={lang}
         dir={lang === "ar" ? "rtl" : "ltr"}

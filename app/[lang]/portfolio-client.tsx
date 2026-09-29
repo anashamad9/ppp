@@ -5,6 +5,7 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
+import { createPortal } from "react-dom"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -42,6 +43,7 @@ import {
   Rocket,
   Users,
   LoaderCircle,
+  X,
 } from "lucide-react"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 import {
@@ -232,7 +234,7 @@ export default function PortfolioClient({
       )}
     >
       <div className={cn("w-full bg-background", compactHome ? "" : "px-4 pt-8 sm:px-6 sm:pt-10 md:px-8 md:pt-12")}>
-        <Card className={cn("mx-auto w-full border-none bg-transparent shadow-none", splitBuildLayout ? "max-w-[1100px]" : "max-w-[720px]")}>
+        <Card className={cn("mx-auto w-full border-none bg-transparent shadow-none", splitBuildLayout ? "max-w-[840px]" : "max-w-[720px]")}>
           <CardContent
             className={cn(
               "flex flex-col",
@@ -246,7 +248,7 @@ export default function PortfolioClient({
                 <Description isLoaded={isLoaded} dict={dict} lang={lang} topTags={topTags} description={description} activeView={descriptionView} setActiveView={navigateDescriptionView} interactive={compactHome} />
                 {!isCompactArticlesView && <CTAButtons isLoaded={isLoaded} dict={dict} lang={lang} secondaryActionLabel={secondaryActionLabel} secondaryActionTargetId={secondaryActionTargetId} secondaryActionIcon={secondaryActionIcon} directContactHref={directContactHref} onShowArticles={compactHome && !secondaryActionTargetId ? () => navigateDescriptionView("articles") : undefined} />}
                 {showcaseSlides?.length ? <BuildShowcaseCard isLoaded={isLoaded} showcaseSlides={showcaseSlides} lang={lang} /> : null}
-                {impactCards?.length ? <ImpactHighlights isLoaded={isLoaded} cards={impactCards} lang={lang} bento /> : null}
+                {impactCards?.length ? <ImpactHighlights isLoaded={isLoaded} cards={impactCards} lang={lang} /> : null}
                 {!hideTechStack && <CoreTechStack isLoaded={isLoaded} coreStack={activeCoreStack} dict={dict} lang={lang} compactCard={compactTechStackCard} />}
                 {projectsCard ? <ProjectsShowcaseCard isLoaded={isLoaded} projectsCard={projectsCard} lang={lang} uniformGrid /> : null}
                 {!hideExperience && <Experience isLoaded={isLoaded} experiences={dict.experiences} dict={dict} lang={lang} />}
@@ -1196,22 +1198,11 @@ function ImpactHighlights({
   isLoaded,
   cards,
   lang,
-  bento = false,
 }: {
   isLoaded: boolean
   cards: ImpactCard[]
   lang: Locale
-  bento?: boolean
 }) {
-  const [openCards, setOpenCards] = useState<Record<string, boolean>>({})
-
-  const toggleCard = (title: string) => {
-    setOpenCards((current) => ({
-      ...current,
-      [title]: !current[title],
-    }))
-  }
-
   return (
     <section
       className={`-mt-5 flex flex-col gap-3 transition-all duration-500 ease-out sm:-mt-8 ${
@@ -1219,59 +1210,26 @@ function ImpactHighlights({
       }`}
       style={{ transitionDelay: "525ms" }}
     >
-      <div className="grid grid-cols-3 items-stretch gap-3">
+      <div className="grid grid-cols-1 items-stretch gap-3 sm:grid-cols-3">
         {cards.map((card) => {
-          const isOpen = Boolean(openCards[card.title])
           const hasLongMetric = card.metric.length > 6
 
           return (
             <div
               key={card.title}
-              className="flex h-full min-h-[165px] flex-col rounded-lg bg-muted p-4 transition-all duration-300 ease-out"
+              className="flex h-full min-h-[130px] flex-col justify-center gap-2 rounded-lg bg-muted p-4 text-start"
             >
-              <button
-                type="button"
-                onClick={() => toggleCard(card.title)}
-                aria-expanded={isOpen}
-                className="flex w-full flex-1 items-start justify-between gap-3 text-start"
-              >
-                <div className="space-y-2.5">
-                  <Badge
-                    variant="secondary"
-                    className="w-fit rounded-full border-0 bg-background/80 px-2.5 py-1 text-[11px] font-medium text-foreground shadow-none"
-                  >
-                    {card.label}
-                  </Badge>
-                  <div className="space-y-1.5">
-                    <span
-                      className={cn(
-                        "block font-semibold leading-none text-foreground tabular-nums",
-                        hasLongMetric ? "text-xl sm:text-[24px]" : "text-2xl sm:text-[28px]",
-                      )}
-                    >
-                      {card.metric}
-                    </span>
-                    <h2 className={cn("text-sm font-semibold leading-snug text-foreground sm:text-[15px]", lang === "ar" && "font-thmanyah-serif-text")}>
-                      {card.title}
-                    </h2>
-                  </div>
-                </div>
-                <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-background/80 text-foreground transition duration-300">
-                  <ChevronDown className={cn("h-4 w-4 transition-transform duration-300", isOpen && "rotate-180")} />
-                </span>
-              </button>
-              <div
+              <span
                 className={cn(
-                  "grid transition-all duration-300 ease-out",
-                  isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
+                  "block font-semibold leading-none text-foreground tabular-nums",
+                  hasLongMetric ? "text-xl sm:text-[24px]" : "text-2xl sm:text-[28px]",
                 )}
               >
-                <div className="overflow-hidden">
-                  <p className="mt-4 text-xs leading-5 text-foreground/75 sm:text-[13px]">
-                    {card.description}
-                  </p>
-                </div>
-              </div>
+                {card.metric}
+              </span>
+              <h2 className={cn("text-sm font-semibold leading-snug text-foreground sm:text-[15px]", lang === "ar" && "font-thmanyah-serif-text")}>
+                {card.title}
+              </h2>
             </div>
           )
         })}
@@ -1311,8 +1269,8 @@ function BuildShowcaseCard({
       style={{ transitionDelay: "600ms" }}
     >
       <div className="overflow-hidden rounded-lg bg-muted">
-        <div className="grid grid-cols-1 md:grid-cols-2">
-          <div className="flex min-h-[380px] flex-col p-4 sm:min-h-[460px] sm:p-5 md:min-h-[520px]">
+        <div className="grid grid-cols-1 md:h-[520px] md:grid-cols-2">
+          <div className="flex min-h-[380px] flex-col p-4 sm:min-h-[460px] sm:p-5 md:min-h-0 md:overflow-y-auto">
             <Badge
               variant="secondary"
               className="mb-4 w-fit rounded-full border-0 bg-background/80 px-2.5 py-1 text-[11px] font-medium text-foreground shadow-none"
@@ -1340,7 +1298,7 @@ function BuildShowcaseCard({
               ))}
             </div>
           </div>
-          <div className="relative min-h-[280px] overflow-hidden border-t border-background/60 md:min-h-full md:border-s">
+          <div className="relative min-h-[280px] overflow-hidden border-t border-background/60 md:h-full md:min-h-0 md:border-s md:border-t-0">
             {showcaseSlides.map((slide, index) => (
               <div
                 key={`${slide.imageSrc}-${index}`}
@@ -1398,6 +1356,35 @@ function ProjectsShowcaseCard({
   const projectImages = (lang === "ar" ? [...projectsCard.projects].reverse() : projectsCard.projects).flatMap((project) =>
     project.images.map((image) => ({ ...image, projectTitle: project.title })),
   )
+  const [selectedImage, setSelectedImage] = useState<(typeof projectImages)[number] | null>(null)
+  const [isLightboxVisible, setIsLightboxVisible] = useState(false)
+
+  useEffect(() => {
+    if (!selectedImage) return
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeImage()
+    }
+    window.addEventListener("keydown", handleEscape)
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener("keydown", handleEscape)
+    }
+  }, [selectedImage])
+
+  const openImage = (image: (typeof projectImages)[number]) => {
+    setSelectedImage(image)
+    window.requestAnimationFrame(() => setIsLightboxVisible(true))
+  }
+
+  const closeImage = () => {
+    setIsLightboxVisible(false)
+    window.setTimeout(() => setSelectedImage(null), 180)
+  }
+
   if (!projectImages.length) return null
 
   return (
@@ -1412,26 +1399,62 @@ function ProjectsShowcaseCard({
         <div
           className={cn(
             "grid gap-3 sm:gap-4",
-            uniformGrid ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-flow-dense grid-cols-2 auto-rows-[70px] sm:auto-rows-[82px]",
+            uniformGrid ? "grid-cols-1 sm:grid-cols-2" : "grid-flow-dense grid-cols-2 auto-rows-[70px] sm:auto-rows-[82px]",
           )}
           dir="ltr"
           aria-label={lang === "ar" ? "صور المشاريع" : "Project images"}
         >
           {projectImages.map((image, imageIndex) => (
-                <div
+                <button
+                  type="button"
                   key={`${image.projectTitle}-${image.src}-${imageIndex}`}
+                  onClick={() => openImage(image)}
+                  aria-label={lang === "ar" ? `عرض صورة ${image.projectTitle}` : `Open ${image.projectTitle} image`}
                   className={cn(
-                    "group relative overflow-hidden rounded-lg bg-muted",
+                    "group relative min-w-0 cursor-zoom-in overflow-hidden rounded-lg bg-muted text-start transition-transform duration-200 ease-out hover:z-10 hover:scale-[1.015] focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2",
                     uniformGrid
                       ? "aspect-[4/3]"
                       : cn("row-span-4 min-h-[150px] sm:min-h-[210px]", imageIndex % 6 === 0 ? "row-span-6" : imageIndex % 4 === 0 ? "row-span-5" : imageIndex % 3 === 0 ? "row-span-3" : "row-span-4"),
                   )}
                 >
-                  <Image src={image.src} alt={image.alt} fill draggable={false} className="object-cover" sizes={uniformGrid ? "(min-width: 1024px) 350px, (min-width: 640px) 50vw, 100vw" : "(min-width: 1024px) 38vw, 50vw"} />
-                </div>
+                  <Image src={image.src} alt={image.alt} fill draggable={false} className="object-cover" sizes={uniformGrid ? "(min-width: 640px) 420px, 100vw" : "(min-width: 1024px) 38vw, 50vw"} />
+                </button>
               ))}
         </div>
       </div>
+      {selectedImage && createPortal(
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={lang === "ar" ? `معاينة صورة ${selectedImage.projectTitle}` : `${selectedImage.projectTitle} image preview`}
+          onClick={closeImage}
+          className={cn(
+            "fixed inset-0 z-[100] flex cursor-zoom-out items-center justify-center bg-black/85 p-4 transition-opacity duration-200",
+            isLightboxVisible ? "opacity-100" : "opacity-0",
+          )}
+        >
+          <div
+            onClick={(event) => event.stopPropagation()}
+            className={cn(
+              "relative flex max-h-[92vh] w-[min(92vw,72rem)] cursor-default flex-col overflow-hidden rounded-lg bg-background transition-[transform,opacity] duration-200 ease-out",
+              isLightboxVisible ? "scale-100 opacity-100" : "scale-[0.97] opacity-0",
+            )}
+          >
+            <button
+              type="button"
+              onClick={closeImage}
+              className="absolute end-3 top-3 z-10 grid h-8 w-8 place-items-center rounded-full bg-background/85 text-foreground backdrop-blur-sm transition-colors hover:bg-background"
+              aria-label={lang === "ar" ? "إغلاق المعاينة" : "Close preview"}
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <div className="relative aspect-[4/3] max-h-[92vh] w-full">
+              <Image src={selectedImage.src} alt={selectedImage.alt} fill priority className="object-contain" sizes="92vw" />
+            </div>
+          </div>
+        </div>,
+        document.body,
+      )}
     </section>
   )
 }
@@ -1486,7 +1509,7 @@ function TestimonialCtaSection({
 
         {children}
 
-        <div className="cta-grid-surface relative isolate flex min-h-[220px] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-muted p-7 text-center sm:min-h-[260px] sm:p-10">
+        <div className="flex min-h-[220px] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-muted p-7 text-center sm:min-h-[260px] sm:p-10">
           <div className="relative z-10 flex flex-col items-center gap-4">
             <h3 className={cn("text-xl font-normal leading-relaxed tracking-tight text-foreground sm:text-2xl", lang === "ar" && "font-thmanyah-serif-text")}>
               {testimonialCta.ctaTitle}

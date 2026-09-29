@@ -25,6 +25,22 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
+// Runs before next-themes so the first paint uses Amman's daytime when
+// the visitor has not chosen a theme. An automatic choice is refreshed on reload.
+const ammanThemeScript = `
+  try {
+    var savedTheme = localStorage.getItem('theme');
+    var automatic = localStorage.getItem('amman-theme-auto') === 'true';
+    if (!savedTheme || automatic) {
+      var hour = Number(new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Asia/Amman', hour: 'numeric', hourCycle: 'h23'
+      }).format(new Date()));
+      localStorage.setItem('theme', hour >= 6 && hour < 18 ? 'light' : 'dark');
+      localStorage.setItem('amman-theme-auto', 'true');
+    }
+  } catch (_) {}
+`
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,6 +49,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: ammanThemeScript }} />
         <link rel="icon" href="/Anas%20Hamad.png" sizes="any" />
         <link rel="icon" href="/Anas%20Hamad.png" type="image/png" />
         <link rel="shortcut icon" href="/Anas%20Hamad.png" />
