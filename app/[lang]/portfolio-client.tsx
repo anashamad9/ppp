@@ -68,6 +68,8 @@ import {
   SiWhatsapp,
 } from "@icons-pack/react-simple-icons"
 
+const nameTypography = "min-w-0 text-lg font-semibold tracking-tight text-foreground sm:text-2xl"
+
 // Types
 type Dictionary = Awaited<ReturnType<typeof getDictionary>>
 type CoreStackCategory = {
@@ -390,7 +392,7 @@ function Header({
         {!compact && (
           <div className="flex min-w-0 flex-col items-start gap-0">
             <div className="flex min-w-0 flex-wrap items-center gap-1.5">
-              <h1 className={cn("min-w-0 text-lg font-semibold tracking-tight text-foreground sm:text-2xl", lang === "ar" && "font-thmanyah-serif-text")}>
+              <h1 className={cn(nameTypography, lang === "ar" && "font-thmanyah-serif-text")}>
                 {dict.header.name}
               </h1>
               <TooltipProvider delayDuration={100}>
@@ -533,8 +535,11 @@ function Description({
       const underlineMatch = part.match(/^<u>(.*?)<\/u>$/)
       if (underlineMatch) {
         return interactive ? (
-          <span key={`u-${index}`} className={emphasisClassName}>
-            {underlineMatch[1]}
+          <span
+            key={`u-${index}`}
+            className={cn(emphasisClassName, lang === "ar" && underlineMatch[1] === "أنس" && "font-thmanyah-serif-text tracking-tight")}
+          >
+            {lang === "ar" && underlineMatch[1] === "أنس" ? dict.header.name.split(" ")[0] : underlineMatch[1]}
           </span>
         ) : (
           <u key={`u-${index}`}>{underlineMatch[1]}</u>

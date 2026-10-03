@@ -151,6 +151,10 @@ export function TopControls({ lang, embedded = false }: TopControlsProps) {
     </nav>
   )
 
+  if (pathname === "/card" || pathname?.endsWith("/card")) {
+    return null
+  }
+
   if (!mounted) {
     return null
   }
