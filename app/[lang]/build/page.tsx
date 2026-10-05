@@ -286,9 +286,32 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
             description: "Turned a repetitive operational process into an automated system that saved one client more than four hours every day.",
           },
         ]
+  const galleryImages = [
+    "ezgif-8c16a00faa31ff7f.gif",
+    "Group 195.png",
+    "Group 196.png",
+    "Group 197.png",
+    "Group 198.png",
+    "Group 199.png",
+    "ezgif-83e41f1bc1b5ca40.gif",
+    "Group 200.png",
+    "Group 201.png",
+    "Group 202.png",
+    "Group 203.png",
+    "Group 204.png",
+    "Group 205.png",
+    "Group 206.png",
+    "Group 207.png",
+    "Group 208.png",
+  ].map((filename, index) => ({
+    src: `/mew%20images/${encodeURIComponent(filename)}`,
+    alt: lang === "ar" ? `صورة من معرض الأعمال ${index + 1}` : `Portfolio gallery image ${index + 1}`,
+  }))
+
   const projectsCard =
     lang === "ar"
       ? {
+          galleryImages,
           projects: [
             {
               tag: "أتمت",
@@ -364,6 +387,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
           ],
         }
       : {
+          galleryImages,
           projects: [
             {
               tag: "Atmet",

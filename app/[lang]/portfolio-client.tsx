@@ -57,7 +57,6 @@ import {
   SiLangchain,
   SiNextdotjs,
   SiNodedotjs,
-  SiOpenai,
   SiPostgresql,
   SiPytorch,
   SiPython,
@@ -101,6 +100,7 @@ type ProjectItem = {
 }
 type ProjectsCard = {
   projects: ProjectItem[]
+  galleryImages?: ProjectImage[]
 }
 type TestimonialCtaCard = {
   quoteTag: string
@@ -1048,7 +1048,6 @@ const techLogoIcons: Record<string, { Icon: SimpleIconComponent; color: "default
   LangChain: { Icon: SiLangchain, color: "default" },
   "Next.js": { Icon: SiNextdotjs, color: "currentColor" },
   "Node.js": { Icon: SiNodedotjs, color: "default" },
-  OpenAI: { Icon: SiOpenai, color: "currentColor" },
   PostgreSQL: { Icon: SiPostgresql, color: "default" },
   PyTorch: { Icon: SiPytorch, color: "default" },
   Python: { Icon: SiPython, color: "default" },
@@ -1358,9 +1357,11 @@ function ProjectsShowcaseCard({
   lang: Locale
   uniformGrid?: boolean
 }) {
-  const projectImages = (lang === "ar" ? [...projectsCard.projects].reverse() : projectsCard.projects).flatMap((project) =>
-    project.images.map((image) => ({ ...image, projectTitle: project.title })),
-  )
+  const projectImages = projectsCard.galleryImages
+    ? projectsCard.galleryImages.map((image) => ({ ...image, projectTitle: lang === "ar" ? "معرض الأعمال" : "Portfolio gallery" }))
+    : (lang === "ar" ? [...projectsCard.projects].reverse() : projectsCard.projects).flatMap((project) =>
+        project.images.map((image) => ({ ...image, projectTitle: project.title })),
+      )
   const [selectedImage, setSelectedImage] = useState<(typeof projectImages)[number] | null>(null)
   const [isLightboxVisible, setIsLightboxVisible] = useState(false)
 
@@ -1395,7 +1396,7 @@ function ProjectsShowcaseCard({
   return (
     <section
       id="projects"
-      className={`scroll-mt-24 transition-all duration-500 ease-out ${
+      className={`scroll-mt-24 transition-all duration-500 ease-out lg:relative lg:left-1/2 lg:w-[min(calc(100vw-4rem),1120px)] lg:-translate-x-1/2 ${
         isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
       }`}
       style={{ transitionDelay: "650ms" }}
@@ -1404,7 +1405,7 @@ function ProjectsShowcaseCard({
         <div
           className={cn(
             "grid gap-3 sm:gap-4",
-            uniformGrid ? "grid-cols-1 sm:grid-cols-2" : "grid-flow-dense grid-cols-2 auto-rows-[70px] sm:auto-rows-[82px]",
+            uniformGrid ? "grid-cols-3" : "grid-flow-dense grid-cols-2 auto-rows-[70px] sm:auto-rows-[82px]",
           )}
           dir="ltr"
           aria-label={lang === "ar" ? "صور المشاريع" : "Project images"}
@@ -1418,11 +1419,11 @@ function ProjectsShowcaseCard({
                   className={cn(
                     "group relative min-w-0 cursor-zoom-in overflow-hidden rounded-lg bg-muted text-start transition-transform duration-200 ease-out hover:z-10 hover:scale-[1.015] focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2",
                     uniformGrid
-                      ? "aspect-[4/3]"
+                      ? "aspect-square"
                       : cn("row-span-4 min-h-[150px] sm:min-h-[210px]", imageIndex % 6 === 0 ? "row-span-6" : imageIndex % 4 === 0 ? "row-span-5" : imageIndex % 3 === 0 ? "row-span-3" : "row-span-4"),
                   )}
                 >
-                  <Image src={image.src} alt={image.alt} fill draggable={false} className="object-cover" sizes={uniformGrid ? "(min-width: 640px) 420px, 100vw" : "(min-width: 1024px) 38vw, 50vw"} />
+                  <Image src={image.src} alt={image.alt} fill draggable={false} unoptimized={image.src.endsWith(".gif")} className="object-cover" sizes={uniformGrid ? "(min-width: 1024px) 360px, 33vw" : "(min-width: 1024px) 38vw, 50vw"} />
                 </button>
               ))}
         </div>
@@ -1441,7 +1442,7 @@ function ProjectsShowcaseCard({
           <div
             onClick={(event) => event.stopPropagation()}
             className={cn(
-              "relative flex max-h-[92vh] w-[min(92vw,72rem)] cursor-default flex-col overflow-hidden rounded-lg bg-background transition-[transform,opacity] duration-200 ease-out",
+              "relative flex aspect-square w-[min(92vw,48rem)] cursor-default flex-col overflow-hidden rounded-lg bg-background transition-[transform,opacity] duration-200 ease-out",
               isLightboxVisible ? "scale-100 opacity-100" : "scale-[0.97] opacity-0",
             )}
           >
@@ -1453,8 +1454,8 @@ function ProjectsShowcaseCard({
             >
               <X className="h-4 w-4" />
             </button>
-            <div className="relative aspect-[4/3] max-h-[92vh] w-full">
-              <Image src={selectedImage.src} alt={selectedImage.alt} fill priority className="object-contain" sizes="92vw" />
+            <div className="relative aspect-square w-full">
+              <Image src={selectedImage.src} alt={selectedImage.alt} fill priority unoptimized={selectedImage.src.endsWith(".gif")} className="object-contain" sizes="92vw" />
             </div>
           </div>
         </div>,
