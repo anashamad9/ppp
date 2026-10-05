@@ -1396,7 +1396,7 @@ function ProjectsShowcaseCard({
   return (
     <section
       id="projects"
-      className={`scroll-mt-24 transition-all duration-500 ease-out lg:relative lg:left-1/2 lg:w-[min(calc(100vw-4rem),1120px)] lg:-translate-x-1/2 ${
+      className={`portfolio-gallery scroll-mt-24 transition-all duration-500 ease-out ${
         isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
       }`}
       style={{ transitionDelay: "650ms" }}
@@ -1410,7 +1410,10 @@ function ProjectsShowcaseCard({
           dir="ltr"
           aria-label={lang === "ar" ? "صور المشاريع" : "Project images"}
         >
-          {projectImages.map((image, imageIndex) => (
+          {projectImages.map((image, imageIndex) => {
+            const isVideo = image.src.endsWith(".mp4")
+
+            return (
                 <button
                   type="button"
                   key={`${image.projectTitle}-${image.src}-${imageIndex}`}
@@ -1423,9 +1426,22 @@ function ProjectsShowcaseCard({
                       : cn("row-span-4 min-h-[150px] sm:min-h-[210px]", imageIndex % 6 === 0 ? "row-span-6" : imageIndex % 4 === 0 ? "row-span-5" : imageIndex % 3 === 0 ? "row-span-3" : "row-span-4"),
                   )}
                 >
-                  <Image src={image.src} alt={image.alt} fill draggable={false} unoptimized={image.src.endsWith(".gif")} className="object-cover" sizes={uniformGrid ? "(min-width: 1024px) 360px, 33vw" : "(min-width: 1024px) 38vw, 50vw"} />
+                  {isVideo ? (
+                    <video
+                      src={image.src}
+                      aria-label={image.alt}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                  ) : (
+                    <Image src={image.src} alt={image.alt} fill draggable={false} unoptimized={image.src.endsWith(".gif")} className="object-cover" sizes={uniformGrid ? "(min-width: 1024px) 360px, 33vw" : "(min-width: 1024px) 38vw, 50vw"} />
+                  )}
                 </button>
-              ))}
+              )})}
         </div>
       </div>
       {selectedImage && createPortal(
@@ -1455,7 +1471,11 @@ function ProjectsShowcaseCard({
               <X className="h-4 w-4" />
             </button>
             <div className="relative aspect-square w-full">
-              <Image src={selectedImage.src} alt={selectedImage.alt} fill priority unoptimized={selectedImage.src.endsWith(".gif")} className="object-contain" sizes="92vw" />
+              {selectedImage.src.endsWith(".mp4") ? (
+                <video src={selectedImage.src} aria-label={selectedImage.alt} autoPlay muted loop playsInline controls className="h-full w-full object-contain" />
+              ) : (
+                <Image src={selectedImage.src} alt={selectedImage.alt} fill priority unoptimized={selectedImage.src.endsWith(".gif")} className="object-contain" sizes="92vw" />
+              )}
             </div>
           </div>
         </div>,

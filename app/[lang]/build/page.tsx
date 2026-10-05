@@ -287,13 +287,13 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
           },
         ]
   const galleryImages = [
-    "ezgif-8c16a00faa31ff7f.gif",
+    "ezgif-8c16a00faa31ff7f.mp4",
     "Group 195.png",
     "Group 196.png",
     "Group 197.png",
     "Group 198.png",
     "Group 199.png",
-    "ezgif-83e41f1bc1b5ca40.gif",
+    "ezgif-83e41f1bc1b5ca40.mp4",
     "Group 200.png",
     "Group 201.png",
     "Group 202.png",
