@@ -1394,9 +1394,10 @@ function ProjectsShowcaseCard({
   if (!projectImages.length) return null
 
   return (
+    <div className="portfolio-gallery-bleed" dir="ltr">
     <section
       id="projects"
-      className={`portfolio-gallery scroll-mt-24 transition-all duration-500 ease-out ${
+      className={`mx-auto w-[calc(100vw-2rem)] max-w-[1120px] scroll-mt-24 transition-all duration-500 ease-out sm:w-[calc(100vw-3rem)] lg:w-[calc(100vw-4rem)] ${
         isLoaded ? "translate-y-0 opacity-100 blur-none" : "translate-y-2 opacity-0 blur-[4px]"
       }`}
       style={{ transitionDelay: "650ms" }}
@@ -1482,6 +1483,7 @@ function ProjectsShowcaseCard({
         document.body,
       )}
     </section>
+    </div>
   )
 }
 

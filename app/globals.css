@@ -151,15 +151,11 @@ html[data-theme-switching="true"] .avatar-flip-card {
   transform: rotateY(0deg) !important;
 }
 
-/* The portfolio gallery deliberately grows wider than its 840px content card
-   on desktop. Physical left margin keeps that overflow centered in both LTR
-   and RTL; auto logical margins would anchor it to the RTL start edge. */
-@media (min-width: 1024px) {
-  .portfolio-gallery {
-    width: min(calc(100vw - 4rem), 1120px);
-    margin-left: calc((100% - min(calc(100vw - 4rem), 1120px)) / 2);
-    margin-right: 0;
-  }
+/* Escape the narrow text card before centering the wider portfolio gallery.
+   The fixed full-viewport wrapper avoids RTL's over-constrained margin rules. */
+.portfolio-gallery-bleed {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
 }
 
 /* Ensure Arabic text displays correctly */
