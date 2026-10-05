@@ -152,10 +152,10 @@ html[data-theme-switching="true"] .avatar-flip-card {
 }
 
 /* Escape the narrow text card before centering the wider portfolio gallery.
-   The fixed full-viewport wrapper avoids RTL's over-constrained margin rules. */
+   The wrapper is a flex child, so self-center is needed to override RTL's
+   default right-edge cross-axis alignment. */
 .portfolio-gallery-bleed {
   width: 100vw;
-  margin-left: calc(50% - 50vw);
 }
 
 /* Ensure Arabic text displays correctly */
