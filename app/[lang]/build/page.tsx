@@ -297,7 +297,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
     "Group 200.png",
     "Group 201.png",
     "Group 202.png",
-    "Group 203.png",
+    "ee.png",
     "Group 204.png",
     "Group 205.png",
     "Group 206.png",
