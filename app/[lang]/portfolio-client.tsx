@@ -1273,7 +1273,7 @@ function BuildShowcaseCard({
       style={{ transitionDelay: "600ms" }}
     >
       <div className="overflow-hidden rounded-lg bg-muted">
-        <div className="grid grid-cols-1 md:h-[520px] md:grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-2">
           <div className="flex min-h-[380px] flex-col p-4 sm:min-h-[460px] sm:p-5 md:min-h-0 md:overflow-y-auto">
             <Badge
               variant="secondary"
@@ -1302,7 +1302,7 @@ function BuildShowcaseCard({
               ))}
             </div>
           </div>
-          <div className="relative min-h-[280px] overflow-hidden border-t border-background/60 md:h-full md:min-h-0 md:border-s md:border-t-0">
+          <div className="relative aspect-square overflow-hidden border-t border-background/60 md:border-s md:border-t-0">
             {showcaseSlides.map((slide, index) => (
               <div
                 key={`${slide.imageSrc}-${index}`}
@@ -1315,7 +1315,7 @@ function BuildShowcaseCard({
                   src={slide.imageSrc}
                   alt={slide.imageAlt}
                   fill
-                  className="object-cover"
+                  className="object-cover object-center"
                   sizes="(min-width: 768px) 35vw, 100vw"
                 />
               </div>
@@ -1436,10 +1436,10 @@ function ProjectsShowcaseCard({
                       loop
                       playsInline
                       preload="metadata"
-                      className="absolute inset-0 h-full w-full object-cover"
+                      className="absolute inset-0 h-full w-full object-cover object-center"
                     />
                   ) : (
-                    <Image src={image.src} alt={image.alt} fill draggable={false} unoptimized={image.src.endsWith(".gif")} className="object-cover" sizes={uniformGrid ? "(min-width: 1024px) 360px, 33vw" : "(min-width: 1024px) 38vw, 50vw"} />
+                    <Image src={image.src} alt={image.alt} fill draggable={false} unoptimized={image.src.endsWith(".gif")} className="object-cover object-center" sizes={uniformGrid ? "(min-width: 1024px) 360px, 33vw" : "(min-width: 1024px) 38vw, 50vw"} />
                   )}
                 </button>
               )})}
