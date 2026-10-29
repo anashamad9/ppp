@@ -2,6 +2,10 @@
 
 # dependencies
 /node_modules
+/.pnpm-store/
+
+# Original design assets; serve optimized copies from public instead.
+/source-assets/
 
 # next.js
 /.next/

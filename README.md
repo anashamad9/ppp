@@ -1,5 +1,13 @@
 # Simple Portfolio
 
+## Local development
+
+Use npm (`npm ci`, then `npm run dev`), matching the CI workflow. Avoid mixing npm and pnpm installs in the same `node_modules` folder.
+
+`.next` contains generated build output and caches and can be removed when reclaiming disk space. The next development session or build recreates it.
+
+Keep original design assets in the local, ignored `source-assets/` folder and serve resized, compressed copies from `public/`. Back up originals separately; they are not included in Git or deployments.
+
 *Automatically synced with your [v0.dev](https://v0.dev) deployments*
 
 [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/anashamad9s-projects/v0-simple-portfolio)

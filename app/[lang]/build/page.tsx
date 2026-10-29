@@ -136,7 +136,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
             title: "من الفكرة الأولى إلى الذكاء الذي يقف خلفها.",
             description: "لا أتعامل مع التصميم والتطوير والذكاء الاصطناعي كخدمات منفصلة تُجمع في نهاية المشروع. أبني المنتج كتجربة واحدة متكاملة: من فهم المشكلة وتصميم طريقة استخدامها، إلى تطوير بنيته وبناء الأنظمة الذكية التي تمنحه قدراته الحقيقية.",
             badges: ["استراتيجية المنتج", "تصميم تجربة المستخدم", "التطوير", "أنظمة الذكاء الاصطناعي"],
-            imageSrc: "/first-card/5th image.png",
+            imageSrc: "/first-card/5th image.webp",
             imageAlt: "معاينة لتجربة منتج رقمية متكاملة",
           },
           {
@@ -186,7 +186,7 @@ export default async function BuildPage({ params }: { params: Promise<{ lang: st
             title: "From the first idea to the intelligence behind it.",
             description: "I do not treat design, development, and AI as separate services that get assembled at the end of a project. I build the product as one complete experience: from understanding the problem and designing how it should be used, to developing its structure and building the intelligent systems that give it real capabilities.",
             badges: ["Product Strategy", "UX Design", "Development", "AI Systems"],
-            imageSrc: "/first-card/5th image.png",
+            imageSrc: "/first-card/5th image.webp",
             imageAlt: "Integrated digital product experience preview",
           },
           {
