@@ -180,6 +180,17 @@
   ],
   "articles": [
     {
+      "id": 10,
+      "enabled": true,
+      "topic": "Why I Built Atmet Brain, and How Its Core Learns from Company Work",
+      "date": "October 29, 2026",
+      "readTime": "8 min read",
+      "coverImage": "/articles/company-brain-cover.png",
+      "ogImage": "/articles/company-brain-cover.png",
+      "coverAlt": "Connected information sources on a dark background",
+      "content": ""
+    },
+    {
       "id": 9,
       "enabled": true,
       "topic": "Building a Company Brain Before Building AI Agents",

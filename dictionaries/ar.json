@@ -180,6 +180,17 @@
   ],
   "articles": [
     {
+      "id": 10,
+      "enabled": true,
+      "topic": "لماذا بنيت Atmet Brain، وكيف تتعلم نواته من عمل الشركة؟",
+      "date": "29 أكتوبر 2026",
+      "readTime": "قراءة 8 دقائق",
+      "coverImage": "/articles/company-brain-cover.png",
+      "ogImage": "/articles/company-brain-cover.png",
+      "coverAlt": "مصادر ومعلومات مترابطة على خلفية داكنة",
+      "content": ""
+    },
+    {
       "id": 9,
       "enabled": true,
       "topic": "قواعد المعرفة",
