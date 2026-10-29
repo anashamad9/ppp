@@ -113,7 +113,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleItemListJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
-      <PortfolioClient dict={dict} lang={lang} hideExperience hideTechStack hideArticles compactHome directContactHref={`mailto:${SITE_EMAIL}`} />
+      <PortfolioClient dict={dict} lang={lang} avatarSrc="/mew%20images/IMG_0571%20%E2%80%94%20PNG.png" hideExperience hideTechStack hideArticles compactHome directContactHref={`mailto:${SITE_EMAIL}`} />
     </>
   )
 }
