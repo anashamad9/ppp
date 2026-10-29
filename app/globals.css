@@ -149,6 +149,13 @@ body [dir="rtl"] .font-thmanyah-serif-text * {
 
 html[data-theme-switching="true"] .avatar-flip-card {
   transform: rotateY(0deg) !important;
+  transition: none !important;
+}
+
+/* The theme reveal's blur flattens 3D layers in its snapshot. Explicitly hide
+   the reverse face so it cannot paint over the portrait during the reveal. */
+html[data-theme-switching="true"] .avatar-flip-card > img:last-child {
+  visibility: hidden !important;
 }
 
 /* Escape the narrow text card before centering the wider portfolio gallery.
