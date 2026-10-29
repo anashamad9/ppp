@@ -782,7 +782,7 @@ function CTAButtons({
         )}
         <Button
           variant="outline"
-          className="h-[32px] w-auto rounded-[99px] border-0 bg-muted px-3 py-1 hover:bg-muted/80"
+          className="h-[32px] w-auto rounded-[99px] border-0 bg-muted px-3 py-1 text-foreground hover:bg-muted/80 hover:text-foreground"
           onClick={() => {
             if (onShowArticles) {
               onShowArticles()
@@ -796,7 +796,7 @@ function CTAButtons({
           }}
           type="button"
         >
-          <span className="flex items-center gap-1.5">
+          <span className="flex items-center gap-1.5 text-foreground">
             <span className="text-[13px] font-normal leading-5">{actionLabel}</span>
             <ActionIcon className="h-3.5 w-3.5" />
           </span>
