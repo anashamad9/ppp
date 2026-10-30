@@ -10,7 +10,6 @@ import { ArrowLeft, ArrowRight, Calendar, Clock, LoaderCircle, LockKeyhole } fro
 import type { Locale } from "@/i18n-config"
 import { ArticleFooter } from "@/components/article-footer"
 import { ArticleChartBlock } from "./article-charts"
-import { BrainLearningChart } from "./brain-learning-charts"
 import type { BundledLanguage } from "@/components/ui/shadcn-io/code-block"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
@@ -197,10 +196,7 @@ export default function ArticleDetailClient({
       const chartMatch = segment.trim().match(/^\[chart:([a-z0-9-]+)\]$/i)
       if (chartMatch) {
         if (article.id === 11 && chartMatch[1].startsWith("harness-")) {
-          return <HarnessArticleChart key={`harness-${index}`} chartKey={chartMatch[1].slice(8)} />
-        }
-        if (article.id === 10 && chartMatch[1].startsWith("brain-")) {
-          return <BrainLearningChart key={`chart-${chartMatch[1]}-${index}`} id={chartMatch[1]} lang={lang} />
+          return <HarnessArticleChart key={`harness-${index}`} chartKey={chartMatch[1].slice(8)} lang={lang} />
         }
         return <ArticleChartBlock key={`chart-${chartMatch[1]}-${index}`} id={chartMatch[1]} lang={lang} />
       }
