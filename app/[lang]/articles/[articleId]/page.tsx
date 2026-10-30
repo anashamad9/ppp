@@ -101,7 +101,9 @@ export async function generateMetadata({ params }: ArticleParams): Promise<Metad
     },
     alternates: {
       canonical: canonicalPath,
-      languages: {
+      languages: article.id === 11 ? {
+        ar: `/ar/articles/${articleId}`,
+      } : {
         en: `/en/articles/${articleId}`,
         ar: `/ar/articles/${articleId}`,
       },

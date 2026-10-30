@@ -1,5 +1,7 @@
 "use client"
 
+import {HarnessArticleChart} from './harness-article-charts'
+
 import { isValidElement, useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -194,6 +196,9 @@ export default function ArticleDetailClient({
     return segments.map((segment, index) => {
       const chartMatch = segment.trim().match(/^\[chart:([a-z0-9-]+)\]$/i)
       if (chartMatch) {
+        if (article.id === 11 && chartMatch[1].startsWith("harness-")) {
+          return <HarnessArticleChart key={`harness-${index}`} chartKey={chartMatch[1].slice(8)} />
+        }
         if (article.id === 10 && chartMatch[1].startsWith("brain-")) {
           return <BrainLearningChart key={`chart-${chartMatch[1]}-${index}`} id={chartMatch[1]} lang={lang} />
         }

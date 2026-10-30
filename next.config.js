@@ -17,7 +17,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   // Add this to ensure static files are properly handled
   trailingSlash: false,

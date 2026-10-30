@@ -581,7 +581,7 @@ function RelianceAccuracyChart({ lang }: { lang: Locale }) {
           cursor={{ strokeDasharray: "4 4" }}
           content={
             <ChartTooltipContent
-              formatter={(value: number | string) => formatPercentFromRatio(lang, Number(value))}
+              formatter={(value) => formatPercentFromRatio(lang, Number(value))}
             />
           }
         />
@@ -753,8 +753,8 @@ function MediatorHeatmap({ lang }: { lang: Locale }) {
           {values.map((row) => (
             <tr key={row.category} className="border-t border-border/60">
               <td className="p-2 font-medium text-foreground">{row.category}</td>
-              {["Exposure", "Availability", "Wait time", "Price"].map((key) => {
-                const value = (row as Record<string, number>)[key]
+              {(["Exposure", "Availability", "Wait time", "Price"] as const).map((key) => {
+                const value = row[key]
                 return (
                   <td key={key} className="p-1">
                     <div
@@ -820,7 +820,7 @@ function UtilityAccuracyChart({ lang }: { lang: Locale }) {
           cursor={{ strokeDasharray: "4 4" }}
           content={
             <ChartTooltipContent
-              formatter={(value: number | string, name) => {
+              formatter={(value, name) => {
                 const numericValue = Number(value)
                 if (!Number.isFinite(numericValue)) {
                   return value
@@ -956,7 +956,7 @@ function FriesOscillationChart({ lang }: { lang: Locale }) {
         <ChartTooltip
           content={
             <ChartTooltipContent
-              formatter={(value: number | string) => formatPercent(lang, Number(value) * 100, 0)}
+              formatter={(value) => formatPercent(lang, Number(value) * 100, 0)}
             />
           }
         />
@@ -1003,7 +1003,7 @@ function FeatureContributionChart({ lang }: { lang: Locale }) {
         <ChartTooltip
           content={
             <ChartTooltipContent
-              formatter={(value: number | string) => formatPercentFromRatio(lang, Number(value))}
+              formatter={(value) => formatPercentFromRatio(lang, Number(value))}
             />
           }
         />
@@ -1075,7 +1075,7 @@ function RelianceTuningChart({ lang }: { lang: Locale }) {
         <ChartTooltip
           content={
             <ChartTooltipContent
-              formatter={(value: number | string) => formatPercentFromRatio(lang, Number(value))}
+              formatter={(value) => formatPercentFromRatio(lang, Number(value))}
             />
           }
         />
@@ -1128,7 +1128,7 @@ function GuardrailOscillationChart({ lang }: { lang: Locale }) {
         <ChartTooltip
           content={
             <ChartTooltipContent
-              formatter={(value: number | string) => formatPercent(lang, Number(value) * 100, 0)}
+              formatter={(value) => formatPercent(lang, Number(value) * 100, 0)}
             />
           }
         />
@@ -1191,7 +1191,7 @@ function AccuracyVsRelianceChart({ lang }: { lang: Locale }) {
         <ChartTooltip
           content={
             <ChartTooltipContent
-              formatter={(value: number | string) => formatPercent(lang, Number(value))}
+              formatter={(value) => formatPercent(lang, Number(value))}
             />
           }
         />
@@ -1426,7 +1426,7 @@ function ConcentrationEngagementChart({ lang }: { lang: Locale }) {
         <ChartTooltip
           content={
             <ChartTooltipContent
-              formatter={(value: number | string, name) => {
+              formatter={(value, name) => {
                 const numericValue = Number(value)
                 if (name === "ctr") {
                   return formatPercent(lang, numericValue, 1)
@@ -1532,7 +1532,7 @@ function CreditStrategyShiftChart({ lang }: { lang: Locale }) {
         <ChartTooltip
           content={
             <ChartTooltipContent
-              formatter={(value: number | string) => wrapForLang(lang, formatValue(Number(value)))}
+              formatter={(value) => wrapForLang(lang, formatValue(Number(value)))}
               labelFormatter={(value) =>
                 formatUnitTick(lang, lang === "ar" ? "شهر" : "Month", Number(value), {
                   maximumFractionDigits: 0,
@@ -1627,7 +1627,7 @@ function FindingRStarChart({ lang }: { lang: Locale }) {
         <ChartTooltip
           content={
             <ChartTooltipContent
-              formatter={(value: number | string, name, payload) => {
+              formatter={(value, name, payload) => {
                 if (payload && (payload as any).payload?.key) {
                   const label = (payload as any).payload?.key
                   const percent = label.replace("exp", "")
@@ -1686,7 +1686,7 @@ function ExplorationTradeoffChart({ lang }: { lang: Locale }) {
         <ChartTooltip
           content={
             <ChartTooltipContent
-              formatter={(value: number | string) => formatPercent(lang, Number(value), 1)}
+              formatter={(value) => formatPercent(lang, Number(value), 1)}
             />
           }
         />
@@ -1764,7 +1764,7 @@ function RelianceBucketsChart({ lang }: { lang: Locale }) {
         <ChartTooltip
           content={
             <ChartTooltipContent
-              formatter={(value: number | string, _name, payload) => {
+              formatter={(value, _name, payload) => {
                 const numeric = Number(value)
                 if (payload && (payload as any).payload?.key) {
                   const key = (payload as any).payload?.key as string
@@ -1979,7 +1979,7 @@ function DistributionShiftChart({ lang }: { lang: Locale }) {
                   <ChartTooltip
                     content={
                       <ChartTooltipContent
-                        formatter={(value: number | string) => formatPercent(lang, Number(value), 1)}
+                        formatter={(value) => formatPercent(lang, Number(value), 1)}
                       />
                     }
                   />
@@ -2067,7 +2067,7 @@ function PolicyDistributionChangeChart({ lang }: { lang: Locale }) {
           <ChartTooltip
             content={
               <ChartTooltipContent
-                formatter={(value: number | string, name) =>
+                formatter={(value, name) =>
                   `${name === "before" ? (lang === "ar" ? "قبل" : "Before") : lang === "ar" ? "بعد" : "After"}: ${formatPercent(
                     lang,
                     Number(value) * 100,
@@ -2192,7 +2192,7 @@ function AdoptionGuardrailSeries({ lang }: { lang: Locale }) {
         <ChartTooltip
           content={
             <ChartTooltipContent
-              formatter={(value: number | string, name: string) => {
+              formatter={(value, name) => {
                 if (name === "adoption") {
                   return formatPercent(lang, Number(value) * 100, 1)
                 }
