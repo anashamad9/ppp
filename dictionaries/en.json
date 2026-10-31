@@ -24,10 +24,8 @@
   ],
   "description": [
     "Hi, I'm <u>Anas</u>.",
-    "An AI/ML engineer and product developer. I love turning ideas into useful products, especially with AI, automation, and data.",
-    "I work at [company:Digizag], where I automate daily work with Python and help lead the development of an internal product. Before interning at [company:Ahli Bank], I worked at [company:Onqoud] on AI products and data-analytics platforms for restaurants and cafés. I also interned at [company:ShAI], where I built ML models and fine-tuned local LLMs.",
-    "I'm currently building [company:Atmet], an AI coworker that connects with apps and build local agents. Another project close to me is <u>ElmLLM</u>, an open-source Arabic language model. My work has also won the <u>ICM AI Competition</u>, the <u>Best AI Project Fund Prize</u> at Princess Sumaya University, and <u>first place in NASA's 2024 AI Competition</u>.",
-    "You can reach me at [copy:hi@anashamad.com]<u>hi@anashamad.com</u> or find me on [social:X], [social:LinkedIn], [social:GitHub], and [social:Hugging Face]."
+    "I'm an AI/ML engineer and product developer who likes building and trying new things. I currently lead systems and technology development at [company:Digizag] and automate day-to-day tasks. I'm also building [company:Atmet], an experimental product. During university, I won several competitions, developed <u>ElmLLM</u>, an open-source Arabic language model, and received a funding award for [company:Onqoud], a business intelligence platform for restaurants.",
+    "I spend most of my time researching and experimenting, especially with AI and building products. I've worked with startups and founders, and I write from time to time. You can find my articles below. If you'd like to collaborate, reach me at [copy:hi@anashamad.com]<u>hi@anashamad.com</u>. You can also find me on [social:X], [social:LinkedIn], [social:GitHub], and [social:Hugging Face]."
   ],
   "cta": {
     "contact": "Contact me",

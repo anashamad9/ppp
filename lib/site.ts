@@ -22,7 +22,7 @@ export const SITE_NAME = "Anas Hamad"
 export const SITE_TITLE_EN = "Anas Hamad | AI & Machine Learning Engineer"
 export const SITE_TITLE_AR = "أنس حمد | مهندس ذكاء اصطناعي وتعلم آلة"
 export const SITE_DESCRIPTION_EN =
-  "Hey, I'm Anas. I build practical AI things, share what I learn, and write about real projects and experiments."
+  "Hi, I'm Anas. An AI/ML engineer and product developer working at Digizag and building Atmet. I also write about AI and products."
 export const SITE_DESCRIPTION_AR =
   "هلا، أنا أنس. مهندس AI/ML ومطوّر منتجات تقنية. أعمل في ديجيزاج وأبني أتمت، وأكتب عن الذكاء الاصطناعي والمنتجات."
 
