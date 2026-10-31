@@ -25,6 +25,7 @@ const markdownArticleFiles: Record<Locale, Record<number, string>> = {
 }
 
 type ArticlePreviewFields = {
+  description?: string
   coverImage?: string
   ogImage?: string
   coverAlt?: string
@@ -37,6 +38,7 @@ function extractMarkdownTitle(markdown: string): string | null {
 
 function parseMarkdownFrontmatter(markdown: string): {
   body: string
+  description?: string
   coverImage?: string
   ogImage?: string
   coverAlt?: string
@@ -72,6 +74,7 @@ function parseMarkdownFrontmatter(markdown: string): {
 
   return {
     body,
+    description: frontmatter.description,
     coverImage: frontmatter.coverImage || frontmatter.cover_image,
     ogImage: frontmatter.ogImage || frontmatter.og_image,
     coverAlt: frontmatter.coverAlt || frontmatter.cover_alt,
@@ -88,23 +91,21 @@ export const getDictionary = async (locale: Locale) => {
   }
 
   await Promise.all(
-    Object.entries(fileMap).map(async ([articleId, filename]) => {
-      const id = Number(articleId)
-      const article = dictionary.articles.find((item) => item.id === id) as
-        | (typeof dictionary.articles[number] & ArticlePreviewFields)
-        | undefined
-
-      if (!article) {
-        return
-      }
+    dictionary.articles.map(async (entry) => {
+      const article = entry as typeof entry & ArticlePreviewFields
+      // New articles use a predictable filename; historical paths stay valid.
+      const filename = fileMap[article.id] || `articles/${article.id}-${locale}.md`
 
       try {
         const markdownPath = path.join(process.cwd(), "public", filename)
         const rawMarkdown = await readFile(markdownPath, "utf8")
-        const { body, coverImage, ogImage, coverAlt } = parseMarkdownFrontmatter(rawMarkdown)
+        const { body, description, coverImage, ogImage, coverAlt } = parseMarkdownFrontmatter(rawMarkdown)
         const title = extractMarkdownTitle(body)
 
         article.content = body
+        if (description) {
+          article.description = description
+        }
         if (title) {
           article.topic = title
         }

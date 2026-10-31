@@ -23,6 +23,10 @@ const nextConfig = {
   trailingSlash: false,
   output: "standalone",
   outputFileTracingRoot: path.join(__dirname),
+  outputFileTracingIncludes: {
+    "/**/articles/*/*": ["./lib/fonts/*.ttf"],
+  },
+  serverExternalPackages: ["@resvg/resvg-js"],
 }
 
 module.exports = nextConfig

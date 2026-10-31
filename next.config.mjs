@@ -13,6 +13,10 @@ const nextConfig = {
   },
   output: "standalone",
   outputFileTracingRoot: path.join(process.cwd()),
+  outputFileTracingIncludes: {
+    "/**/articles/*/*": ["./lib/fonts/*.ttf"],
+  },
+  serverExternalPackages: ["@resvg/resvg-js"],
 }
 
 export default nextConfig

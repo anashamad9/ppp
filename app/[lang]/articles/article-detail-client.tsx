@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { ArrowLeft, ArrowRight, Calendar, Clock, LoaderCircle, LockKeyhole } from "lucide-react"
 import type { Locale } from "@/i18n-config"
+import { getArticleImagePath } from "@/lib/article-preview"
 import { ArticleFooter } from "@/components/article-footer"
 import { ArticleChartBlock } from "./article-charts"
 import type { BundledLanguage } from "@/components/ui/shadcn-io/code-block"
@@ -50,8 +51,7 @@ export default function ArticleDetailClient({
   const [isLoaded, setIsLoaded] = useState(false)
   const [navigatingArticleId, setNavigatingArticleId] = useState<number | null>(null)
   const isProtectedArticle = article.id === 6
-  const headerImage = article.coverImage || "/anas-logo.png"
-  const headerAlt = article.coverAlt || article.topic
+  const headerImage = getArticleImagePath(lang, article.id)
   const forceSnippetLtr = lang === "ar"
 
   useEffect(() => {
@@ -265,8 +265,8 @@ export default function ArticleDetailClient({
         <Card className="mx-auto mb-8 w-full max-w-[720px] border-none bg-transparent shadow-none sm:mb-16">
           <CardContent className="flex flex-col gap-6 p-0 sm:p-4">
             <div className="flex flex-col gap-4">
-              <div className="overflow-hidden rounded-3xl border border-border/50 bg-muted/20">
-                <img src={headerImage} alt={headerAlt} className="h-auto w-full object-cover" loading="eager" />
+              <div className="overflow-hidden rounded-md border border-border/50 bg-muted/20">
+                <img src={headerImage} alt={article.topic} width={1200} height={630} className="h-auto w-full" loading="eager" />
               </div>
               <h1 className="text-2xl font-bold leading-tight text-foreground sm:text-3xl">{article.topic}</h1>
               <div className="flex items-center gap-4 text-xs text-muted-foreground sm:text-sm">
@@ -299,8 +299,7 @@ export default function ArticleDetailClient({
                 </h2>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3">
                   {relatedArticles.map((related) => {
-                    const relatedImage = related.coverImage || "/anas-logo.png"
-                    const relatedAlt = related.coverAlt || related.topic
+                    const relatedImage = getArticleImagePath(lang, related.id)
                     const isNavigating = navigatingArticleId === related.id
 
                     return (
@@ -315,11 +314,13 @@ export default function ArticleDetailClient({
                         aria-busy={isNavigating}
                         className="group block min-w-0"
                       >
-                        <div className="aspect-[16/10] w-full overflow-hidden rounded-2xl bg-muted/20">
+                        <div className="aspect-[1200/630] w-full overflow-hidden rounded-md border border-border/50 bg-muted/20">
                           <img
                             src={relatedImage}
-                            alt={relatedAlt}
-                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                            alt={related.topic}
+                            width={1200}
+                            height={630}
+                            className="h-full w-full transition-transform duration-300 group-hover:scale-[1.02]"
                             loading="lazy"
                           />
                         </div>

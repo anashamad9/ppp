@@ -1,4 +1,5 @@
 ---
+description: Why I replaced a collection of Python scripts with reusable knowledge bases, and what changed when AI became part of my working environment.
 coverImage: /Article%203/article%204.png
 ogImage: /Article%203/article%204.png
 coverAlt: Transforming raw data into structured, reusable knowledge

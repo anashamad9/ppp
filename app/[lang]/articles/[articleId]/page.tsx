@@ -5,31 +5,13 @@ import ArticleDetailClient from "../article-detail-client"
 import { notFound } from "next/navigation"
 import { PERSON_NAME_EN, SITE_DESCRIPTION_AR, SITE_DESCRIPTION_EN, SITE_TITLE_AR, SITE_TITLE_EN } from "@/lib/site"
 import { getRequestSiteUrl } from "@/lib/site-url.server"
+import { getArticleDescription, getArticleImagePath } from "@/lib/article-preview"
 
 type ArticleParams = {
   params: Promise<{
     lang: string
     articleId: string
   }>
-}
-
-type ArticlePreviewFields = {
-  coverImage?: string
-  ogImage?: string
-  coverAlt?: string
-}
-
-const stripMarkdown = (value = "") =>
-  value
-    .replace(/^---[\s\S]*?---/m, "")
-    .replace(/```[\s\S]*?```/g, "")
-    .replace(/[#>*_`~\[\]()]/g, "")
-    .replace(/\s+/g, " ")
-    .trim()
-
-const getDescription = (content: string | undefined, fallback: string) => {
-  const plainText = stripMarkdown(content)
-  return plainText ? plainText.slice(0, 155) : fallback
 }
 
 const toIsoDate = (value: string | undefined) => {
@@ -57,11 +39,8 @@ export async function generateMetadata({ params }: ArticleParams): Promise<Metad
     }
   }
 
-  const articlePreview = article as typeof article & ArticlePreviewFields
-  const previewImage = articlePreview.ogImage || articlePreview.coverImage || "/anas-preview.png"
-  const previewImageUrl = previewImage.startsWith("http") ? previewImage : `${siteUrl}${previewImage}`
-  const previewImageAlt = articlePreview.coverAlt || article.topic
-  const description = getDescription(article.content, isArabic ? SITE_DESCRIPTION_AR : SITE_DESCRIPTION_EN)
+  const previewImageUrl = `${siteUrl}${getArticleImagePath(lang, article.id, "png")}`
+  const description = getArticleDescription(article)
   const canonicalPath = `/${lang}/articles/${articleId}`
   const publishedTime = toIsoDate(article.date)
 
@@ -88,8 +67,9 @@ export async function generateMetadata({ params }: ArticleParams): Promise<Metad
         {
           url: previewImageUrl,
           width: 1200,
-          height: 629,
-          alt: previewImageAlt,
+          height: 630,
+          type: "image/png",
+          alt: article.topic,
         },
       ],
     },
@@ -123,15 +103,14 @@ export default async function ArticlePage({ params }: ArticleParams) {
 
   const relatedArticles = dict.articles
     .filter((item) => item.enabled && item.id !== article.id)
-  const articlePreview = article as typeof article & ArticlePreviewFields
-  const previewImage = articlePreview.ogImage || articlePreview.coverImage || "/anas-preview.png"
+  const previewImage = getArticleImagePath(lang, article.id, "png")
   const publishedDate = toIsoDate(article.date)
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: article.topic,
-    description: getDescription(article.content, isArabic ? SITE_DESCRIPTION_AR : SITE_DESCRIPTION_EN),
-    image: previewImage.startsWith("http") ? previewImage : `${siteUrl}${previewImage}`,
+    description: getArticleDescription(article),
+    image: `${siteUrl}${previewImage}`,
     datePublished: publishedDate,
     dateModified: publishedDate,
     author: {

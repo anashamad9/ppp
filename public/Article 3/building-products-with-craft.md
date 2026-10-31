@@ -1,4 +1,5 @@
 ---
+description: As AI makes software easier to build, craft matters more. Exploring how design and user experience shape the products people choose to use.
 coverImage: /Article%203/thumb3.png
 ogImage: /Article%203/thumb3.png
 coverAlt: Building Products and Software with Craft
