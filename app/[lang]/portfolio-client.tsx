@@ -448,8 +448,8 @@ function Description({
       company: "Atmet",
       logo: "/Atmet.png",
       period: "Now",
-      companySummary: "A coworker agent platform that automates business workflows by integrating apps and applying reusable skills.",
-      description: "Atmet is a coworker agent platform that connects business apps, applies skills, and automates recurring workflows.",
+      companySummary: lang === "ar" ? "منتج في طور التجربة." : "An experimental product in development.",
+      description: lang === "ar" ? "منتج في طور التجربة." : "An experimental product in development.",
     },
   ]
   const companyByName = new Map(companyProfiles.map((company) => [company.company.toLowerCase(), company]))
@@ -510,7 +510,9 @@ function Description({
       const socialMatch = part.match(/^\[social:([^\]]+)\]$/)
       if (socialMatch && interactive) {
         const label = socialMatch[1]
-        const socialLink = dict.socialLinks.find((link) => link.label.toLowerCase() === label.toLowerCase())
+        const socialLink = dict.socialLinks.find(
+          (link) => link.label.toLowerCase() === label.toLowerCase() || (label === "LinkedIn" && link.label === "لينكد إن"),
+        )
 
         return socialLink?.href ? (
           <a
