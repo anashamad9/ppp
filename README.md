@@ -47,6 +47,10 @@ Any changes you make to your deployed app will be automatically pushed to this r
 
 ## Deployment
 
+Vercel uses `npm ci` and `npm run build`, as configured in `vercel.json`.
+Commit `package-lock.json` whenever dependencies change, and keep npm as the
+only package manager for this project.
+
 Your project is live at:
 
 **[https://vercel.com/anashamad9s-projects/v0-simple-portfolio](https://vercel.com/anashamad9s-projects/v0-simple-portfolio)**
