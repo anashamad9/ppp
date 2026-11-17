@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
@@ -15,11 +15,11 @@ import { CopyButton } from "@/components/ui/copy-button"
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { usePortalFontVars } from "@/hooks/use-portal-font-vars"
 
 interface TopControlsProps {
   lang: Locale
@@ -33,8 +33,6 @@ export function TopControls({ lang, embedded = false }: TopControlsProps) {
   const [mounted, setMounted] = useState(false)
   const [isBuildHost, setIsBuildHost] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  const languageTriggerRef = useRef<HTMLButtonElement>(null)
-  const [languageMenuFonts, setLanguageMenuFonts] = useState<Record<string, string>>({})
   const { startTransition } = useThemeTransition()
 
   useEffect(() => {
@@ -120,28 +118,13 @@ export function TopControls({ lang, embedded = false }: TopControlsProps) {
         </span>
       </Link>
       <span className="mx-0.5 h-5 w-px shrink-0 bg-border" aria-hidden="true" />
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button
-            type="button"
-            tabIndex={isScrolled ? 0 : -1}
-            className={cn("inline-flex h-7 items-center gap-1 rounded-full bg-muted px-2.5 text-[11px] font-medium text-foreground transition-colors hover:bg-muted/80", isRTL && "font-thmanyah-serif-text")}
-            aria-label={labels.switchLang}
-            title={labels.switchLang}
-          >
-            {lang === "ar" ? labels.arabic : labels.english}
-            <ChevronDown className="h-3 w-3" />
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="center" className="min-w-[9rem]">
-          <DropdownMenuItem onClick={() => handleSwitchLang("en")} className="font-sans text-left" dir="ltr">
-            {labels.english}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleSwitchLang("ar")} className="font-arabic text-right" dir="rtl">
-            {labels.arabic}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <LanguageMenu
+        lang={lang}
+        labels={labels}
+        onSelect={handleSwitchLang}
+        side="bottom"
+        tabIndex={isScrolled ? 0 : -1}
+      />
       <ThemeToggleButton
         theme={currentTheme}
         variant="circle-blur"
@@ -172,54 +155,7 @@ export function TopControls({ lang, embedded = false }: TopControlsProps) {
       <>
         {floatingNav}
         <div className={cn("pointer-events-none fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 transition-opacity duration-300", isScrolled && "opacity-0 [&_*]:pointer-events-none")} aria-hidden={isScrolled}>
-        <DropdownMenu onOpenChange={(open) => {
-          if (open && languageTriggerRef.current) {
-            const styles = getComputedStyle(languageTriggerRef.current)
-            setLanguageMenuFonts({
-              "--font-inter": styles.getPropertyValue("--font-inter"),
-              "--font-ibm-plex-sans-arabic": styles.getPropertyValue("--font-ibm-plex-sans-arabic"),
-            })
-          }
-        }}>
-          <DropdownMenuTrigger asChild>
-            <button
-              ref={languageTriggerRef}
-              type="button"
-              className="group pointer-events-auto inline-flex h-7 min-w-[88px] items-center justify-center gap-1 rounded-full border-0 bg-muted px-2.5 font-sans text-[11px] font-medium text-foreground transition-colors hover:bg-muted/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=open]:rounded-t-none data-[state=open]:bg-muted"
-              tabIndex={isScrolled ? -1 : 0}
-              aria-label={labels.switchLang}
-              title={labels.switchLang}
-            >
-              {lang === "ar" ? labels.arabic : labels.english}
-              <ChevronDown className="h-3 w-3 transition-transform duration-200 group-data-[state=open]:rotate-180" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            side="top"
-            align="center"
-            sideOffset={0}
-            avoidCollisions={false}
-            style={languageMenuFonts}
-            className="w-[var(--radix-dropdown-menu-trigger-width)] min-w-0 rounded-b-none rounded-t-2xl border-0 bg-muted p-1 text-foreground shadow-none data-[state=open]:animate-none data-[state=closed]:animate-none"
-          >
-            <DropdownMenuRadioGroup value={lang} onValueChange={(value) => handleSwitchLang(value as Locale)}>
-              {(["en", "ar"] as const).map((locale) => (
-                <DropdownMenuRadioItem
-                  key={locale}
-                  value={locale}
-                  className={cn(
-                    "h-7 cursor-pointer justify-center gap-1 rounded-full px-1 py-0 text-[11px] font-medium focus:bg-foreground/10 focus:text-foreground [&>span:first-child]:hidden",
-                    locale === "ar" ? "font-arabic" : "font-sans",
-                  )}
-                  dir={locale === "ar" ? "rtl" : "ltr"}
-                >
-                  {locale === "ar" ? labels.arabic : labels.english}
-                  {lang === locale && <Check className="h-2.5 w-2.5 shrink-0 text-muted-foreground" aria-hidden="true" />}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <LanguageMenu lang={lang} labels={labels} onSelect={handleSwitchLang} side="top" tabIndex={isScrolled ? -1 : 0} />
         <ThemeToggleButton
           theme={currentTheme}
           variant="circle-blur"
@@ -239,79 +175,58 @@ export function TopControls({ lang, embedded = false }: TopControlsProps) {
     )
   }
 
+  if (!embedded) {
+    // Every other page and article ends with the same controls as the
+    // homepage: the language menu and theme toggle, centered.
+    return (
+      <footer className="flex items-center justify-center gap-2 px-4 pb-4 pt-2">
+        <LanguageMenu lang={lang} labels={labels} onSelect={handleSwitchLang} side="top" />
+        <ThemeToggleButton
+          theme={currentTheme}
+          variant="circle-blur"
+          start="center"
+          onClick={handleToggleTheme}
+          className="h-7 w-7 rounded-full border-0 bg-muted text-foreground hover:bg-muted/80 hover:text-foreground"
+          aria-label={labels.toggle}
+          title={labels.toggle}
+        />
+      </footer>
+    )
+  }
+
+  // Embedded footer at the end of the build page.
   return (
-    <>
-      {floatingNav}
-      <div className={cn(embedded ? "pb-1" : "pb-4", isBuildPage && !embedded ? "px-3 sm:px-5 md:px-6" : "px-0")}>
-      <div
-        className={cn(
-          "bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/40",
-          isBuildPage && !embedded ? "w-full lg:me-auto lg:w-[42%]" : embedded ? "w-full" : "mx-auto w-full max-w-[720px]",
-        )}
-      >
-        <div className={cn("flex flex-wrap items-center justify-between gap-2", embedded ? "pb-2" : "pb-3")}>
-          <div className={cn("flex flex-wrap items-center", embedded ? "gap-1.5" : "gap-2")}>
+    <div className="px-0 pb-1">
+      <div className="w-full bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/40">
+        <div className="flex flex-wrap items-center justify-between gap-2 pb-2">
+          <div className="flex flex-wrap items-center gap-1.5">
             {activeSocialLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={cn(
-                  "group inline-flex items-center gap-1 rounded-full bg-muted text-[11px] font-medium text-foreground transition-colors hover:bg-muted/80",
-                  embedded ? "h-6 px-2" : "h-7 px-2.5",
-                )}
+                className="group inline-flex h-6 items-center gap-1 rounded-full bg-muted px-2 text-[11px] font-medium text-foreground transition-colors hover:bg-muted/80"
               >
                 <span>{link.label}</span>
                 <ArrowUpRight className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </a>
             ))}
           </div>
-          <div className={cn("flex items-center", embedded ? "gap-1.5" : "gap-2")}>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  type="button"
-                  className={cn(
-                    "inline-flex items-center gap-1 rounded-full border-0 bg-muted text-[11px] font-medium text-foreground transition-colors hover:bg-muted/80",
-                    embedded ? "h-6 px-2" : "h-7 px-2.5",
-                  )}
-                  aria-label={labels.switchLang}
-                  title={labels.switchLang}
-                >
-                  {lang === "ar" ? labels.arabic : labels.english}
-                  <ChevronDown className="h-3 w-3" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="min-w-[9rem]">
-                <DropdownMenuItem onClick={() => handleSwitchLang("en")} className="font-sans text-left" dir="ltr">
-                  {labels.english}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleSwitchLang("ar")}
-                  className="font-arabic text-right"
-                  dir="rtl"
-                >
-                  {labels.arabic}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div className="flex items-center gap-1.5">
+            <LanguageMenu lang={lang} labels={labels} onSelect={handleSwitchLang} side="top" className="h-6" />
             <ThemeToggleButton
               theme={currentTheme}
               variant="circle-blur"
               start="center"
               onClick={handleToggleTheme}
-              className={cn(
-                "rounded-full border-0 bg-muted text-foreground hover:bg-muted/80 hover:text-foreground",
-                embedded ? "h-6 w-6" : "h-7 w-7",
-                !mounted && "opacity-0"
-              )}
+              className="h-6 w-6 rounded-full border-0 bg-muted text-foreground hover:bg-muted/80 hover:text-foreground"
               aria-label={labels.toggle}
               title={labels.toggle}
             />
           </div>
         </div>
-        <div className={cn("border-t border-border/60", embedded ? "pt-2" : "pt-3 sm:pt-4")}>
+        <div className="border-t border-border/60 pt-2">
           <div className="flex min-w-0 items-center gap-2">
             <span className="shrink-0 text-sm text-muted-foreground">{labels.contact}</span>
             <a
@@ -328,9 +243,77 @@ export function TopControls({ lang, embedded = false }: TopControlsProps) {
           </div>
         </div>
       </div>
-      </div>
-    </>
+    </div>
   )
 }
 
 export default TopControls
+
+function LanguageMenu({
+  lang,
+  labels,
+  onSelect,
+  side,
+  tabIndex,
+  className,
+}: {
+  lang: Locale
+  labels: { switchLang: string; english: string; arabic: string }
+  onSelect: (locale: Locale) => void
+  side: "top" | "bottom"
+  tabIndex?: number
+  className?: string
+}) {
+  const { ref, style, capture } = usePortalFontVars<HTMLButtonElement>()
+  const opensDown = side === "bottom"
+
+  return (
+    <DropdownMenu onOpenChange={(open) => open && capture()}>
+      <DropdownMenuTrigger asChild>
+        <button
+          ref={ref}
+          type="button"
+          tabIndex={tabIndex}
+          className={cn(
+            "group pointer-events-auto inline-flex h-7 min-w-[88px] items-center justify-center gap-1 rounded-full border-0 bg-muted px-2.5 font-sans text-[11px] font-medium text-foreground transition-colors hover:bg-muted/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=open]:bg-muted",
+            opensDown ? "data-[state=open]:rounded-b-none" : "data-[state=open]:rounded-t-none",
+            className,
+          )}
+          aria-label={labels.switchLang}
+          title={labels.switchLang}
+        >
+          {lang === "ar" ? labels.arabic : labels.english}
+          <ChevronDown className="h-3 w-3 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        side={side}
+        align="center"
+        sideOffset={0}
+        avoidCollisions={false}
+        style={style}
+        className={cn(
+          "w-[var(--radix-dropdown-menu-trigger-width)] min-w-0 border-0 bg-muted p-1 text-foreground shadow-none data-[state=open]:animate-none data-[state=closed]:animate-none",
+          opensDown ? "rounded-b-2xl rounded-t-none" : "rounded-b-none rounded-t-2xl",
+        )}
+      >
+        <DropdownMenuRadioGroup value={lang} onValueChange={(value) => onSelect(value as Locale)}>
+          {(["en", "ar"] as const).map((locale) => (
+            <DropdownMenuRadioItem
+              key={locale}
+              value={locale}
+              className={cn(
+                "h-7 cursor-pointer justify-center gap-1 rounded-full px-1 py-0 text-[11px] font-medium focus:bg-foreground/10 focus:text-foreground [&>span:first-child]:hidden",
+                locale === "ar" ? "font-arabic" : "font-sans",
+              )}
+              dir={locale === "ar" ? "rtl" : "ltr"}
+            >
+              {locale === "ar" ? labels.arabic : labels.english}
+              {lang === locale && <Check className="h-2.5 w-2.5 shrink-0 text-muted-foreground" aria-hidden="true" />}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}

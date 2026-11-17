@@ -17,6 +17,7 @@ import type { getDictionary } from "@/lib/dictionaries"
 import { ArticleFooter } from "@/components/article-footer"
 import { TopControls } from "@/components/top-controls"
 import { cn } from "@/lib/utils"
+import { usePortalFontVars } from "@/hooks/use-portal-font-vars"
 import {
   ArrowUpRight,
   BadgeCheck,
@@ -448,8 +449,8 @@ function Description({
       company: "Atmet",
       logo: "/Atmet.png",
       period: "Now",
-      companySummary: lang === "ar" ? "منتج في طور التجربة." : "An experimental product in development.",
-      description: lang === "ar" ? "منتج في طور التجربة." : "An experimental product in development.",
+      companySummary: lang === "ar" ? "عقل ذكاء اصطناعي تجريبي قيد التطوير." : "An experimental AI brain in development.",
+      description: lang === "ar" ? "عقل ذكاء اصطناعي تجريبي قيد التطوير." : "An experimental AI brain in development.",
     },
   ]
   const companyByName = new Map(companyProfiles.map((company) => [company.company.toLowerCase(), company]))
@@ -457,7 +458,6 @@ function Description({
 
   const renderParagraph = (paragraph: string) => {
     const parts = paragraph.split(/(\[icon:[^\]]+\]|\[company:[^\]]+\]|\[tech-stack:[^\]]+\]|\[copy:[^\]]+\]|\[social:[^\]]+\]|<u>.*?<\/u>)/g).filter(Boolean)
-
     return parts.map((part, index) => {
       const iconMatch = part.match(/^\[icon:([^\]]+)\]$/)
       if (iconMatch) {
@@ -532,6 +532,15 @@ function Description({
             {label}
           </span>
         )
+      }
+
+      if (!interactive) {
+        const plainToken = part.match(/^\[(company|tech-stack|social|copy):([^\]]+)\]$/)
+        if (plainToken) {
+          if (plainToken[1] === "copy") return null
+          const label = plainToken[1] === "company" ? companyByName.get(plainToken[2].toLowerCase())?.company ?? plainToken[2] : plainToken[2]
+          return <span key={`plain-${index}`}>{label}</span>
+        }
       }
 
       const underlineMatch = part.match(/^<u>(.*?)<\/u>$/)
@@ -623,53 +632,68 @@ function CompanyHoverLink({
   experience: Dictionary["experiences"][number]
   lang: Locale
 }) {
+  return (
+    <CompanyHoverCard experience={experience} lang={lang}>
+      <button
+        type="button"
+        className="group inline-flex items-center gap-1 rounded-sm px-1 py-0.5 align-middle transition-colors hover:bg-secondary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <Image
+          src={experience.logo}
+          alt={experience.company}
+          width={14}
+          height={14}
+          className="inline-block rounded-sm object-contain"
+          unoptimized={experience.logo.startsWith("http")}
+        />
+        <span className="text-sm font-medium text-foreground">{experience.company}</span>
+      </button>
+    </CompanyHoverCard>
+  )
+}
+
+function CompanyHoverCard({
+  experience,
+  lang,
+  children,
+}: {
+  experience: Dictionary["experiences"][number]
+  lang: Locale
+  children: React.ReactElement
+}) {
   const companySummary = (experience as { companySummary?: string }).companySummary ?? experience.description
+  const isArabic = lang === "ar"
+  const { ref: fontSourceRef, style: fontVars, capture: captureFontVars } = usePortalFontVars<HTMLSpanElement>()
 
   return (
-    <HoverCard openDelay={40} closeDelay={120}>
-      <HoverCardTrigger asChild>
-        <button
-          type="button"
-          className="group inline-flex items-center gap-1 rounded-sm px-1 py-0.5 align-middle transition-colors hover:bg-secondary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          <Image
-            src={experience.logo}
-            alt={experience.company}
-            width={14}
-            height={14}
-            className="inline-block rounded-sm object-contain"
-            unoptimized={experience.logo.startsWith("http")}
-          />
-          <span className="text-sm font-medium text-foreground">{experience.company}</span>
-        </button>
-      </HoverCardTrigger>
+    <HoverCard openDelay={40} closeDelay={120} onOpenChange={(open) => open && captureFontVars()}>
+      <span ref={fontSourceRef} className="contents">
+        <HoverCardTrigger asChild>{children}</HoverCardTrigger>
+      </span>
       <HoverCardContent
+        side="top"
+        align="center"
+        sideOffset={6}
+        dir={isArabic ? "rtl" : "ltr"}
+        style={fontVars}
         className={cn(
-          "z-[9999] w-56 space-y-1.5 p-2",
-          lang === "ar" ? "text-right" : "text-left",
+          "z-[9999] w-64 rounded-2xl border-0 bg-muted p-3 text-foreground shadow-none",
+          isArabic ? "font-arabic text-right" : "font-sans text-left",
         )}
-        style={{
-          fontFamily:
-            lang === "ar"
-              ? '"IBM Plex Sans Arabic", "Noto Sans Arabic", Tahoma, Arial, sans-serif'
-              : 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-        }}
       >
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           <Image
             src={experience.logo}
-            alt={experience.company}
-            width={28}
-            height={28}
-            className="h-7 w-7 rounded object-contain"
+            alt=""
+            width={24}
+            height={24}
+            className="size-6 shrink-0 rounded-full object-contain"
             unoptimized={experience.logo.startsWith("http")}
           />
-          <div className="flex flex-col">
-            <span className="text-xs font-semibold text-foreground">{experience.company}</span>
-            <span className="text-[10px] text-muted-foreground">{experience.period}</span>
-          </div>
+          <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-foreground">{experience.company}</span>
+          <span className="shrink-0 whitespace-nowrap text-[11px] font-medium text-muted-foreground">{experience.period}</span>
         </div>
-        <p className="text-[10px] leading-relaxed text-muted-foreground">{companySummary}</p>
+        <p className="mt-2 text-[12px] leading-relaxed text-muted-foreground">{companySummary}</p>
       </HoverCardContent>
     </HoverCard>
   )
@@ -900,7 +924,6 @@ function Experience({
           const isExpanded = expandedJobs.has(jobKey)
           const isHovered = hoveredJobKey === jobKey
           const isDimmed = hoveredJobKey !== null && !isHovered
-          const companySummary = (exp as { companySummary?: string }).companySummary ?? exp.description
           return (
             <div
               key={jobKey}
@@ -926,51 +949,23 @@ function Experience({
                   <span className="text-xs text-muted-foreground">
                     {lang === "ar" ? "في" : "at"}
                   </span>
-                  <HoverCard openDelay={40} closeDelay={120}>
-                    <HoverCardTrigger asChild>
-                      <button
-                        type="button"
-                        onClick={(e) => e.stopPropagation()}
-                        className="group flex items-center gap-1 rounded-sm px-1 py-0.5 text-left transition-colors hover:bg-secondary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      >
-                        <Image
-                          src={exp.logo}
-                          alt={exp.company}
-                          width={14}
-                          height={14}
-                          className="inline-block rounded-sm"
-                        />
-                        <span className="text-sm font-medium text-foreground">{exp.company}</span>
-                      </button>
-                    </HoverCardTrigger>
-                    <HoverCardContent
-                      className={cn(
-                        "z-[9999] w-56 space-y-1.5 p-2",
-                        lang === "ar" ? "text-right" : "text-left",
-                      )}
-                      style={{
-                        fontFamily:
-                          lang === "ar"
-                            ? '"IBM Plex Sans Arabic", "Noto Sans Arabic", Tahoma, Arial, sans-serif'
-                            : 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-                      }}
+                  <CompanyHoverCard experience={exp} lang={lang}>
+                    <button
+                      type="button"
+                      onClick={(e) => e.stopPropagation()}
+                      className="group flex items-center gap-1 rounded-sm px-1 py-0.5 text-left transition-colors hover:bg-secondary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
-                      <div className="flex items-center gap-1.5">
-                        <Image
-                          src={exp.logo}
-                          alt={exp.company}
-                          width={28}
-                          height={28}
-                          className="h-7 w-7 rounded object-contain"
-                        />
-                        <div className="flex flex-col">
-                          <span className="text-xs font-semibold text-foreground">{exp.company}</span>
-                          <span className="text-[10px] text-muted-foreground">{exp.period}</span>
-                        </div>
-                      </div>
-                      <p className="text-[10px] leading-relaxed text-muted-foreground">{companySummary}</p>
-                    </HoverCardContent>
-                  </HoverCard>
+                      <Image
+                        src={exp.logo}
+                        alt={exp.company}
+                        width={14}
+                        height={14}
+                        className="inline-block rounded-sm"
+                        unoptimized={exp.logo.startsWith("http")}
+                      />
+                      <span className="text-sm font-medium text-foreground">{exp.company}</span>
+                    </button>
+                  </CompanyHoverCard>
 
                 </div>
 
